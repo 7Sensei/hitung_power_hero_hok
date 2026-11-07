@@ -152,45 +152,48 @@ class GamelandLaneView extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     // Kolom Power Saat Ini
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Row(
-                          children: [
-                            Container(
-                              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
-                              decoration: BoxDecoration(
-                                color: HokTheme.neonLime.withValues(alpha: 0.15),
-                                borderRadius: BorderRadius.circular(20),
-                                border: Border.all(color: HokTheme.neonLime.withValues(alpha: 0.4)),
-                              ),
-                              child: Text(
-                                '${laneData.lane.displayName} • Tier ${laneData.currentTier}',
-                                style: const TextStyle(
-                                  color: HokTheme.neonLime,
-                                  fontSize: 11,
-                                  fontWeight: FontWeight.bold,
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Row(
+                            children: [
+                              Container(
+                                padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                                decoration: BoxDecoration(
+                                  color: HokTheme.neonLime.withValues(alpha: 0.15),
+                                  borderRadius: BorderRadius.circular(20),
+                                  border: Border.all(color: HokTheme.neonLime.withValues(alpha: 0.4)),
+                                ),
+                                child: Text(
+                                  '${laneData.lane.displayName} • Tier ${laneData.currentTier}',
+                                  style: const TextStyle(
+                                    color: HokTheme.neonLime,
+                                    fontSize: 11,
+                                    fontWeight: FontWeight.bold,
+                                  ),
                                 ),
                               ),
-                            ),
-                          ],
-                        ),
-                        const SizedBox(height: 8),
-                        Text(
-                          HOKUtils.formatNumber(laneData.totalPowerLane),
-                          style: const TextStyle(
-                            color: Colors.white,
-                            fontSize: 36,
-                            fontWeight: FontWeight.w900,
-                            letterSpacing: -0.5,
+                            ],
                           ),
-                        ),
-                        Text(
-                          'Peringkat Saat Ini: ${laneData.currentPercentile}',
-                          style: const TextStyle(color: HokTheme.textSecondary, fontSize: 12),
-                        ),
-                      ],
+                          const SizedBox(height: 8),
+                          Text(
+                            HOKUtils.formatNumber(laneData.totalPowerLane),
+                            style: const TextStyle(
+                              color: Colors.white,
+                              fontSize: 34,
+                              fontWeight: FontWeight.w900,
+                              letterSpacing: -0.5,
+                            ),
+                          ),
+                          Text(
+                            'Peringkat Saat Ini: ${laneData.currentPercentile}',
+                            style: const TextStyle(color: HokTheme.textSecondary, fontSize: 12),
+                          ),
+                        ],
+                      ),
                     ),
+                    const SizedBox(width: 12),
 
                     // Kolom Target Power
                     Column(
@@ -263,13 +266,15 @@ class GamelandLaneView extends StatelessWidget {
                 ),
                 const SizedBox(height: 8),
 
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                Wrap(
+                  alignment: WrapAlignment.spaceBetween,
+                  runSpacing: 4,
                   children: [
                     Text(
                       'Progress ke target: ${(laneData.progressToTarget * 100).toStringAsFixed(1)}%',
                       style: const TextStyle(color: HokTheme.textMuted, fontSize: 11),
                     ),
+                    const SizedBox(width: 8),
                     Text(
                       'Formula: Utama (${HOKUtils.formatNumber(laneData.subtotalUtama)}) + OP (${HOKUtils.formatNumber(laneData.subtotalOP)})',
                       style: const TextStyle(color: HokTheme.textSecondary, fontSize: 11),

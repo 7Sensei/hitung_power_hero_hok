@@ -45,40 +45,43 @@ class GamelandHeroHeader extends StatelessWidget {
         const SizedBox(height: 16),
 
         // 2. Big Title (Ala Gameland: "Power Lane 🎮 Simulator" atau "Rincian Hero 🎮 Calculator")
-        Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Text(
-              isLaneMode ? 'Power Lane' : 'Rincian Hero',
-              style: const TextStyle(
-                color: Colors.white,
-                fontSize: 36,
-                fontWeight: FontWeight.w900,
-                letterSpacing: -1.0,
+        FittedBox(
+          fit: BoxFit.scaleDown,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Text(
+                isLaneMode ? 'Power Lane' : 'Rincian Hero',
+                style: const TextStyle(
+                  color: Colors.white,
+                  fontSize: 36,
+                  fontWeight: FontWeight.w900,
+                  letterSpacing: -1.0,
+                ),
               ),
-            ),
-            const SizedBox(width: 12),
-            Container(
-              padding: const EdgeInsets.all(7),
-              decoration: BoxDecoration(
-                color: const Color(0xFF1C271C),
-                shape: BoxShape.circle,
-                border: Border.all(color: const Color(0xFF2E422E)),
+              const SizedBox(width: 12),
+              Container(
+                padding: const EdgeInsets.all(7),
+                decoration: BoxDecoration(
+                  color: const Color(0xFF1C271C),
+                  shape: BoxShape.circle,
+                  border: Border.all(color: const Color(0xFF2E422E)),
+                ),
+                child: const Text('🎮', style: TextStyle(fontSize: 20)),
               ),
-              child: const Text('🎮', style: TextStyle(fontSize: 20)),
-            ),
-            const SizedBox(width: 12),
-            Text(
-              isLaneMode ? 'Simulator' : 'Calculator',
-              style: const TextStyle(
-                color: Colors.white,
-                fontSize: 36,
-                fontWeight: FontWeight.w900,
-                letterSpacing: -1.0,
+              const SizedBox(width: 12),
+              Text(
+                isLaneMode ? 'Simulator' : 'Calculator',
+                style: const TextStyle(
+                  color: Colors.white,
+                  fontSize: 36,
+                  fontWeight: FontWeight.w900,
+                  letterSpacing: -1.0,
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
 
         const SizedBox(height: 10),

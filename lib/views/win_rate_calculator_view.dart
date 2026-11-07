@@ -72,40 +72,43 @@ class _WinRateCalculatorViewState extends State<WinRateCalculatorView> {
         const SizedBox(height: 16),
 
         // 2. Big Title
-        Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            const Text(
-              'Win Rate',
-              style: TextStyle(
-                color: Colors.white,
-                fontSize: 36,
-                fontWeight: FontWeight.w900,
-                letterSpacing: -1.0,
+        FittedBox(
+          fit: BoxFit.scaleDown,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              const Text(
+                'Win Rate',
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 36,
+                  fontWeight: FontWeight.w900,
+                  letterSpacing: -1.0,
+                ),
               ),
-            ),
-            const SizedBox(width: 12),
-            Container(
-              padding: const EdgeInsets.all(7),
-              decoration: BoxDecoration(
-                color: const Color(0xFF1C271C),
-                shape: BoxShape.circle,
-                border: Border.all(color: const Color(0xFF2E422E)),
+              const SizedBox(width: 12),
+              Container(
+                padding: const EdgeInsets.all(7),
+                decoration: BoxDecoration(
+                  color: const Color(0xFF1C271C),
+                  shape: BoxShape.circle,
+                  border: Border.all(color: const Color(0xFF2E422E)),
+                ),
+                child: const Text('🎯', style: TextStyle(fontSize: 20)),
               ),
-              child: const Text('🎯', style: TextStyle(fontSize: 20)),
-            ),
-            const SizedBox(width: 12),
-            const Text(
-              'Calculator',
-              style: TextStyle(
-                color: Colors.white,
-                fontSize: 36,
-                fontWeight: FontWeight.w900,
-                letterSpacing: -1.0,
+              const SizedBox(width: 12),
+              const Text(
+                'Calculator',
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 36,
+                  fontWeight: FontWeight.w900,
+                  letterSpacing: -1.0,
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
 
         const SizedBox(height: 10),
@@ -469,31 +472,30 @@ class _WinRateCalculatorViewState extends State<WinRateCalculatorView> {
               },
             ),
             const SizedBox(height: 10),
-            // Quick preset chips untuk target WR
-            Row(
+            // Quick preset chips untuk target WR (Wrap agar tidak overflow di layar kecil)
+            Wrap(
+              crossAxisAlignment: WrapCrossAlignment.center,
+              spacing: 6,
+              runSpacing: 6,
               children: [
                 const Text('Pilih Cepat Target: ', style: TextStyle(color: HokTheme.textMuted, fontSize: 11)),
-                const SizedBox(width: 6),
                 ...[55.0, 60.0, 65.0, 70.0, 80.0].map((t) {
-                  return Padding(
-                    padding: const EdgeInsets.only(right: 6),
-                    child: InkWell(
-                      onTap: () {
-                        provider.updateWrTargetPercent(t);
-                        _targetWrController.text = t.toStringAsFixed(1);
-                      },
-                      borderRadius: BorderRadius.circular(6),
-                      child: Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                        decoration: BoxDecoration(
-                          color: const Color(0xFF162216),
-                          borderRadius: BorderRadius.circular(6),
-                          border: Border.all(color: const Color(0xFF233223)),
-                        ),
-                        child: Text(
-                          '${t.toInt()}%',
-                          style: const TextStyle(color: HokTheme.limeAccent, fontSize: 11, fontWeight: FontWeight.bold),
-                        ),
+                  return InkWell(
+                    onTap: () {
+                      provider.updateWrTargetPercent(t);
+                      _targetWrController.text = t.toStringAsFixed(1);
+                    },
+                    borderRadius: BorderRadius.circular(6),
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                      decoration: BoxDecoration(
+                        color: const Color(0xFF162216),
+                        borderRadius: BorderRadius.circular(6),
+                        border: Border.all(color: const Color(0xFF233223)),
+                      ),
+                      child: Text(
+                        '${t.toInt()}%',
+                        style: const TextStyle(color: HokTheme.limeAccent, fontSize: 11, fontWeight: FontWeight.bold),
                       ),
                     ),
                   );
@@ -584,3 +586,4 @@ class _WinRateCalculatorViewState extends State<WinRateCalculatorView> {
     );
   }
 }
+
