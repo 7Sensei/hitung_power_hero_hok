@@ -36,3 +36,4 @@ class HeroPowerDetail {
     return (powerTotal * pengaliTotal).round();
   }
 }
+

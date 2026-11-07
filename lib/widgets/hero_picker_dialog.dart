@@ -36,18 +36,21 @@ class _HeroPickerDialogState extends State<HeroPickerDialog> {
     }).toList();
 
     return Dialog(
-      backgroundColor: const Color(0xFF111D33),
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+      backgroundColor: const Color(0xFF0D140D),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(20),
+        side: const BorderSide(color: Color(0xFF1E2E1E)),
+      ),
       child: Container(
         width: 480,
         height: 560,
-        padding: const EdgeInsets.all(20),
+        padding: const EdgeInsets.all(22),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Row(
               children: [
-                const Icon(Icons.group, color: HokTheme.blueCyan),
+                const Icon(Icons.sports_esports_rounded, color: HokTheme.neonLime),
                 const SizedBox(width: 8),
                 const Text(
                   'Pilih Hero Honor of Kings',
@@ -68,9 +71,14 @@ class _HeroPickerDialogState extends State<HeroPickerDialog> {
 
             // Search Bar
             TextField(
-              decoration: const InputDecoration(
+              decoration: InputDecoration(
                 hintText: 'Cari nama hero (misal: Dharma, Lam)...',
-                prefixIcon: Icon(Icons.search, color: HokTheme.blueCyan),
+                prefixIcon: const Icon(Icons.search, color: HokTheme.neonLime),
+                fillColor: const Color(0xFF131B13),
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(30),
+                  borderSide: const BorderSide(color: Color(0xFF1F2D1F)),
+                ),
               ),
               onChanged: (val) {
                 setState(() {
@@ -93,10 +101,11 @@ class _HeroPickerDialogState extends State<HeroPickerDialog> {
                         _filterLane = null;
                       });
                     },
-                    selectedColor: HokTheme.blueCyan,
+                    selectedColor: HokTheme.neonLime,
                     labelStyle: TextStyle(
-                      color: _filterLane == null ? Colors.black : Colors.white,
+                      color: _filterLane == null ? HokTheme.darkText : Colors.white,
                       fontSize: 12,
+                      fontWeight: FontWeight.bold,
                     ),
                   ),
                   const SizedBox(width: 6),
@@ -112,10 +121,11 @@ class _HeroPickerDialogState extends State<HeroPickerDialog> {
                             _filterLane = sel ? lane : null;
                           });
                         },
-                        selectedColor: lane.accentColor,
+                        selectedColor: HokTheme.neonLime,
                         labelStyle: TextStyle(
-                          color: isSel ? Colors.black : Colors.white,
+                          color: isSel ? HokTheme.darkText : Colors.white,
                           fontSize: 12,
+                          fontWeight: isSel ? FontWeight.bold : FontWeight.normal,
                         ),
                       ),
                     );
@@ -140,18 +150,18 @@ class _HeroPickerDialogState extends State<HeroPickerDialog> {
                         final hero = filtered[index];
                         return ListTile(
                           shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(8),
+                            borderRadius: BorderRadius.circular(10),
                           ),
                           contentPadding: const EdgeInsets.symmetric(
                             horizontal: 10,
                             vertical: 4,
                           ),
                           leading: CircleAvatar(
-                            backgroundColor: hero.lane.accentColor.withValues(alpha: 0.25),
+                            backgroundColor: const Color(0xFF1B281B),
                             child: Text(
                               hero.name.substring(0, hero.name.length >= 2 ? 2 : 1).toUpperCase(),
-                              style: TextStyle(
-                                color: hero.lane.accentColor,
+                              style: const TextStyle(
+                                color: HokTheme.neonLime,
                                 fontWeight: FontWeight.bold,
                                 fontSize: 13,
                               ),
@@ -172,15 +182,15 @@ class _HeroPickerDialogState extends State<HeroPickerDialog> {
                             ),
                           ),
                           trailing: Container(
-                            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
                             decoration: BoxDecoration(
-                              color: const Color(0xFF1B2E50),
-                              borderRadius: BorderRadius.circular(6),
+                              color: const Color(0xFF172217),
+                              borderRadius: BorderRadius.circular(20),
                             ),
                             child: Text(
                               '${hero.defaultPower} Pwr',
                               style: const TextStyle(
-                                color: HokTheme.goldLight,
+                                color: HokTheme.neonLime,
                                 fontSize: 11,
                                 fontWeight: FontWeight.bold,
                               ),

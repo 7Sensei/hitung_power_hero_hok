@@ -51,13 +51,12 @@ void main() {
     });
   });
 
-  testWidgets('HOK App Smoke Test', (WidgetTester tester) async {
+  testWidgets('HOK Gameland App Smoke Test', (WidgetTester tester) async {
     await tester.pumpWidget(const HOKPowerCalculatorApp());
     await tester.pumpAndSettle();
 
-    // Verifikasi judul dan elemen utama muncul
-    expect(find.text('HOK Power Calculator'), findsOneWidget);
-    expect(find.text('Power Lane'), findsOneWidget);
+    // Verifikasi brand navbar & komponen utama muncul
+    expect(find.text('HOK Power'), findsOneWidget);
     expect(find.text('Hero Utama'), findsOneWidget);
     expect(find.text('Hero OP Kamu'), findsOneWidget);
   });

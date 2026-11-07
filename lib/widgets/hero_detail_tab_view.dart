@@ -45,65 +45,74 @@ class _HeroDetailTabViewState extends State<HeroDetailTabView> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // Banner Hasil Perhitungan Utama
+          // Banner Hasil Perhitungan Utama (Gameland Neon Ambient Glow)
           Container(
             width: double.infinity,
-            padding: const EdgeInsets.all(20),
+            padding: const EdgeInsets.all(26),
             decoration: BoxDecoration(
-              gradient: const LinearGradient(
-                begin: Alignment.topLeft,
-                end: Alignment.bottomRight,
-                colors: [Color(0xFF132342), Color(0xFF1C315B)],
-              ),
-              borderRadius: BorderRadius.circular(16),
-              border: Border.all(color: const Color(0xFF2E487C), width: 1.5),
+              color: const Color(0xFF0C120C),
+              borderRadius: BorderRadius.circular(20),
+              border: Border.all(color: const Color(0xFF1E2D1E)),
               boxShadow: [
                 BoxShadow(
-                  color: Colors.black.withValues(alpha: 0.3),
-                  blurRadius: 16,
-                  offset: const Offset(0, 6),
+                  color: HokTheme.neonLime.withValues(alpha: 0.1),
+                  blurRadius: 30,
+                  spreadRadius: 2,
+                  offset: const Offset(0, 10),
                 ),
               ],
             ),
             child: Column(
               children: [
-                const Text(
-                  'Power Hero = Power Total × Pengali Total',
-                  style: TextStyle(
-                    color: HokTheme.blueCyan,
-                    fontSize: 13,
-                    fontWeight: FontWeight.bold,
-                    letterSpacing: 0.5,
+                Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 4),
+                  decoration: BoxDecoration(
+                    color: HokTheme.neonLime.withValues(alpha: 0.15),
+                    borderRadius: BorderRadius.circular(20),
+                    border: Border.all(color: HokTheme.neonLime.withValues(alpha: 0.3)),
+                  ),
+                  child: const Text(
+                    'Power Hero = Power Total × Pengali Total',
+                    style: TextStyle(
+                      color: HokTheme.neonLime,
+                      fontSize: 12,
+                      fontWeight: FontWeight.bold,
+                      letterSpacing: 0.5,
+                    ),
                   ),
                 ),
-                const SizedBox(height: 8),
+                const SizedBox(height: 14),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.baseline,
                   textBaseline: TextBaseline.alphabetic,
                   children: [
-                    const Icon(Icons.diamond, color: HokTheme.goldAccent, size: 28),
-                    const SizedBox(width: 8),
                     Text(
                       HOKUtils.formatNumber(detail.finalHeroPower),
                       style: const TextStyle(
                         color: Colors.white,
-                        fontSize: 42,
+                        fontSize: 48,
                         fontWeight: FontWeight.w900,
+                        letterSpacing: -1,
                       ),
                     ),
                     const SizedBox(width: 8),
                     const Text(
                       'Power',
-                      style: TextStyle(color: HokTheme.goldLight, fontSize: 16, fontWeight: FontWeight.bold),
+                      style: TextStyle(
+                        color: HokTheme.neonLime,
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
                   ],
                 ),
                 const SizedBox(height: 12),
                 Wrap(
-                  spacing: 16,
+                  spacing: 12,
                   runSpacing: 8,
                   alignment: WrapAlignment.center,
+                  crossAxisAlignment: WrapCrossAlignment.center,
                   children: [
                     _buildFormulaBadge('Power Total', HOKUtils.formatNumber(detail.powerTotal)),
                     const Text('×', style: TextStyle(color: Colors.white70, fontSize: 18, fontWeight: FontWeight.bold)),
@@ -116,7 +125,7 @@ class _HeroDetailTabViewState extends State<HeroDetailTabView> {
 
           const SizedBox(height: 24),
 
-          // SEKSI 1: POWER TOTAL (KOMPONEN POIN)
+          // SEKSI 1: POWER TOTAL
           const Text(
             '1. Komponen Power Total',
             style: TextStyle(
@@ -125,13 +134,13 @@ class _HeroDetailTabViewState extends State<HeroDetailTabView> {
               fontWeight: FontWeight.bold,
             ),
           ),
-          const SizedBox(height: 10),
+          const SizedBox(height: 12),
 
           // 1. Power Performa Ranked
           _buildItemCard(
             title: 'Power Performa Ranked',
             currentValueText: '${detail.powerPerformaRanked} / 1.500',
-            description: 'Standar: 900. Bertambah lebih cepat jika di bawah standar. Dipengaruhi hasil & skor match ranked serta tier pemain.',
+            description: 'Standar: 900. Bertambah lebih cepat jika di bawah standar. Makin tinggi Tier rank, makin tinggi pula batas standarnya.',
             child: Row(
               children: [
                 Expanded(
@@ -140,8 +149,8 @@ class _HeroDetailTabViewState extends State<HeroDetailTabView> {
                     min: 0,
                     max: 1500,
                     divisions: 150,
-                    activeColor: HokTheme.blueCyan,
-                    inactiveColor: const Color(0xFF1B2A48),
+                    activeColor: HokTheme.neonLime,
+                    inactiveColor: const Color(0xFF1B2A1B),
                     onChanged: (val) {
                       provider.updatePerformaRanked(val.round());
                       _rankedController.text = val.round().toString();
@@ -154,7 +163,12 @@ class _HeroDetailTabViewState extends State<HeroDetailTabView> {
                     controller: _rankedController,
                     keyboardType: TextInputType.number,
                     textAlign: TextAlign.center,
-                    decoration: const InputDecoration(contentPadding: EdgeInsets.all(8)),
+                    style: const TextStyle(color: Colors.white, fontSize: 13, fontWeight: FontWeight.bold),
+                    decoration: InputDecoration(
+                      contentPadding: const EdgeInsets.all(8),
+                      fillColor: const Color(0xFF141E14),
+                      border: OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
+                    ),
                     onChanged: (val) {
                       final n = int.tryParse(val) ?? 0;
                       provider.updatePerformaRanked(n);
@@ -170,7 +184,7 @@ class _HeroDetailTabViewState extends State<HeroDetailTabView> {
           _buildItemCard(
             title: 'Power Performa Peak',
             currentValueText: '${detail.powerPerformaPeak} / 200',
-            description: 'Standar: 200. Bertambah lebih cepat jika di bawah standar. Makin tinggi Poin Tourney, makin tinggi pula batas standarnya.',
+            description: 'Standar: 200. Bertambah lebih cepat jika di bawah standar. Dipengaruhi hasil & skor match Peak Tournament.',
             child: Row(
               children: [
                 Expanded(
@@ -179,8 +193,8 @@ class _HeroDetailTabViewState extends State<HeroDetailTabView> {
                     min: 0,
                     max: 400,
                     divisions: 80,
-                    activeColor: HokTheme.blueCyan,
-                    inactiveColor: const Color(0xFF1B2A48),
+                    activeColor: HokTheme.neonLime,
+                    inactiveColor: const Color(0xFF1B2A1B),
                     onChanged: (val) {
                       provider.updatePerformaPeak(val.round());
                       _peakPerfController.text = val.round().toString();
@@ -193,7 +207,12 @@ class _HeroDetailTabViewState extends State<HeroDetailTabView> {
                     controller: _peakPerfController,
                     keyboardType: TextInputType.number,
                     textAlign: TextAlign.center,
-                    decoration: const InputDecoration(contentPadding: EdgeInsets.all(8)),
+                    style: const TextStyle(color: Colors.white, fontSize: 13, fontWeight: FontWeight.bold),
+                    decoration: InputDecoration(
+                      contentPadding: const EdgeInsets.all(8),
+                      fillColor: const Color(0xFF141E14),
+                      border: OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
+                    ),
                     onChanged: (val) {
                       final n = int.tryParse(val) ?? 0;
                       provider.updatePerformaPeak(n);
@@ -209,7 +228,7 @@ class _HeroDetailTabViewState extends State<HeroDetailTabView> {
           _buildItemCard(
             title: 'Power Kemenangan',
             currentValueText: '${detail.powerKemenangan} / 3.000',
-            description: 'Menangkan Ranked Match atau Peak Tournament untuk meningkatkan (Maksimal 3.000 poin). Dipengaruhi kemenangan di beberapa Season terakhir.',
+            description: 'Menangkan Ranked Match atau Peak Tournament untuk meningkatkan (Maksimal 3.000 poin).',
             child: Row(
               children: [
                 Expanded(
@@ -218,8 +237,8 @@ class _HeroDetailTabViewState extends State<HeroDetailTabView> {
                     min: 0,
                     max: 3000,
                     divisions: 150,
-                    activeColor: HokTheme.goldAccent,
-                    inactiveColor: const Color(0xFF1B2A48),
+                    activeColor: HokTheme.neonLime,
+                    inactiveColor: const Color(0xFF1B2A1B),
                     onChanged: (val) {
                       provider.updatePowerKemenangan(val.round());
                       _kemenanganController.text = val.round().toString();
@@ -232,7 +251,12 @@ class _HeroDetailTabViewState extends State<HeroDetailTabView> {
                     controller: _kemenanganController,
                     keyboardType: TextInputType.number,
                     textAlign: TextAlign.center,
-                    decoration: const InputDecoration(contentPadding: EdgeInsets.all(8)),
+                    style: const TextStyle(color: Colors.white, fontSize: 13, fontWeight: FontWeight.bold),
+                    decoration: InputDecoration(
+                      contentPadding: const EdgeInsets.all(8),
+                      fillColor: const Color(0xFF141E14),
+                      border: OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
+                    ),
                     onChanged: (val) {
                       final n = int.tryParse(val) ?? 0;
                       provider.updatePowerKemenangan(n);
@@ -245,7 +269,7 @@ class _HeroDetailTabViewState extends State<HeroDetailTabView> {
 
           const SizedBox(height: 24),
 
-          // SEKSI 2: PENGALI TOTAL (FAKTOR MULTIPLIER)
+          // SEKSI 2: PENGALI TOTAL
           const Text(
             '2. Komponen Pengali Total',
             style: TextStyle(
@@ -254,16 +278,16 @@ class _HeroDetailTabViewState extends State<HeroDetailTabView> {
               fontWeight: FontWeight.bold,
             ),
           ),
-          const SizedBox(height: 10),
+          const SizedBox(height: 12),
 
-          // Pengali Peak (Poin Tourney)
+          // Pengali Peak
           _buildItemCard(
             title: 'Pengali Peak',
             currentValueText: '${detail.pengaliPeakPercent.toStringAsFixed(0)}%',
             description: 'Poin Peak saat ini: ${detail.poinPeakSaatIni}. Dihitung otomatis: +1% setiap kelipatan 20 poin di atas 1.200.',
             child: Row(
               children: [
-                const Icon(Icons.military_tech, color: HokTheme.goldAccent),
+                const Icon(Icons.military_tech_rounded, color: HokTheme.neonLime),
                 const SizedBox(width: 10),
                 const Text('Poin Peak Tourney:', style: TextStyle(color: Colors.white, fontSize: 13)),
                 const SizedBox(width: 10),
@@ -271,10 +295,13 @@ class _HeroDetailTabViewState extends State<HeroDetailTabView> {
                   child: TextField(
                     controller: _poinPeakController,
                     keyboardType: TextInputType.number,
-                    decoration: const InputDecoration(
+                    style: const TextStyle(color: Colors.white, fontSize: 13, fontWeight: FontWeight.bold),
+                    decoration: InputDecoration(
                       hintText: '1260',
                       suffixText: 'Poin',
-                      contentPadding: EdgeInsets.symmetric(horizontal: 10, vertical: 8),
+                      fillColor: const Color(0xFF141E14),
+                      contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                      border: OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
                     ),
                     onChanged: (val) {
                       final n = int.tryParse(val) ?? 1200;
@@ -291,14 +318,14 @@ class _HeroDetailTabViewState extends State<HeroDetailTabView> {
           _buildItemCard(
             title: 'Pengali Keaktifan',
             currentValueText: '${detail.pengaliKeaktifanPercent.toStringAsFixed(0)}%',
-            description: 'Keaktifan hero (${detail.pengaliKeaktifanPercent < 50 ? 'Kurang/Tidak Aktif' : 'Aktif'}). Menurun setiap minggu jika tidak dimainkan, dapat dipulihkan dengan bermain dan meraih MVP.',
+            description: 'Keaktifan hero (${detail.pengaliKeaktifanPercent < 50 ? 'Tidak/Kurang Aktif' : 'Aktif'}). Menurun setiap minggu jika tidak dimainkan, dapat dipulihkan dengan bermain & MVP.',
             child: Slider(
               value: detail.pengaliKeaktifanPercent,
               min: 10,
               max: 100,
               divisions: 18,
-              activeColor: detail.pengaliKeaktifanPercent >= 80 ? HokTheme.greenAccent : HokTheme.goldAccent,
-              inactiveColor: const Color(0xFF1B2A48),
+              activeColor: HokTheme.neonLime,
+              inactiveColor: const Color(0xFF1B2A1B),
               onChanged: (val) {
                 provider.updateKeaktifan(val);
               },
@@ -313,19 +340,19 @@ class _HeroDetailTabViewState extends State<HeroDetailTabView> {
             child: ElevatedButton.icon(
               onPressed: () => _showApplyToSlotSheet(context, provider),
               style: ElevatedButton.styleFrom(
-                backgroundColor: HokTheme.blueCyan,
-                foregroundColor: Colors.black,
-                padding: const EdgeInsets.symmetric(vertical: 14),
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                backgroundColor: HokTheme.neonLime,
+                foregroundColor: HokTheme.darkText,
+                padding: const EdgeInsets.symmetric(vertical: 16),
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
               ),
-              icon: const Icon(Icons.assignment_return_outlined),
+              icon: const Icon(Icons.assignment_turned_in_rounded),
               label: Text(
                 'Terapkan Power ${HOKUtils.formatNumber(detail.finalHeroPower)} ke Slot Lane',
-                style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
+                style: const TextStyle(fontWeight: FontWeight.w900, fontSize: 14),
               ),
             ),
           ),
-          const SizedBox(height: 30),
+          const SizedBox(height: 40),
         ],
       ),
     );
@@ -335,9 +362,9 @@ class _HeroDetailTabViewState extends State<HeroDetailTabView> {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
       decoration: BoxDecoration(
-        color: const Color(0xFF0F192E),
+        color: const Color(0xFF141C14),
         borderRadius: BorderRadius.circular(8),
-        border: Border.all(color: const Color(0xFF2B4475)),
+        border: Border.all(color: const Color(0xFF223022)),
       ),
       child: Row(
         mainAxisSize: MainAxisSize.min,
@@ -345,7 +372,7 @@ class _HeroDetailTabViewState extends State<HeroDetailTabView> {
           Text('$label: ', style: const TextStyle(color: HokTheme.textSecondary, fontSize: 12)),
           Text(
             value,
-            style: const TextStyle(color: HokTheme.goldAccent, fontWeight: FontWeight.bold, fontSize: 13),
+            style: const TextStyle(color: HokTheme.neonLime, fontWeight: FontWeight.bold, fontSize: 13),
           ),
         ],
       ),
@@ -359,11 +386,11 @@ class _HeroDetailTabViewState extends State<HeroDetailTabView> {
     required Widget child,
   }) {
     return Container(
-      padding: const EdgeInsets.all(16),
+      padding: const EdgeInsets.all(18),
       decoration: BoxDecoration(
-        color: const Color(0xFF121E36),
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: const Color(0xFF1E3258)),
+        color: const Color(0xFF0D130D),
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(color: const Color(0xFF1C281C)),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -378,13 +405,13 @@ class _HeroDetailTabViewState extends State<HeroDetailTabView> {
               Container(
                 padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
                 decoration: BoxDecoration(
-                  color: const Color(0xFF1A2D4F),
+                  color: const Color(0xFF182418),
                   borderRadius: BorderRadius.circular(6),
                 ),
                 child: Text(
                   currentValueText,
                   style: const TextStyle(
-                    color: HokTheme.blueCyan,
+                    color: HokTheme.neonLime,
                     fontSize: 12,
                     fontWeight: FontWeight.bold,
                   ),
@@ -404,12 +431,11 @@ class _HeroDetailTabViewState extends State<HeroDetailTabView> {
     );
   }
 
-  // Bottom Sheet untuk memilih slot mana di Lane aktif yang ingin diisi
   void _showApplyToSlotSheet(BuildContext context, CalculatorProvider provider) {
     final laneData = provider.currentLaneData;
     showModalBottomSheet(
       context: context,
-      backgroundColor: const Color(0xFF111D33),
+      backgroundColor: const Color(0xFF0F150F),
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
       ),
@@ -424,17 +450,16 @@ class _HeroDetailTabViewState extends State<HeroDetailTabView> {
                 'Pilih Slot di ${laneData.lane.displayName}',
                 style: const TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.bold),
               ),
-              const SizedBox(height: 8),
+              const SizedBox(height: 6),
               Text(
-                'Nilai power ${HOKUtils.formatNumber(provider.heroDetail.finalHeroPower)} akan disalin ke slot terpilih:',
+                'Nilai power ${HOKUtils.formatNumber(provider.heroDetail.finalHeroPower)} akan disalin ke slot:',
                 style: const TextStyle(color: HokTheme.textSecondary, fontSize: 12),
               ),
               const SizedBox(height: 14),
-
               Expanded(
                 child: ListView(
                   children: [
-                    const Text('Top 5 Hero Utama (100%):', style: TextStyle(color: HokTheme.goldAccent, fontWeight: FontWeight.bold, fontSize: 12)),
+                    const Text('Top 1-5 Hero Utama (100%):', style: TextStyle(color: HokTheme.neonLime, fontWeight: FontWeight.bold, fontSize: 12)),
                     const SizedBox(height: 6),
                     ...List.generate(5, (idx) {
                       final h = laneData.heroUtama[idx];
@@ -442,8 +467,8 @@ class _HeroDetailTabViewState extends State<HeroDetailTabView> {
                         dense: true,
                         leading: CircleAvatar(
                           radius: 14,
-                          backgroundColor: const Color(0xFF1F355E),
-                          child: Text('#${idx + 1}', style: const TextStyle(color: Colors.white, fontSize: 10)),
+                          backgroundColor: const Color(0xFF1D2A1D),
+                          child: Text('#${idx + 1}', style: const TextStyle(color: HokTheme.neonLime, fontSize: 10, fontWeight: FontWeight.bold)),
                         ),
                         title: Text(h.heroName, style: const TextStyle(color: Colors.white, fontSize: 13)),
                         trailing: Text('${h.power} Power', style: const TextStyle(color: HokTheme.textSecondary, fontSize: 12)),
@@ -454,7 +479,7 @@ class _HeroDetailTabViewState extends State<HeroDetailTabView> {
                       );
                     }),
                     const SizedBox(height: 10),
-                    const Text('Top 6-10 Hero OP (20%):', style: TextStyle(color: HokTheme.blueCyan, fontWeight: FontWeight.bold, fontSize: 12)),
+                    const Text('Top 6-10 Hero OP (20%):', style: TextStyle(color: Colors.white70, fontWeight: FontWeight.bold, fontSize: 12)),
                     const SizedBox(height: 6),
                     ...List.generate(5, (idx) {
                       final h = laneData.heroOP[idx];
@@ -462,8 +487,8 @@ class _HeroDetailTabViewState extends State<HeroDetailTabView> {
                         dense: true,
                         leading: CircleAvatar(
                           radius: 14,
-                          backgroundColor: const Color(0xFF1F355E),
-                          child: Text('#${idx + 6}', style: const TextStyle(color: Colors.white, fontSize: 10)),
+                          backgroundColor: const Color(0xFF1D2A1D),
+                          child: Text('#${idx + 6}', style: const TextStyle(color: Colors.white70, fontSize: 10, fontWeight: FontWeight.bold)),
                         ),
                         title: Text(h.heroName, style: const TextStyle(color: Colors.white, fontSize: 13)),
                         trailing: Text('${h.power} Power', style: const TextStyle(color: HokTheme.textSecondary, fontSize: 12)),

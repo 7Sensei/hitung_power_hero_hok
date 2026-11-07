@@ -108,3 +108,4 @@ class AppConstants {
     HokHero(id: 'zhuangzi', name: 'Zhuangzi', lane: HokLane.roam, defaultPower: 3900),
   ];
 }
+
