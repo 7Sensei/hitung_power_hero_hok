@@ -8,9 +8,7 @@ import '../providers/calculator_provider.dart';
 import 'hero_picker_dialog.dart';
 
 class GamelandLaneView extends StatelessWidget {
-  final String searchQuery;
-
-  const GamelandLaneView({super.key, this.searchQuery = ''});
+  const GamelandLaneView({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -619,7 +617,7 @@ class GamelandLaneView extends StatelessWidget {
               title: 'Prioritas 2: Masukkan ${highestOP.heroName} ke Top 5',
               detail: gapToPromote > 0
                   ? 'Tingkatkan ${highestOP.heroName} (${highestOP.power}) minimal +$gapToPromote poin agar melampaui ${lowestUtama.heroName}. Kontribusinya akan melompat seketika dari 20% menjadi 100%!'
-                  : 'Gunakan tombol Auto-Sort untuk mengurutkan kembali peringkat hero.',
+                  : 'Power hero cadangan sudah optimal untuk memaksimalkan total power.',
             ),
           ],
         ],

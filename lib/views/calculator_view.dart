@@ -7,15 +7,8 @@ import '../widgets/gameland_lane_view.dart';
 import '../widgets/gameland_navbar.dart';
 import '../widgets/hero_detail_tab_view.dart';
 
-class CalculatorView extends StatefulWidget {
+class CalculatorView extends StatelessWidget {
   const CalculatorView({super.key});
-
-  @override
-  State<CalculatorView> createState() => _CalculatorViewState();
-}
-
-class _CalculatorViewState extends State<CalculatorView> {
-  String _searchQuery = '';
 
   @override
   Widget build(BuildContext context) {
@@ -27,7 +20,7 @@ class _CalculatorViewState extends State<CalculatorView> {
         child: SingleChildScrollView(
           child: Column(
             children: [
-              // 1. TOP NAVBAR ALA GAMELAND
+              // 1. TOP NAVBAR ALA GAMELAND (Termasuk Switcher Power Lane & Rincian Hero di Atas)
               const GamelandNavbar(),
 
               // 2. MAIN CONTAINER WITH MAX-WIDTH (RESPONSIVE)
@@ -38,18 +31,12 @@ class _CalculatorViewState extends State<CalculatorView> {
                     padding: const EdgeInsets.symmetric(horizontal: 20),
                     child: Column(
                       children: [
-                        // Hero Header (Title, Subtitle, Search Capsule, Category Pills)
-                        GamelandHeroHeader(
-                          onSearch: (val) {
-                            setState(() {
-                              _searchQuery = val;
-                            });
-                          },
-                        ),
+                        // Hero Header (Title, Subtitle, Category Pills 5 Lane)
+                        const GamelandHeroHeader(),
 
                         // Content (Lane View vs Hero Power Detail View)
                         if (provider.activeTab == CalculatorTab.lane)
-                          GamelandLaneView(searchQuery: _searchQuery)
+                          const GamelandLaneView()
                         else
                           const HeroDetailTabView(),
 
