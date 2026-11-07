@@ -1,39 +1,64 @@
-// This is a basic Flutter widget test.
-//
-// To perform an interaction with a widget in your test, use the WidgetTester
-// utility in the flutter_test package. For example, you can send tap and scroll
-// gestures. You can also use WidgetTester to find child widgets in the widget
-// tree, read text, and verify that the values of widget properties are correct.
-
-import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-
+import 'package:hitung_power_hero_hok/core/utils.dart';
 import 'package:hitung_power_hero_hok/main.dart';
-import 'package:hitung_power_hero_hok/providers/calculator_provider.dart';
-import 'package:provider/provider.dart';
 
 void main() {
-  testWidgets('Counter increments smoke test', (WidgetTester tester) async {
-    // Build our app and trigger a frame.
-    await tester.pumpWidget(
-      MultiProvider(
-        providers: [
-          ChangeNotifierProvider(create: (_) => CalculatorProvider()),
-        ],
-        child: const HOKWebKalkulator(),
-      ),
-    );
+  group('HOK Calculation Logic Unit Tests', () {
+    test('Verifikasi perhitungan Power Lane sesuai Screenshot HoK', () {
+      final heroUtama = [6958, 6402, 5226, 4388, 4246];
+      final heroOP = [3681, 3627, 2112, 2059, 1331];
 
-    // Verify that our counter starts at 0.
-    expect(find.text('0'), findsOneWidget);
-    expect(find.text('1'), findsNothing);
+      // Subtotal Hero Utama (100%)
+      final subtotalUtama = HOKUtils.calculateSubtotalUtama(heroUtama);
+      expect(subtotalUtama, 27220);
 
-    // Tap the '+' icon and trigger a frame.
-    await tester.tap(find.byIcon(Icons.add));
-    await tester.pump();
+      // Subtotal Hero OP (20% dari 12.810 = 2.562)
+      final subtotalOP = HOKUtils.calculateSubtotalOP(heroOP);
+      expect(subtotalOP, 2562);
 
-    // Verify that our counter has incremented.
-    expect(find.text('0'), findsNothing);
-    expect(find.text('1'), findsOneWidget);
+      // Total Power Lane = 27.220 + 2.562 = 29.782
+      final totalLane = HOKUtils.calculatePowerLane(heroUtama, heroOP);
+      expect(totalLane, 29782);
+
+      // Tier = 29
+      final tier = HOKUtils.calculateTier(totalLane);
+      expect(tier, 29);
+    });
+
+    test('Verifikasi perhitungan Pengali Peak Tourney', () {
+      // 1260 Poin Tourney -> (1260 - 1200) / 20 = 3%
+      expect(HOKUtils.calculatePeakMultiplier(1260), 3.0);
+
+      // 1200 Poin Tourney -> 0%
+      expect(HOKUtils.calculatePeakMultiplier(1200), 0.0);
+
+      // 1400 Poin Tourney -> 10%
+      expect(HOKUtils.calculatePeakMultiplier(1400), 10.0);
+    });
+
+    test('Verifikasi rumus Power Hero = Power Total x Pengali Total', () {
+      // Power Total = 900 (Ranked) + 200 (Peak) + 100 (Kemenangan) = 1200
+      // Pengali Total = (1 + 3% Peak) * (100% Keaktifan) = 1.03
+      // Final Hero Power = 1200 * 1.03 = 1236
+      final heroPower = HOKUtils.calculateHeroPower(
+        performaRanked: 900,
+        performaPeak: 200,
+        kemenangan: 100,
+        poinPeak: 1260,
+        keaktifanPercent: 100.0,
+      );
+      expect(heroPower, 1236);
+    });
+  });
+
+  testWidgets('HOK App Smoke Test', (WidgetTester tester) async {
+    await tester.pumpWidget(const HOKPowerCalculatorApp());
+    await tester.pumpAndSettle();
+
+    // Verifikasi judul dan elemen utama muncul
+    expect(find.text('HOK Power Calculator'), findsOneWidget);
+    expect(find.text('Power Lane'), findsOneWidget);
+    expect(find.text('Hero Utama'), findsOneWidget);
+    expect(find.text('Hero OP Kamu'), findsOneWidget);
   });
 }
