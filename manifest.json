@@ -1,11 +1,11 @@
 {
-    "name": "hitung_power_hero_hok",
-    "short_name": "hitung_power_hero_hok",
+    "name": "HOK Power Calculator",
+    "short_name": "HOK Power",
     "start_url": ".",
     "display": "standalone",
-    "background_color": "#0175C2",
-    "theme_color": "#0175C2",
-    "description": "A new Flutter project.",
+    "background_color": "#070A07",
+    "theme_color": "#D4F82A",
+    "description": "Kalkulator Resmi Power Lane (分路战力) & Hero Power (英雄战力) Honor of Kings.",
     "orientation": "portrait-primary",
     "prefer_related_applications": false,
     "icons": [
