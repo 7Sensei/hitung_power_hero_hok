@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import '../core/constants.dart';
 import '../core/theme.dart';
+import '../core/utils.dart';
 import '../providers/calculator_provider.dart';
 
 class GamelandNavbar extends StatelessWidget {
@@ -96,7 +98,36 @@ class GamelandNavbar extends StatelessWidget {
               Row(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  // Pill Mode / Reset Sample
+                  // Tombol Salin Ringkasan Text untuk Share
+                  InkWell(
+                    onTap: () => _copySummaryToClipboard(context, provider),
+                    borderRadius: BorderRadius.circular(30),
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
+                      decoration: BoxDecoration(
+                        color: HokTheme.neonLime.withValues(alpha: 0.15),
+                        borderRadius: BorderRadius.circular(30),
+                        border: Border.all(color: HokTheme.neonLime.withValues(alpha: 0.4)),
+                      ),
+                      child: const Row(
+                        children: [
+                          Icon(Icons.share_outlined, color: HokTheme.neonLime, size: 15),
+                          SizedBox(width: 6),
+                          Text(
+                            'Salin Rekap',
+                            style: TextStyle(
+                              color: HokTheme.neonLime,
+                              fontSize: 12,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                  const SizedBox(width: 10),
+
+                  // Pill Muat Contoh HoK
                   InkWell(
                     onTap: () {
                       provider.resetToSampleData();
@@ -118,7 +149,7 @@ class GamelandNavbar extends StatelessWidget {
                       ),
                       child: const Row(
                         children: [
-                          Icon(Icons.refresh_rounded, color: HokTheme.neonLime, size: 16),
+                          Icon(Icons.refresh_rounded, color: Colors.white70, size: 15),
                           SizedBox(width: 6),
                           Text(
                             'Sample HoK',
@@ -132,7 +163,7 @@ class GamelandNavbar extends StatelessWidget {
                       ),
                     ),
                   ),
-                  const SizedBox(width: 10),
+                  const SizedBox(width: 8),
 
                   // Circle Reset Button
                   _buildCircleButton(
@@ -198,5 +229,49 @@ class GamelandNavbar extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  // Fungsi Salin Rekap ke Clipboard
+  static void _copySummaryToClipboard(BuildContext context, CalculatorProvider provider) {
+    final l = provider.currentLaneData;
+    final buffer = StringBuffer();
+    buffer.writeln('🎮 *HONOR OF KINGS - POWER LANE SUMMARY*');
+    buffer.writeln('🛡️ *${l.lane.displayName}*: ${HOKUtils.formatNumber(l.totalPowerLane)} Power (Tier ${l.currentTier})');
+    buffer.writeln('📊 Peringkat: ${l.currentPercentile}');
+    buffer.writeln('');
+    buffer.writeln('👑 *Top 5 Hero Utama (100%)*:');
+    for (int i = 0; i < l.heroUtama.length; i++) {
+      final h = l.heroUtama[i];
+      buffer.writeln('  ${i + 1}. ${h.heroName}: ${HOKUtils.formatNumber(h.power)} Power');
+    }
+    buffer.writeln('  👉 Subtotal: ${HOKUtils.formatNumber(l.subtotalUtama)} Power');
+    buffer.writeln('');
+    buffer.writeln('⚡ *Top 6-10 Hero OP (20%)*:');
+    for (int i = 0; i < l.heroOP.length; i++) {
+      final h = l.heroOP[i];
+      buffer.writeln('  ${i + 6}. ${h.heroName}: ${HOKUtils.formatNumber(h.power)} Power');
+    }
+    buffer.writeln('  👉 Subtotal Kontribusi: ${HOKUtils.formatNumber(l.subtotalOP)} Power (20% dari ${HOKUtils.formatNumber(l.sumRawOP)})');
+    buffer.writeln('');
+    buffer.writeln('🎯 *Target*: ${HOKUtils.formatNumber(l.targetPower)} Power (${l.targetPercentile})');
+    if (l.remainingPowerToTarget > 0) {
+      buffer.writeln('⏳ Butuh +${HOKUtils.formatNumber(l.remainingPowerToTarget)} poin lagi untuk mencapai target.');
+    } else {
+      buffer.writeln('🎉 Target telah tercapai!');
+    }
+    buffer.writeln('');
+    buffer.writeln('🚀 Dihitung via HOK Power Calculator');
+
+    Clipboard.setData(ClipboardData(text: buffer.toString())).then((_) {
+      if (context.mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Ringkasan Power Lane berhasil disalin ke clipboard! Siap dibagikan ke teman/komunitas.'),
+            backgroundColor: Color(0xFF162416),
+            duration: Duration(seconds: 3),
+          ),
+        );
+      }
+    });
   }
 }

@@ -84,8 +84,8 @@ class GamelandHeroHeader extends StatelessWidget {
         const SizedBox(height: 12),
 
         // 3. Subtitle (Sesuai referensi: "Everything you need to know about...")
-        const SizedBox(
-          maxWidth: 620,
+        ConstrainedBox(
+          constraints: BoxConstraints(maxWidth: 620),
           child: Text(
             'Kalkulator akurat Power Lane (分路战力) dan rincian Hero Power (英雄战力) resmi Honor of Kings. Simulasikan target Tier dan strategi push hero secara real-time.',
             textAlign: TextAlign.center,
@@ -120,11 +120,18 @@ class GamelandHeroHeader extends StatelessWidget {
               decoration: const InputDecoration(
                 hintText: 'Cari nama hero (misal: Dharma, Lam, Diaochan)...',
                 hintStyle: TextStyle(color: HokTheme.textMuted, fontSize: 13),
-                prefixIcon: Icon(Icons.search_rounded, color: HokTheme.limeAccent, size: 20),
+                prefixIcon: Icon(
+                  Icons.search_rounded,
+                  color: HokTheme.limeAccent,
+                  size: 20,
+                ),
                 border: InputBorder.none,
                 enabledBorder: InputBorder.none,
                 focusedBorder: InputBorder.none,
-                contentPadding: EdgeInsets.symmetric(horizontal: 20, vertical: 14),
+                contentPadding: EdgeInsets.symmetric(
+                  horizontal: 20,
+                  vertical: 14,
+                ),
               ),
               onChanged: onSearch,
             ),
@@ -148,7 +155,8 @@ class GamelandHeroHeader extends StatelessWidget {
               children: [
                 // 5 Tombol Lane
                 ...HokLane.values.map((lane) {
-                  final isSelected = provider.activeTab == CalculatorTab.lane &&
+                  final isSelected =
+                      provider.activeTab == CalculatorTab.lane &&
                       provider.activeLane == lane;
 
                   return _buildCategoryPill(
@@ -220,7 +228,9 @@ class GamelandHeroHeader extends StatelessWidget {
               Text(
                 label,
                 style: TextStyle(
-                  color: isSelected ? HokTheme.darkText : HokTheme.textSecondary,
+                  color: isSelected
+                      ? HokTheme.darkText
+                      : HokTheme.textSecondary,
                   fontSize: 12,
                   fontWeight: isSelected ? FontWeight.w800 : FontWeight.w500,
                 ),
