@@ -76,24 +76,23 @@ class CalculatorView extends StatelessWidget {
         children: [
           Divider(color: Color(0xFF162116), height: 1),
           SizedBox(height: 20),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          Wrap(
+            alignment: WrapAlignment.spaceBetween,
+            crossAxisAlignment: WrapCrossAlignment.center,
+            spacing: 12,
+            runSpacing: 8,
             children: [
               Text(
                 'Gameland Tools © 2026 • HOK Power & WR Calculator',
                 style: TextStyle(color: HokTheme.textMuted, fontSize: 11),
               ),
-              Row(
-                children: [
-                  Text(
-                    'Honor of Kings & MLBB Algorithms',
-                    style: TextStyle(
-                      color: HokTheme.limeAccent,
-                      fontSize: 11,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                ],
+              Text(
+                'Honor of Kings & MLBB Algorithms',
+                style: TextStyle(
+                  color: HokTheme.limeAccent,
+                  fontSize: 11,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
             ],
           ),

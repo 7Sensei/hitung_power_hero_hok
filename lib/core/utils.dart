@@ -61,7 +61,21 @@ class HOKUtils {
   // FITUR PENGHITUNG WIN RATE (johsteven/penghitung-wr)
   // ==========================================
 
-  // Hitung jumlah match win streak tanpa kalah yang dibutuhkan untuk mencapai target Win Rate
+  // 1. Hitung Total Kemenangan (Win)
+  static int calculateTotalWin(int totalMatch, double currentWR) {
+    if (totalMatch <= 0) return 0;
+    return (totalMatch * (currentWR / 100.0)).round();
+  }
+
+  // 2. Hitung Total Kekalahan (Lose)
+  static int calculateTotalLose(int totalMatch, double currentWR) {
+    if (totalMatch <= 0) return 0;
+    final wins = calculateTotalWin(totalMatch, currentWR);
+    final lose = totalMatch - wins;
+    return lose >= 0 ? lose : 0;
+  }
+
+  // 3. Hitung jumlah match win streak tanpa lose yang dibutuhkan untuk mencapai target Win Rate
   // Formula: x = ceil((targetWR * totalMatch - currentWins) / (1 - targetWR))
   static int? calculateRequiredWinStreak({
     required int totalMatch,
@@ -79,8 +93,22 @@ class HOKUtils {
     return requiredWins.ceil();
   }
 
-  // Hitung berapa kali kalah berturut-turut (lose streak) sebelum WR turun ke persentase tertentu
-  // Formula: y = floor(currentWins / targetLowerWR - totalMatch)
+  // 4. Hitung Win Rate baru jika mengalami Lose Streak sebanyak N kali
+  // Formula: newWR = (currentWins / (totalMatch + loseStreak)) * 100%
+  static double calculateWrAfterLoseStreak({
+    required int totalMatch,
+    required double currentWRPercent,
+    required int loseStreak,
+  }) {
+    if (totalMatch <= 0) return 0.0;
+    final currentWins = calculateTotalWin(totalMatch, currentWRPercent);
+    final newTotalMatch = totalMatch + loseStreak;
+    if (newTotalMatch <= 0) return 0.0;
+    final newWr = (currentWins / newTotalMatch) * 100.0;
+    return double.parse(newWr.toStringAsFixed(1));
+  }
+
+  // 5. Hitung berapa kali kalah berturut-turut (lose streak) sebelum WR turun ke persentase tertentu
   static int? calculateLoseStreakToDrop({
     required int totalMatch,
     required double currentWRPercent,

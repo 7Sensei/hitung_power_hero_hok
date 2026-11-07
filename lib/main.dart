@@ -5,14 +5,7 @@ import 'providers/calculator_provider.dart';
 import 'views/calculator_view.dart';
 
 void main() {
-  runApp(
-    MultiProvider(
-      providers: [
-        ChangeNotifierProvider(create: (_) => CalculatorProvider()),
-      ],
-      child: const HOKPowerCalculatorApp(),
-    ),
-  );
+  runApp(const HOKPowerCalculatorApp());
 }
 
 class HOKPowerCalculatorApp extends StatelessWidget {
@@ -20,11 +13,16 @@ class HOKPowerCalculatorApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'HOK Power Calculator',
-      debugShowCheckedModeBanner: false,
-      theme: HokTheme.darkTheme,
-      home: const CalculatorView(),
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (_) => CalculatorProvider()),
+      ],
+      child: MaterialApp(
+        title: 'HOK Power Calculator',
+        debugShowCheckedModeBanner: false,
+        theme: HokTheme.darkTheme,
+        home: const CalculatorView(),
+      ),
     );
   }
 }

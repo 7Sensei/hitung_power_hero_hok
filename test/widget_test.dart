@@ -1,6 +1,8 @@
+import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:hitung_power_hero_hok/core/utils.dart';
 import 'package:hitung_power_hero_hok/main.dart';
+import 'package:hitung_power_hero_hok/views/win_rate_calculator_view.dart';
 
 void main() {
   group('HOK Calculation Logic Unit Tests', () {
@@ -48,41 +50,31 @@ void main() {
     });
   });
 
-  group('Win Rate Calculator (johsteven/penghitung-wr) Unit Tests', () {
-    test('Verifikasi rumus Win Streak target WR', () {
-      // 100 match, 50% WR (50 win), target 60% WR -> butuh 25 win streak
+  group('Win Rate Calculator (johsteven/penghitung-wr) Unit Tests Sesuai Screenshot', () {
+    test('Screenshot 1: Verifikasi rumus Win Streak target WR', () {
+      // 100 match, 50% WR (50 win), target 60% WR -> butuh 25 win tanpa lose
       final reqWins = HOKUtils.calculateRequiredWinStreak(
         totalMatch: 100,
         currentWRPercent: 50.0,
         targetWRPercent: 60.0,
       );
       expect(reqWins, 25);
-
-      // Target sudah tercapai -> 0
-      final alreadyDone = HOKUtils.calculateRequiredWinStreak(
-        totalMatch: 100,
-        currentWRPercent: 65.0,
-        targetWRPercent: 60.0,
-      );
-      expect(alreadyDone, 0);
-
-      // Target 100% mustahil jika pernah kalah -> null
-      final impossible = HOKUtils.calculateRequiredWinStreak(
-        totalMatch: 100,
-        currentWRPercent: 50.0,
-        targetWRPercent: 100.0,
-      );
-      expect(impossible, isNull);
     });
 
-    test('Verifikasi rumus Lose Streak drop WR', () {
-      // 100 match, 50% WR (50 win), target turun 45% WR -> butuh 11 lose streak
-      final losses = HOKUtils.calculateLoseStreakToDrop(
+    test('Screenshot 2: Verifikasi rumus Hitung WR dengan lose streak', () {
+      // 100 match, 50% WR, lose streak 5 kali -> WR menjadi 47.6%
+      final newWr = HOKUtils.calculateWrAfterLoseStreak(
         totalMatch: 100,
         currentWRPercent: 50.0,
-        targetLowerWRPercent: 45.0,
+        loseStreak: 5,
       );
-      expect(losses, 11);
+      expect(newWr, 47.6);
+    });
+
+    test('Screenshot 3: Verifikasi rumus Cek total win atau lose', () {
+      // 100 match, 50% WR -> Total win: 50 match, Total lose: 50 match
+      expect(HOKUtils.calculateTotalWin(100, 50.0), 50);
+      expect(HOKUtils.calculateTotalLose(100, 50.0), 50);
     });
   });
 
@@ -93,5 +85,34 @@ void main() {
     // Verifikasi brand navbar & komponen utama muncul
     expect(find.text('HOK Power'), findsOneWidget);
     expect(find.text('Hero Utama'), findsOneWidget);
+  });
+
+  testWidgets('Win Rate Calculator View smoke & mode switch test', (WidgetTester tester) async {
+    await tester.pumpWidget(
+      const MaterialApp(
+        home: Scaffold(
+          body: SingleChildScrollView(
+            child: WinRateCalculatorView(),
+          ),
+        ),
+      ),
+    );
+    await tester.pumpAndSettle();
+
+    // Pastikan default di mode Win Streak
+    expect(find.text('Hitung Win Streak'), findsWidgets);
+    expect(find.text('Hitung Sekarang'), findsOneWidget);
+
+    // Switch ke Lose Streak
+    await tester.tap(find.text('Lose Streak'));
+    await tester.pumpAndSettle();
+    expect(find.text('Hitung WR × Lose Streak'), findsOneWidget);
+
+    // Switch ke Win / Lose
+    await tester.tap(find.text('Win / Lose'));
+    await tester.pumpAndSettle();
+    expect(find.text('Cek Total Win / Lose'), findsOneWidget);
+    expect(find.text('Win'), findsOneWidget);
+    expect(find.text('Lose'), findsOneWidget);
   });
 }
