@@ -1,14 +1,28 @@
 import 'package:flutter/material.dart';
 import '../core/constants.dart';
+import '../core/utils.dart';
 import '../models/hero_detail_model.dart';
 import '../models/hero_model.dart';
 import '../models/lane_model.dart';
 
+enum AppScreen {
+  powerCalculator,     // Kalkulator Power Lane & Hero HoK
+  winRateCalculator,   // Penghitung Win Rate (johsteven/penghitung-wr)
+}
+
 enum CalculatorTab { lane, hero }
 
 class CalculatorProvider with ChangeNotifier {
+  AppScreen activeScreen = AppScreen.powerCalculator;
   CalculatorTab activeTab = CalculatorTab.lane;
   HokLane activeLane = HokLane.clash;
+
+  // State untuk Penghitung Win Rate (johsteven/penghitung-wr)
+  int wrTotalMatch = 100;
+  double wrCurrentPercent = 50.0;
+  double wrTargetPercent = 60.0;
+  double wrDropTargetPercent = 45.0;
+  bool isWrWinStreakMode = true; // true = target win streak, false = lose streak check
 
   // Data 5 Lane terpisah
   late Map<HokLane, LaneData> laneDataMap;
@@ -263,5 +277,51 @@ class CalculatorProvider with ChangeNotifier {
       updateHeroOPPower(index, power);
     }
     setTab(CalculatorTab.lane);
+  }
+
+  // --- SCREEN SWITCHER (Sidebar Menu) ---
+  void setAppScreen(AppScreen screen) {
+    activeScreen = screen;
+    notifyListeners();
+  }
+
+  // --- WIN RATE CALCULATOR METHODS (johsteven/penghitung-wr) ---
+  int get wrCurrentWins => (wrTotalMatch * (wrCurrentPercent / 100.0)).round();
+
+  int? get wrRequiredWinStreak => HOKUtils.calculateRequiredWinStreak(
+        totalMatch: wrTotalMatch,
+        currentWRPercent: wrCurrentPercent,
+        targetWRPercent: wrTargetPercent,
+      );
+
+  int? get wrAllowedLoseStreak => HOKUtils.calculateLoseStreakToDrop(
+        totalMatch: wrTotalMatch,
+        currentWRPercent: wrCurrentPercent,
+        targetLowerWRPercent: wrDropTargetPercent,
+      );
+
+  void updateWrTotalMatch(int val) {
+    wrTotalMatch = val.clamp(1, 999999);
+    notifyListeners();
+  }
+
+  void updateWrCurrentPercent(double val) {
+    wrCurrentPercent = val.clamp(0.0, 100.0);
+    notifyListeners();
+  }
+
+  void updateWrTargetPercent(double val) {
+    wrTargetPercent = val.clamp(0.0, 100.0);
+    notifyListeners();
+  }
+
+  void updateWrDropTargetPercent(double val) {
+    wrDropTargetPercent = val.clamp(0.0, 100.0);
+    notifyListeners();
+  }
+
+  void setWrWinStreakMode(bool isWinStreak) {
+    isWrWinStreakMode = isWinStreak;
+    notifyListeners();
   }
 }

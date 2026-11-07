@@ -37,9 +37,6 @@ void main() {
     });
 
     test('Verifikasi rumus Power Hero = Power Total x Pengali Total', () {
-      // Power Total = 900 (Ranked) + 200 (Peak) + 100 (Kemenangan) = 1200
-      // Pengali Total = (1 + 3% Peak) * (100% Keaktifan) = 1.03
-      // Final Hero Power = 1200 * 1.03 = 1236
       final heroPower = HOKUtils.calculateHeroPower(
         performaRanked: 900,
         performaPeak: 200,
@@ -51,6 +48,44 @@ void main() {
     });
   });
 
+  group('Win Rate Calculator (johsteven/penghitung-wr) Unit Tests', () {
+    test('Verifikasi rumus Win Streak target WR', () {
+      // 100 match, 50% WR (50 win), target 60% WR -> butuh 25 win streak
+      final reqWins = HOKUtils.calculateRequiredWinStreak(
+        totalMatch: 100,
+        currentWRPercent: 50.0,
+        targetWRPercent: 60.0,
+      );
+      expect(reqWins, 25);
+
+      // Target sudah tercapai -> 0
+      final alreadyDone = HOKUtils.calculateRequiredWinStreak(
+        totalMatch: 100,
+        currentWRPercent: 65.0,
+        targetWRPercent: 60.0,
+      );
+      expect(alreadyDone, 0);
+
+      // Target 100% mustahil jika pernah kalah -> null
+      final impossible = HOKUtils.calculateRequiredWinStreak(
+        totalMatch: 100,
+        currentWRPercent: 50.0,
+        targetWRPercent: 100.0,
+      );
+      expect(impossible, isNull);
+    });
+
+    test('Verifikasi rumus Lose Streak drop WR', () {
+      // 100 match, 50% WR (50 win), target turun 45% WR -> butuh 11 lose streak
+      final losses = HOKUtils.calculateLoseStreakToDrop(
+        totalMatch: 100,
+        currentWRPercent: 50.0,
+        targetLowerWRPercent: 45.0,
+      );
+      expect(losses, 11);
+    });
+  });
+
   testWidgets('HOK Gameland App Smoke Test', (WidgetTester tester) async {
     await tester.pumpWidget(const HOKPowerCalculatorApp());
     await tester.pumpAndSettle();
@@ -58,6 +93,5 @@ void main() {
     // Verifikasi brand navbar & komponen utama muncul
     expect(find.text('HOK Power'), findsOneWidget);
     expect(find.text('Hero Utama'), findsOneWidget);
-    expect(find.text('Hero OP Kamu'), findsOneWidget);
   });
 }

@@ -56,4 +56,44 @@ class HOKUtils {
     final pengaliTotal = pengaliPeakFactor * keaktifanFactor;
     return (powerTotal * pengaliTotal).round();
   }
+
+  // ==========================================
+  // FITUR PENGHITUNG WIN RATE (johsteven/penghitung-wr)
+  // ==========================================
+
+  // Hitung jumlah match win streak tanpa kalah yang dibutuhkan untuk mencapai target Win Rate
+  // Formula: x = ceil((targetWR * totalMatch - currentWins) / (1 - targetWR))
+  static int? calculateRequiredWinStreak({
+    required int totalMatch,
+    required double currentWRPercent,
+    required double targetWRPercent,
+  }) {
+    if (totalMatch <= 0) return 0;
+    if (targetWRPercent <= currentWRPercent) return 0;
+    if (targetWRPercent >= 100.0) return null; // Mustahil dicapai jika pernah kalah
+
+    final t = targetWRPercent / 100.0;
+    final currentWins = totalMatch * (currentWRPercent / 100.0);
+    final requiredWins = ((t * totalMatch) - currentWins) / (1.0 - t);
+    if (requiredWins < 0) return 0;
+    return requiredWins.ceil();
+  }
+
+  // Hitung berapa kali kalah berturut-turut (lose streak) sebelum WR turun ke persentase tertentu
+  // Formula: y = floor(currentWins / targetLowerWR - totalMatch)
+  static int? calculateLoseStreakToDrop({
+    required int totalMatch,
+    required double currentWRPercent,
+    required double targetLowerWRPercent,
+  }) {
+    if (totalMatch <= 0) return 0;
+    if (targetLowerWRPercent >= currentWRPercent) return 0;
+    if (targetLowerWRPercent <= 0.0) return null;
+
+    final t = targetLowerWRPercent / 100.0;
+    final currentWins = totalMatch * (currentWRPercent / 100.0);
+    final allowedLosses = (currentWins / t) - totalMatch;
+    if (allowedLosses < 0) return 0;
+    return allowedLosses.floor();
+  }
 }
