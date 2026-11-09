@@ -214,7 +214,13 @@ class GamelandNavbar extends StatelessWidget {
 
         if (isNarrow) {
           return Container(
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+            decoration: const BoxDecoration(
+              color: Color(0xFF090D09),
+              border: Border(
+                bottom: BorderSide(color: Color(0xFF192519), width: 1),
+              ),
+            ),
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
             child: Column(
               children: [
                 Row(
@@ -233,7 +239,13 @@ class GamelandNavbar extends StatelessWidget {
         }
 
         return Container(
-          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 14),
+          decoration: const BoxDecoration(
+            color: Color(0xFF090D09),
+            border: Border(
+              bottom: BorderSide(color: Color(0xFF192519), width: 1),
+            ),
+          ),
+          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
           child: Stack(
             alignment: Alignment.center,
             children: [

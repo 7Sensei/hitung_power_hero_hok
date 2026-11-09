@@ -199,4 +199,45 @@ void main() {
     expect(find.text('Hitung Win Streak'), findsWidgets);
     expect(tester.takeException(), isNull);
   });
+
+  testWidgets('Floating navbar and sticky result bar on scroll test', (
+    WidgetTester tester,
+  ) async {
+    await tester.pumpWidget(const HOKPowerCalculatorApp());
+    await tester.pumpAndSettle();
+
+    // Pastikan navbar fixed di atas
+    expect(find.text('HOK Power'), findsOneWidget);
+    expect(find.text('Power Lane'), findsWidgets);
+
+    // Scroll ke bawah di tab Power Lane
+    await tester.drag(
+      find.byType(SingleChildScrollView).first,
+      const Offset(0, -300),
+    );
+    await tester.pumpAndSettle();
+
+    // Floating result bar harus muncul menampilkan Tier dan Power
+    expect(find.text('Tier 29'), findsWidgets);
+    expect(find.byIcon(Icons.arrow_upward_rounded), findsOneWidget);
+
+    // Tap floating result bar untuk scroll kembali ke atas
+    await tester.tap(find.byIcon(Icons.arrow_upward_rounded));
+    await tester.pumpAndSettle();
+
+    // Pindah ke tab Rincian Hero
+    await tester.tap(find.text('Rincian Hero'));
+    await tester.pumpAndSettle();
+
+    // Scroll ke bawah di tab Rincian Hero
+    await tester.drag(
+      find.byType(SingleChildScrollView).first,
+      const Offset(0, -300),
+    );
+    await tester.pumpAndSettle();
+
+    // Floating result bar rincian hero harus muncul menampilkan icon & power
+    expect(find.text('Power Hero'), findsWidgets);
+    expect(tester.takeException(), isNull);
+  });
 }
