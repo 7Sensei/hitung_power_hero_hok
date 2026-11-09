@@ -17,17 +17,11 @@ class GamelandSidebar extends StatelessWidget {
         side: BorderSide(color: Color(0xFF1C2B1C)),
       ),
       child: SafeArea(
-        child: SingleChildScrollView(
-          child: ConstrainedBox(
-            constraints: BoxConstraints(
-              minHeight: MediaQuery.of(context).size.height,
-            ),
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 20),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisSize: MainAxisSize.min,
-                children: [
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 20),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
               // Header Drawer
               Row(
                 children: [
@@ -126,7 +120,7 @@ class GamelandSidebar extends StatelessWidget {
                 },
               ),
 
-              const SizedBox(height: 24),
+              const Spacer(),
 
               // Footer Info
               Container(
@@ -170,8 +164,6 @@ class GamelandSidebar extends StatelessWidget {
                 ),
               ),
             ],
-              ),
-            ),
           ),
         ),
       ),
