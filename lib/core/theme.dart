@@ -10,12 +10,16 @@ class HokTheme {
   static const Color cardBorderGlow = Color(0x44A3E635);
 
   // Neon Lime & Accent Colors (Gameland Vibe)
-  static const Color neonLime = Color(0xFFD4F82A);       // Electric Lime for active buttons/pills
+  static const Color neonLime = Color(
+    0xFFD4F82A,
+  ); // Electric Lime for active buttons/pills
   static const Color neonLimeLight = Color(0xFFE2F952);
-  static const Color limeAccent = Color(0xFFA3E635);     // Glowing border & highlights
+  static const Color limeAccent = Color(
+    0xFFA3E635,
+  ); // Glowing border & highlights
   static const Color limeMuted = Color(0xFF4D7C0F);
 
-  static const Color darkText = Color(0xFF070A07);       // Text on neon lime pills
+  static const Color darkText = Color(0xFF070A07); // Text on neon lime pills
   static const Color textPrimary = Color(0xFFFFFFFF);
   static const Color textSecondary = Color(0xFF9CA3AF);
   static const Color textMuted = Color(0xFF6B7280);
@@ -50,7 +54,10 @@ class HokTheme {
       inputDecorationTheme: InputDecorationTheme(
         filled: true,
         fillColor: cardSubtle,
-        contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+        contentPadding: const EdgeInsets.symmetric(
+          horizontal: 16,
+          vertical: 12,
+        ),
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
           borderSide: const BorderSide(color: cardBorder),

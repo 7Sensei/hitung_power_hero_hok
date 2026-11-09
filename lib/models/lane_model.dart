@@ -4,7 +4,7 @@ import 'hero_model.dart';
 class LaneData {
   final HokLane lane;
   List<HeroSlotData> heroUtama; // 5 Hero Utama (Bobot 100%)
-  List<HeroSlotData> heroOP;    // 5 Hero OP Kamu (Bobot 20%)
+  List<HeroSlotData> heroOP; // 5 Hero OP Kamu (Bobot 20%)
   String currentPercentile;
   int targetPower;
   String targetPercentile;
@@ -61,4 +61,3 @@ class LaneData {
     return progress.clamp(0.0, 1.0);
   }
 }
-

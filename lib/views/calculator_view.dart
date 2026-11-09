@@ -9,26 +9,40 @@ import '../widgets/gameland_sidebar.dart';
 import '../widgets/hero_detail_tab_view.dart';
 import 'win_rate_calculator_view.dart';
 
-class CalculatorView extends StatelessWidget {
+class CalculatorView extends StatefulWidget {
   const CalculatorView({super.key});
+
+  @override
+  State<CalculatorView> createState() => _CalculatorViewState();
+}
+
+class _CalculatorViewState extends State<CalculatorView> {
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+  final ScrollController _scrollController = ScrollController();
+
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
     final provider = context.watch<CalculatorProvider>();
-    final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
 
     return Scaffold(
-      key: scaffoldKey,
+      key: _scaffoldKey,
       backgroundColor: HokTheme.darkBackground,
       // SIDEBAR MENU DRAWER DI KIRI
       drawer: const GamelandSidebar(),
       body: SafeArea(
         child: SingleChildScrollView(
+          controller: _scrollController,
           child: Column(
             children: [
               // 1. TOP NAVBAR ALA GAMELAND (Dengan Tombol Garis 3 Menu di Kiri)
               GamelandNavbar(
-                onMenuTap: () => scaffoldKey.currentState?.openDrawer(),
+                onMenuTap: () => _scaffoldKey.currentState?.openDrawer(),
               ),
 
               // 2. MAIN CONTAINER WITH MAX-WIDTH (RESPONSIVE)
@@ -40,7 +54,8 @@ class CalculatorView extends StatelessWidget {
                     child: Column(
                       children: [
                         // KONTEN SCREEN 1: KALKULATOR POWER HOK
-                        if (provider.activeScreen == AppScreen.powerCalculator) ...[
+                        if (provider.activeScreen ==
+                            AppScreen.powerCalculator) ...[
                           // Hero Header (Title, Subtitle, Category Pills 5 Lane)
                           const GamelandHeroHeader(),
 
@@ -70,12 +85,14 @@ class CalculatorView extends StatelessWidget {
   }
 
   Widget _buildFooter() {
+    final currentYear = DateTime.now().year.toString();
+
     return Container(
       padding: const EdgeInsets.symmetric(vertical: 30),
-      child: const Column(
+      child: Column(
         children: [
-          Divider(color: Color(0xFF162116), height: 1),
-          SizedBox(height: 20),
+          const Divider(color: Color(0xFF162116), height: 1),
+          const SizedBox(height: 20),
           Wrap(
             alignment: WrapAlignment.spaceBetween,
             crossAxisAlignment: WrapCrossAlignment.center,
@@ -83,11 +100,11 @@ class CalculatorView extends StatelessWidget {
             runSpacing: 8,
             children: [
               Text(
-                'Gameland Tools © 2026 • HOK Power & WR Calculator',
-                style: TextStyle(color: HokTheme.textMuted, fontSize: 11),
+                'HOK by 7Sensei © $currentYear • All Rights Reserved',
+                style: const TextStyle(color: HokTheme.textMuted, fontSize: 11),
               ),
-              Text(
-                'Honor of Kings & MLBB Algorithms',
+              const Text(
+                'Honor of Kings',
                 style: TextStyle(
                   color: HokTheme.limeAccent,
                   fontSize: 11,
@@ -96,7 +113,7 @@ class CalculatorView extends StatelessWidget {
               ),
             ],
           ),
-          SizedBox(height: 10),
+          const SizedBox(height: 10),
         ],
       ),
     );

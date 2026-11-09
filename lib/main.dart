@@ -14,11 +14,9 @@ class HOKPowerCalculatorApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MultiProvider(
-      providers: [
-        ChangeNotifierProvider(create: (_) => CalculatorProvider()),
-      ],
+      providers: [ChangeNotifierProvider(create: (_) => CalculatorProvider())],
       child: MaterialApp(
-        title: 'HOK Power Calculator',
+        title: 'HOK by 7Sensei',
         debugShowCheckedModeBanner: false,
         theme: HokTheme.darkTheme,
         home: const CalculatorView(),

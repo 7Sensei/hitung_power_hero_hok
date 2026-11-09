@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import '../core/constants.dart';
 import '../core/theme.dart';
 import '../core/utils.dart';
 import '../models/lane_model.dart';
@@ -40,7 +39,9 @@ class GamelandLaneView extends StatelessWidget {
                       isUtama: true,
                       title: 'Hero Utama',
                       weightTag: 'Bobot 100%',
-                      subtotalText: HOKUtils.formatNumber(laneData.subtotalUtama),
+                      subtotalText: HOKUtils.formatNumber(
+                        laneData.subtotalUtama,
+                      ),
                       icon: Icons.workspace_premium_rounded,
                       iconColor: HokTheme.neonLime,
                     ),
@@ -56,7 +57,8 @@ class GamelandLaneView extends StatelessWidget {
                       title: 'Hero OP Kamu',
                       weightTag: 'Bobot 20%',
                       subtotalText: HOKUtils.formatNumber(laneData.subtotalOP),
-                      extraSubtotalText: '(20% dari ${HOKUtils.formatNumber(laneData.sumRawOP)})',
+                      extraSubtotalText:
+                          '(20% dari ${HOKUtils.formatNumber(laneData.sumRawOP)})',
                       icon: Icons.shield_outlined,
                       iconColor: HokTheme.limeAccent,
                     ),
@@ -86,7 +88,8 @@ class GamelandLaneView extends StatelessWidget {
                     title: 'Hero OP Kamu',
                     weightTag: 'Bobot 20%',
                     subtotalText: HOKUtils.formatNumber(laneData.subtotalOP),
-                    extraSubtotalText: '(20% dari ${HOKUtils.formatNumber(laneData.sumRawOP)})',
+                    extraSubtotalText:
+                        '(20% dari ${HOKUtils.formatNumber(laneData.sumRawOP)})',
                     icon: Icons.shield_outlined,
                     iconColor: HokTheme.limeAccent,
                   ),
@@ -159,11 +162,20 @@ class GamelandLaneView extends StatelessWidget {
                           Row(
                             children: [
                               Container(
-                                padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 10,
+                                  vertical: 4,
+                                ),
                                 decoration: BoxDecoration(
-                                  color: HokTheme.neonLime.withValues(alpha: 0.15),
+                                  color: HokTheme.neonLime.withValues(
+                                    alpha: 0.15,
+                                  ),
                                   borderRadius: BorderRadius.circular(20),
-                                  border: Border.all(color: HokTheme.neonLime.withValues(alpha: 0.4)),
+                                  border: Border.all(
+                                    color: HokTheme.neonLime.withValues(
+                                      alpha: 0.4,
+                                    ),
+                                  ),
                                 ),
                                 child: Text(
                                   '${laneData.lane.displayName} • Tier ${laneData.currentTier}',
@@ -185,10 +197,6 @@ class GamelandLaneView extends StatelessWidget {
                               fontWeight: FontWeight.w900,
                               letterSpacing: -0.5,
                             ),
-                          ),
-                          Text(
-                            'Peringkat Saat Ini: ${laneData.currentPercentile}',
-                            style: const TextStyle(color: HokTheme.textSecondary, fontSize: 12),
                           ),
                         ],
                       ),
@@ -214,27 +222,15 @@ class GamelandLaneView extends StatelessWidget {
                                 ),
                               ),
                               const SizedBox(width: 4),
-                              const Icon(Icons.edit_outlined, size: 14, color: HokTheme.limeAccent),
+                              const Icon(
+                                Icons.edit_outlined,
+                                size: 14,
+                                color: HokTheme.limeAccent,
+                              ),
                             ],
                           ),
                         ),
-                        const SizedBox(height: 4),
-                        Container(
-                          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
-                          decoration: BoxDecoration(
-                            color: const Color(0xFF141F14),
-                            borderRadius: BorderRadius.circular(6),
-                          ),
-                          child: Text(
-                            laneData.targetPercentile,
-                            style: const TextStyle(
-                              color: Colors.white,
-                              fontSize: 11,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                        ),
-                        const SizedBox(height: 4),
+                        const SizedBox(height: 6),
                         Text(
                           laneData.remainingPowerToTarget > 0
                               ? 'Kurang ${HOKUtils.formatNumber(laneData.remainingPowerToTarget)} poin lagi'
@@ -261,7 +257,9 @@ class GamelandLaneView extends StatelessWidget {
                     value: laneData.progressToTarget,
                     minHeight: 6,
                     backgroundColor: const Color(0xFF172217),
-                    valueColor: const AlwaysStoppedAnimation<Color>(HokTheme.neonLime),
+                    valueColor: const AlwaysStoppedAnimation<Color>(
+                      HokTheme.neonLime,
+                    ),
                   ),
                 ),
                 const SizedBox(height: 8),
@@ -272,12 +270,18 @@ class GamelandLaneView extends StatelessWidget {
                   children: [
                     Text(
                       'Progress ke target: ${(laneData.progressToTarget * 100).toStringAsFixed(1)}%',
-                      style: const TextStyle(color: HokTheme.textMuted, fontSize: 11),
+                      style: const TextStyle(
+                        color: HokTheme.textMuted,
+                        fontSize: 11,
+                      ),
                     ),
                     const SizedBox(width: 8),
                     Text(
                       'Formula: Utama (${HOKUtils.formatNumber(laneData.subtotalUtama)}) + OP (${HOKUtils.formatNumber(laneData.subtotalOP)})',
-                      style: const TextStyle(color: HokTheme.textSecondary, fontSize: 11),
+                      style: const TextStyle(
+                        color: HokTheme.textSecondary,
+                        fontSize: 11,
+                      ),
                     ),
                   ],
                 ),
@@ -348,7 +352,10 @@ class GamelandLaneView extends StatelessWidget {
                       ),
                       Text(
                         weightTag,
-                        style: const TextStyle(color: HokTheme.textMuted, fontSize: 11),
+                        style: const TextStyle(
+                          color: HokTheme.textMuted,
+                          fontSize: 11,
+                        ),
                       ),
                     ],
                   ),
@@ -367,7 +374,10 @@ class GamelandLaneView extends StatelessWidget {
                     if (extraSubtotalText != null)
                       Text(
                         extraSubtotalText,
-                        style: const TextStyle(color: HokTheme.textMuted, fontSize: 10),
+                        style: const TextStyle(
+                          color: HokTheme.textMuted,
+                          fontSize: 10,
+                        ),
                       ),
                   ],
                 ),
@@ -387,7 +397,10 @@ class GamelandLaneView extends StatelessWidget {
 
                 return Container(
                   margin: const EdgeInsets.only(bottom: 8),
-                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 12,
+                    vertical: 8,
+                  ),
                   decoration: BoxDecoration(
                     color: const Color(0xFF121912),
                     borderRadius: BorderRadius.circular(12),
@@ -400,14 +413,18 @@ class GamelandLaneView extends StatelessWidget {
                         width: 26,
                         height: 26,
                         decoration: BoxDecoration(
-                          color: isUtama ? HokTheme.neonLime.withValues(alpha: 0.2) : const Color(0xFF192419),
+                          color: isUtama
+                              ? HokTheme.neonLime.withValues(alpha: 0.2)
+                              : const Color(0xFF192419),
                           borderRadius: BorderRadius.circular(6),
                         ),
                         child: Center(
                           child: Text(
                             '#$rank',
                             style: TextStyle(
-                              color: isUtama ? HokTheme.neonLime : HokTheme.textSecondary,
+                              color: isUtama
+                                  ? HokTheme.neonLime
+                                  : HokTheme.textSecondary,
                               fontSize: 10,
                               fontWeight: FontWeight.w800,
                             ),
@@ -432,9 +449,15 @@ class GamelandLaneView extends StatelessWidget {
                                   );
                                   if (slot.power == 0) {
                                     if (isUtama) {
-                                      provider.updateHeroUtamaPower(index, h.defaultPower);
+                                      provider.updateHeroUtamaPower(
+                                        index,
+                                        h.defaultPower,
+                                      );
                                     } else {
-                                      provider.updateHeroOPPower(index, h.defaultPower);
+                                      provider.updateHeroOPPower(
+                                        index,
+                                        h.defaultPower,
+                                      );
                                     }
                                   }
                                 },
@@ -451,10 +474,19 @@ class GamelandLaneView extends StatelessWidget {
                                   backgroundColor: const Color(0xFF1D2A1D),
                                   child: Text(
                                     slot.heroName.isNotEmpty
-                                        ? slot.heroName.substring(0, slot.heroName.length >= 2 ? 2 : 1).toUpperCase()
+                                        ? slot.heroName
+                                              .substring(
+                                                0,
+                                                slot.heroName.length >= 2
+                                                    ? 2
+                                                    : 1,
+                                              )
+                                              .toUpperCase()
                                         : '?',
                                     style: TextStyle(
-                                      color: isUtama ? HokTheme.neonLime : Colors.white70,
+                                      color: isUtama
+                                          ? HokTheme.neonLime
+                                          : Colors.white70,
                                       fontSize: 10,
                                       fontWeight: FontWeight.bold,
                                     ),
@@ -463,7 +495,8 @@ class GamelandLaneView extends StatelessWidget {
                                 const SizedBox(width: 8),
                                 Expanded(
                                   child: Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
                                     children: [
                                       Text(
                                         slot.heroName,
@@ -477,7 +510,10 @@ class GamelandLaneView extends StatelessWidget {
                                       ),
                                       const Text(
                                         'Ganti hero',
-                                        style: TextStyle(color: HokTheme.textMuted, fontSize: 10),
+                                        style: TextStyle(
+                                          color: HokTheme.textMuted,
+                                          fontSize: 10,
+                                        ),
                                       ),
                                     ],
                                   ),
@@ -514,7 +550,10 @@ class GamelandLaneView extends StatelessWidget {
                         ),
                         borderRadius: BorderRadius.circular(4),
                         child: Container(
-                          padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 6),
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 6,
+                            vertical: 6,
+                          ),
                           decoration: BoxDecoration(
                             color: const Color(0xFF192419),
                             borderRadius: BorderRadius.circular(4),
@@ -548,9 +587,19 @@ class GamelandLaneView extends StatelessWidget {
     LaneData laneData,
   ) {
     final diff = laneData.remainingPowerToTarget;
-    final lowestUtama = laneData.heroUtama.reduce((a, b) => a.power < b.power ? a : b);
-    final highestOP = laneData.heroOP.reduce((a, b) => a.power > b.power ? a : b);
+    final totalPower = laneData.totalPowerLane;
+    final currentTier = laneData.currentTier;
+    final nextTierPower = (currentTier + 1) * 1000;
+    final pointsToNextTier = nextTierPower - totalPower;
+
+    final lowestUtama = laneData.heroUtama.reduce(
+      (a, b) => a.power < b.power ? a : b,
+    );
+    final highestOP = laneData.heroOP.reduce(
+      (a, b) => a.power > b.power ? a : b,
+    );
     final gapToPromote = (lowestUtama.power - highestOP.power) + 1;
+    final avgPerUtama = diff > 0 ? (diff / 5).ceil() : 0;
 
     return Container(
       width: double.infinity,
@@ -573,7 +622,11 @@ class GamelandLaneView extends StatelessWidget {
                   borderRadius: BorderRadius.circular(10),
                 ),
                 child: const Center(
-                  child: Icon(Icons.bolt_rounded, color: HokTheme.neonLime, size: 22),
+                  child: Icon(
+                    Icons.bolt_rounded,
+                    color: HokTheme.neonLime,
+                    size: 22,
+                  ),
                 ),
               ),
               const SizedBox(width: 12),
@@ -588,13 +641,18 @@ class GamelandLaneView extends StatelessWidget {
                 ),
               ),
               Container(
-                padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 10,
+                  vertical: 4,
+                ),
                 decoration: BoxDecoration(
                   color: const Color(0xFF1A261A),
                   borderRadius: BorderRadius.circular(20),
                 ),
                 child: Text(
-                  diff > 0 ? 'Sisa ${HOKUtils.formatNumber(diff)} Poin' : 'Target Tercapai',
+                  diff > 0
+                      ? 'Sisa ${HOKUtils.formatNumber(diff)} Poin'
+                      : 'Target Tercapai',
                   style: const TextStyle(
                     color: HokTheme.neonLime,
                     fontSize: 11,
@@ -607,22 +665,35 @@ class GamelandLaneView extends StatelessWidget {
           const SizedBox(height: 16),
 
           if (diff <= 0)
-            const Text(
-              'Target Power Lane sudah tercapai! Anda bisa menaikkan target untuk mengejar persentase peringkat yang lebih tinggi.',
-              style: TextStyle(color: HokTheme.textSecondary, fontSize: 13),
+            _buildStrategyRow(
+              title: 'Target Saat Ini Tercapai! 🎉',
+              detail:
+                  'Total Power Lane telah memenuhi target ${HOKUtils.formatNumber(laneData.targetPower)}. '
+                  'Anda hanya membutuhkan +${HOKUtils.formatNumber(pointsToNextTier)} poin lagi untuk naik ke Tier ${currentTier + 1} (${HOKUtils.formatNumber(nextTierPower)} Power). '
+                  'Anda dapat menaikkan target dengan menekan tombol edit pada Target Power.',
             )
           else ...[
             _buildStrategyRow(
-              title: 'Prioritas 1: Push Hero Utama Terendah (${lowestUtama.heroName})',
+              title: 'Prioritas 1: Maksimalkan Slot Hero Utama (Bobot 100%)',
               detail:
-                  'Naikkan ${lowestUtama.heroName} (${lowestUtama.power}) sebesar +${HOKUtils.formatNumber(diff)} poin. Efisiensi 100%: Setiap poin langsung masuk ke total power lane.',
+                  'Setiap kenaikan power pada 5 slot Hero Utama dihitung 100% penuh ke Power Lane. '
+                  'Untuk mengejar sisa target ${HOKUtils.formatNumber(diff)} poin, Anda cukup menaikkan rata-rata +${HOKUtils.formatNumber(avgPerUtama)} poin per slot pada 5 Hero Utama.',
             ),
             const SizedBox(height: 10),
             _buildStrategyRow(
-              title: 'Prioritas 2: Masukkan ${highestOP.heroName} ke Top 5',
+              title:
+                  'Prioritas 2: Tukar Slot Hero OP ke Top 5 (Bobot 20% → 100%)',
               detail: gapToPromote > 0
-                  ? 'Tingkatkan ${highestOP.heroName} (${highestOP.power}) minimal +$gapToPromote poin agar melampaui ${lowestUtama.heroName}. Kontribusinya akan melompat seketika dari 20% menjadi 100%!'
-                  : 'Power hero cadangan sudah optimal untuk memaksimalkan total power.',
+                  ? 'Tingkatkan power slot Hero OP tertinggi sebesar minimal +${HOKUtils.formatNumber(gapToPromote)} poin agar melampaui slot terendah di Hero Utama. '
+                        'Bobot kontribusinya akan otomatis melonjak dari 20% menjadi 100% (peningkatan efisiensi 5x lipat).'
+                  : 'Power di seluruh slot Hero Utama saat ini sudah lebih tinggi dibandingkan seluruh slot Hero OP.',
+            ),
+            const SizedBox(height: 10),
+            _buildStrategyRow(
+              title: 'Target Terdekat: Naik ke Tier ${currentTier + 1}',
+              detail:
+                  'Power Lane saat ini adalah ${HOKUtils.formatNumber(totalPower)} (Tier $currentTier). '
+                  'Hanya membutuhkan +${HOKUtils.formatNumber(pointsToNextTier)} poin lagi untuk mencapai Tier ${currentTier + 1} (${HOKUtils.formatNumber(nextTierPower)} Power).',
             ),
           ],
         ],
@@ -652,14 +723,21 @@ class GamelandLaneView extends StatelessWidget {
           const SizedBox(height: 4),
           Text(
             detail,
-            style: const TextStyle(color: HokTheme.textSecondary, fontSize: 12, height: 1.4),
+            style: const TextStyle(
+              color: HokTheme.textSecondary,
+              fontSize: 12,
+              height: 1.4,
+            ),
           ),
         ],
       ),
     );
   }
 
-  void _showEditTargetDialog(BuildContext context, CalculatorProvider provider) {
+  void _showEditTargetDialog(
+    BuildContext context,
+    CalculatorProvider provider,
+  ) {
     final controller = TextEditingController(
       text: provider.currentLaneData.targetPower.toString(),
     );
@@ -668,7 +746,10 @@ class GamelandLaneView extends StatelessWidget {
       builder: (ctx) => AlertDialog(
         backgroundColor: const Color(0xFF0F160F),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-        title: const Text('Ubah Target Power Lane', style: TextStyle(color: Colors.white, fontSize: 16)),
+        title: const Text(
+          'Ubah Target Power Lane',
+          style: TextStyle(color: Colors.white, fontSize: 16),
+        ),
         content: TextField(
           controller: controller,
           keyboardType: TextInputType.number,
@@ -680,11 +761,16 @@ class GamelandLaneView extends StatelessWidget {
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(ctx),
-            child: const Text('Batal', style: TextStyle(color: HokTheme.textSecondary)),
+            child: const Text(
+              'Batal',
+              style: TextStyle(color: HokTheme.textSecondary),
+            ),
           ),
           ElevatedButton(
             onPressed: () {
-              final n = int.tryParse(controller.text) ?? provider.currentLaneData.targetPower;
+              final n =
+                  int.tryParse(controller.text) ??
+                  provider.currentLaneData.targetPower;
               provider.updateTargetPower(n);
               Navigator.pop(ctx);
             },
@@ -704,7 +790,10 @@ class _GamelandPowerField extends StatefulWidget {
   final int initialValue;
   final ValueChanged<int> onChanged;
 
-  const _GamelandPowerField({required this.initialValue, required this.onChanged});
+  const _GamelandPowerField({
+    required this.initialValue,
+    required this.onChanged,
+  });
 
   @override
   State<_GamelandPowerField> createState() => _GamelandPowerFieldState();
@@ -767,4 +856,3 @@ class _GamelandPowerFieldState extends State<_GamelandPowerField> {
     );
   }
 }
-

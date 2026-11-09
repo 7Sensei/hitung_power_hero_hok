@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
 import '../core/constants.dart';
 import '../core/theme.dart';
@@ -72,7 +73,7 @@ class GamelandHeroHeader extends StatelessWidget {
               ),
               const SizedBox(width: 12),
               Text(
-                isLaneMode ? 'Simulator' : 'Calculator',
+                isLaneMode ? 'Calculator' : 'Calculator',
                 style: const TextStyle(
                   color: Colors.white,
                   fontSize: 36,
@@ -91,7 +92,7 @@ class GamelandHeroHeader extends StatelessWidget {
           constraints: const BoxConstraints(maxWidth: 620),
           child: Text(
             isLaneMode
-                ? 'Kalkulator resmi Power Lane (分路战力) Honor of Kings. Bobot Hero Utama 100% dan Hero OP 20% untuk menentukan Tier dan sisa poin ke target rank.'
+                ? 'Kalkulator resmi Power Lane Honor of Kings. Bobot Hero Utama 100% dan Hero OP 20% untuk menentukan Tier dan sisa poin ke target rank.'
                 : 'Kalkulator rincian Hero Power individual berdasarkan rumus resmi in-game: Power Hero = Power Total × Pengali Total.',
             textAlign: TextAlign.center,
             style: const TextStyle(
@@ -127,14 +128,21 @@ class GamelandHeroHeader extends StatelessWidget {
                       borderRadius: BorderRadius.circular(30),
                       child: AnimatedContainer(
                         duration: const Duration(milliseconds: 180),
-                        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 16,
+                          vertical: 8,
+                        ),
                         decoration: BoxDecoration(
-                          color: isSelected ? HokTheme.neonLime : Colors.transparent,
+                          color: isSelected
+                              ? HokTheme.neonLime
+                              : Colors.transparent,
                           borderRadius: BorderRadius.circular(30),
                           boxShadow: isSelected
                               ? [
                                   BoxShadow(
-                                    color: HokTheme.neonLime.withValues(alpha: 0.35),
+                                    color: HokTheme.neonLime.withValues(
+                                      alpha: 0.35,
+                                    ),
                                     blurRadius: 10,
                                     offset: const Offset(0, 2),
                                   ),
@@ -144,18 +152,28 @@ class GamelandHeroHeader extends StatelessWidget {
                         child: Row(
                           mainAxisSize: MainAxisSize.min,
                           children: [
-                            Icon(
-                              lane.icon,
-                              size: 14,
-                              color: isSelected ? HokTheme.darkText : HokTheme.textSecondary,
+                            SvgPicture.asset(
+                              lane.iconAssetPath,
+                              width: 14,
+                              height: 14,
+                              colorFilter: ColorFilter.mode(
+                                isSelected
+                                    ? HokTheme.darkText
+                                    : HokTheme.textSecondary,
+                                BlendMode.srcIn,
+                              ),
                             ),
                             const SizedBox(width: 6),
                             Text(
                               lane.displayName,
                               style: TextStyle(
-                                color: isSelected ? HokTheme.darkText : HokTheme.textSecondary,
+                                color: isSelected
+                                    ? HokTheme.darkText
+                                    : HokTheme.textSecondary,
                                 fontSize: 12,
-                                fontWeight: isSelected ? FontWeight.w800 : FontWeight.w500,
+                                fontWeight: isSelected
+                                    ? FontWeight.w800
+                                    : FontWeight.w500,
                               ),
                             ),
                           ],

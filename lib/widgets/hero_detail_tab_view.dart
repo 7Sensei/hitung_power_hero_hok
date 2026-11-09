@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../core/theme.dart';
 import '../core/utils.dart';
+import '../models/hero_detail_model.dart';
 import '../providers/calculator_provider.dart';
 
 class HeroDetailTabView extends StatefulWidget {
@@ -21,10 +22,20 @@ class _HeroDetailTabViewState extends State<HeroDetailTabView> {
   void initState() {
     super.initState();
     final detail = context.read<CalculatorProvider>().heroDetail;
-    _rankedController = TextEditingController(text: detail.powerPerformaRanked.toString());
-    _peakPerfController = TextEditingController(text: detail.powerPerformaPeak.toString());
-    _kemenanganController = TextEditingController(text: detail.powerKemenangan.toString());
-    _poinPeakController = TextEditingController(text: detail.poinPeakSaatIni.toString());
+    _rankedController = TextEditingController(
+      text: detail.powerPerformaRanked.toString(),
+    );
+    _peakPerfController = TextEditingController(
+      text: detail.powerPerformaPeak.toString(),
+    );
+    _kemenanganController = TextEditingController(
+      text: detail.powerKemenangan.toString(),
+    );
+    _poinPeakController = TextEditingController(
+      text: detail.poinPeakSaatIni > 1200
+          ? detail.poinPeakSaatIni.toString()
+          : '',
+    );
   }
 
   @override
@@ -41,7 +52,8 @@ class _HeroDetailTabViewState extends State<HeroDetailTabView> {
     final provider = context.watch<CalculatorProvider>();
     final detail = provider.heroDetail;
 
-    return SingleChildScrollView(
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 20),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -65,11 +77,16 @@ class _HeroDetailTabViewState extends State<HeroDetailTabView> {
             child: Column(
               children: [
                 Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 4),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 14,
+                    vertical: 4,
+                  ),
                   decoration: BoxDecoration(
                     color: HokTheme.neonLime.withValues(alpha: 0.15),
                     borderRadius: BorderRadius.circular(20),
-                    border: Border.all(color: HokTheme.neonLime.withValues(alpha: 0.3)),
+                    border: Border.all(
+                      color: HokTheme.neonLime.withValues(alpha: 0.3),
+                    ),
                   ),
                   child: const Text(
                     'Power Hero = Power Total × Pengali Total',
@@ -114,9 +131,22 @@ class _HeroDetailTabViewState extends State<HeroDetailTabView> {
                   alignment: WrapAlignment.center,
                   crossAxisAlignment: WrapCrossAlignment.center,
                   children: [
-                    _buildFormulaBadge('Power Total', HOKUtils.formatNumber(detail.powerTotal)),
-                    const Text('×', style: TextStyle(color: Colors.white70, fontSize: 18, fontWeight: FontWeight.bold)),
-                    _buildFormulaBadge('Pengali Total', '${(detail.pengaliTotal * 100).toStringAsFixed(1)}%'),
+                    _buildFormulaBadge(
+                      'Power Total',
+                      HOKUtils.formatNumber(detail.powerTotal),
+                    ),
+                    const Text(
+                      '×',
+                      style: TextStyle(
+                        color: Colors.white70,
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    _buildFormulaBadge(
+                      'Pengali Total',
+                      '${(detail.pengaliTotal * 100).toStringAsFixed(1)}%',
+                    ),
                   ],
                 ),
               ],
@@ -139,16 +169,21 @@ class _HeroDetailTabViewState extends State<HeroDetailTabView> {
           // 1. Power Performa Ranked
           _buildItemCard(
             title: 'Power Performa Ranked',
-            currentValueText: '${detail.powerPerformaRanked} / 1.500',
-            description: 'Standar: 900. Bertambah lebih cepat jika di bawah standar. Makin tinggi Tier rank, makin tinggi pula batas standarnya.',
+            currentValueText:
+                '${HOKUtils.formatNumber(detail.powerPerformaRanked)} / 2.500',
+            description:
+                'Standar: 900. Bertambah lebih cepat jika di bawah standar. Maksimal 2.500 poin.',
             child: Row(
               children: [
                 Expanded(
                   child: Slider(
-                    value: detail.powerPerformaRanked.toDouble(),
+                    value: detail.powerPerformaRanked.toDouble().clamp(
+                      0.0,
+                      2500.0,
+                    ),
                     min: 0,
-                    max: 1500,
-                    divisions: 150,
+                    max: 2500,
+                    divisions: 250,
                     activeColor: HokTheme.neonLime,
                     inactiveColor: const Color(0xFF1B2A1B),
                     onChanged: (val) {
@@ -163,11 +198,17 @@ class _HeroDetailTabViewState extends State<HeroDetailTabView> {
                     controller: _rankedController,
                     keyboardType: TextInputType.number,
                     textAlign: TextAlign.center,
-                    style: const TextStyle(color: Colors.white, fontSize: 13, fontWeight: FontWeight.bold),
+                    style: const TextStyle(
+                      color: Colors.white,
+                      fontSize: 13,
+                      fontWeight: FontWeight.bold,
+                    ),
                     decoration: InputDecoration(
                       contentPadding: const EdgeInsets.all(8),
                       fillColor: const Color(0xFF141E14),
-                      border: OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(8),
+                      ),
                     ),
                     onChanged: (val) {
                       final n = int.tryParse(val) ?? 0;
@@ -183,41 +224,178 @@ class _HeroDetailTabViewState extends State<HeroDetailTabView> {
           // 2. Power Performa Peak
           _buildItemCard(
             title: 'Power Performa Peak',
-            currentValueText: '${detail.powerPerformaPeak} / 200',
-            description: 'Standar: 200. Bertambah lebih cepat jika di bawah standar. Dipengaruhi hasil & skor match Peak Tournament.',
-            child: Row(
+            currentValueText:
+                '${HOKUtils.formatNumber(detail.powerPerformaPeak)} / ${HOKUtils.formatNumber(detail.peakPowerCap)}',
+            description:
+                'Setiap bracket Poin Peak memiliki batas maksimal (Cap). Pilih tier Poin Peak untuk mengatur batas maksimal Power Performa Peak.',
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Expanded(
-                  child: Slider(
-                    value: detail.powerPerformaPeak.toDouble(),
-                    min: 0,
-                    max: 400,
-                    divisions: 80,
-                    activeColor: HokTheme.neonLime,
-                    inactiveColor: const Color(0xFF1B2A1B),
-                    onChanged: (val) {
-                      provider.updatePerformaPeak(val.round());
-                      _peakPerfController.text = val.round().toString();
-                    },
+                // Label Pilihan Poin Peak
+                Row(
+                  children: [
+                    const Icon(
+                      Icons.tune_rounded,
+                      size: 14,
+                      color: HokTheme.neonLime,
+                    ),
+                    const SizedBox(width: 6),
+                    const Text(
+                      'Pilih Poin Peak & Batas Cap:',
+                      style: TextStyle(
+                        color: HokTheme.textSecondary,
+                        fontSize: 12,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 6),
+
+                // Dropdown Poin Peak & Batas Cap
+                Container(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 14,
+                    vertical: 2,
+                  ),
+                  decoration: BoxDecoration(
+                    color: const Color(0xFF141E14),
+                    borderRadius: BorderRadius.circular(10),
+                    border: Border.all(color: const Color(0xFF223022)),
+                  ),
+                  child: DropdownButtonHideUnderline(
+                    child: DropdownButton<int>(
+                      value: detail.selectedPeakPointsTier,
+                      isExpanded: true,
+                      dropdownColor: const Color(0xFF0F150F),
+                      icon: const Icon(
+                        Icons.keyboard_arrow_down_rounded,
+                        color: HokTheme.neonLime,
+                      ),
+                      items: kPeakCapTiers.map((tier) {
+                        return DropdownMenuItem<int>(
+                          value: tier.peakPoints,
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Row(
+                                children: [
+                                  const Icon(
+                                    Icons.military_tech_rounded,
+                                    color: HokTheme.neonLime,
+                                    size: 16,
+                                  ),
+                                  const SizedBox(width: 8),
+                                  Text(
+                                    '${HOKUtils.formatNumber(tier.peakPoints)} Poin Peak',
+                                    style: const TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 13,
+                                      fontWeight: FontWeight.w600,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              Container(
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 8,
+                                  vertical: 3,
+                                ),
+                                decoration: BoxDecoration(
+                                  color: HokTheme.neonLime.withValues(
+                                    alpha: 0.15,
+                                  ),
+                                  borderRadius: BorderRadius.circular(6),
+                                  border: Border.all(
+                                    color: HokTheme.neonLime.withValues(
+                                      alpha: 0.3,
+                                    ),
+                                  ),
+                                ),
+                                child: Text(
+                                  'Cap: +${HOKUtils.formatNumber(tier.capPower)}',
+                                  style: const TextStyle(
+                                    color: HokTheme.neonLime,
+                                    fontSize: 11,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        );
+                      }).toList(),
+                      onChanged: (newTier) {
+                        if (newTier != null) {
+                          provider.updateSelectedPeakTier(newTier);
+                          _peakPerfController.text = provider
+                              .heroDetail
+                              .powerPerformaPeak
+                              .toString();
+                          _poinPeakController.text = newTier > 1200
+                              ? newTier.toString()
+                              : '';
+                        }
+                      },
+                    ),
                   ),
                 ),
-                SizedBox(
-                  width: 80,
-                  child: TextField(
-                    controller: _peakPerfController,
-                    keyboardType: TextInputType.number,
-                    textAlign: TextAlign.center,
-                    style: const TextStyle(color: Colors.white, fontSize: 13, fontWeight: FontWeight.bold),
-                    decoration: InputDecoration(
-                      contentPadding: const EdgeInsets.all(8),
-                      fillColor: const Color(0xFF141E14),
-                      border: OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
+
+                const SizedBox(height: 14),
+
+                // Slider & Input Angka Power Performa Peak
+                Row(
+                  children: [
+                    Expanded(
+                      child: Slider(
+                        value: detail.powerPerformaPeak.toDouble().clamp(
+                          0.0,
+                          detail.peakPowerCap.toDouble(),
+                        ),
+                        min: 0,
+                        max: detail.peakPowerCap.toDouble(),
+                        divisions: detail.peakPowerCap > 0
+                            ? (detail.peakPowerCap <= 400
+                                  ? (detail.peakPowerCap ~/ 5)
+                                  : (detail.peakPowerCap ~/ 20))
+                            : 1,
+                        activeColor: HokTheme.neonLime,
+                        inactiveColor: const Color(0xFF1B2A1B),
+                        onChanged: (val) {
+                          provider.updatePerformaPeak(val.round());
+                          _peakPerfController.text = val.round().toString();
+                        },
+                      ),
                     ),
-                    onChanged: (val) {
-                      final n = int.tryParse(val) ?? 0;
-                      provider.updatePerformaPeak(n);
-                    },
-                  ),
+                    const SizedBox(width: 8),
+                    SizedBox(
+                      width: 84,
+                      child: TextField(
+                        controller: _peakPerfController,
+                        keyboardType: TextInputType.number,
+                        textAlign: TextAlign.center,
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontSize: 13,
+                          fontWeight: FontWeight.bold,
+                        ),
+                        decoration: InputDecoration(
+                          contentPadding: const EdgeInsets.symmetric(
+                            horizontal: 8,
+                            vertical: 8,
+                          ),
+                          fillColor: const Color(0xFF141E14),
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                        ),
+                        onChanged: (val) {
+                          final n = int.tryParse(val) ?? 0;
+                          provider.updatePerformaPeak(n);
+                        },
+                      ),
+                    ),
+                  ],
                 ),
               ],
             ),
@@ -228,7 +406,8 @@ class _HeroDetailTabViewState extends State<HeroDetailTabView> {
           _buildItemCard(
             title: 'Power Kemenangan',
             currentValueText: '${detail.powerKemenangan} / 3.000',
-            description: 'Menangkan Ranked Match atau Peak Tournament untuk meningkatkan (Maksimal 3.000 poin).',
+            description:
+                'Menangkan Ranked Match atau Peak Tournament untuk meningkatkan (Maksimal 3.000 poin).',
             child: Row(
               children: [
                 Expanded(
@@ -251,11 +430,17 @@ class _HeroDetailTabViewState extends State<HeroDetailTabView> {
                     controller: _kemenanganController,
                     keyboardType: TextInputType.number,
                     textAlign: TextAlign.center,
-                    style: const TextStyle(color: Colors.white, fontSize: 13, fontWeight: FontWeight.bold),
+                    style: const TextStyle(
+                      color: Colors.white,
+                      fontSize: 13,
+                      fontWeight: FontWeight.bold,
+                    ),
                     decoration: InputDecoration(
                       contentPadding: const EdgeInsets.all(8),
                       fillColor: const Color(0xFF141E14),
-                      border: OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(8),
+                      ),
                     ),
                     onChanged: (val) {
                       final n = int.tryParse(val) ?? 0;
@@ -283,29 +468,68 @@ class _HeroDetailTabViewState extends State<HeroDetailTabView> {
           // Pengali Peak
           _buildItemCard(
             title: 'Pengali Peak',
-            currentValueText: '${detail.pengaliPeakPercent.toStringAsFixed(0)}%',
-            description: 'Poin Peak saat ini: ${detail.poinPeakSaatIni}. Dihitung otomatis: +1% setiap kelipatan 20 poin di atas 1.200.',
+            currentValueText:
+                '${detail.pengaliPeakPercent.toStringAsFixed(0)}%',
+            description:
+                'Poin Peak saat ini: ${detail.poinPeakSaatIni}. Dihitung otomatis: +1% setiap kelipatan 20 poin di atas 1.200 (Minimal 1.200 poin).',
             child: Row(
               children: [
-                const Icon(Icons.military_tech_rounded, color: HokTheme.neonLime),
+                const Icon(
+                  Icons.military_tech_rounded,
+                  color: HokTheme.neonLime,
+                ),
                 const SizedBox(width: 10),
-                const Text('Poin Peak Tourney:', style: TextStyle(color: Colors.white, fontSize: 13)),
+                const Text(
+                  'Poin Peak Tourney:',
+                  style: TextStyle(color: Colors.white, fontSize: 13),
+                ),
                 const SizedBox(width: 10),
                 Expanded(
                   child: TextField(
                     controller: _poinPeakController,
                     keyboardType: TextInputType.number,
-                    style: const TextStyle(color: Colors.white, fontSize: 13, fontWeight: FontWeight.bold),
+                    style: const TextStyle(
+                      color: Colors.white,
+                      fontSize: 13,
+                      fontWeight: FontWeight.bold,
+                    ),
                     decoration: InputDecoration(
-                      hintText: '1260',
+                      hintText: '1200',
+                      hintStyle: const TextStyle(
+                        color: HokTheme.textMuted,
+                        fontSize: 13,
+                        fontWeight: FontWeight.bold,
+                      ),
                       suffixText: 'Poin',
                       fillColor: const Color(0xFF141E14),
-                      contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-                      border: OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
+                      contentPadding: const EdgeInsets.symmetric(
+                        horizontal: 12,
+                        vertical: 8,
+                      ),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(8),
+                      ),
                     ),
                     onChanged: (val) {
-                      final n = int.tryParse(val) ?? 1200;
-                      provider.updatePoinPeak(n);
+                      if (val.trim().isEmpty) {
+                        provider.updatePoinPeak(1200);
+                      } else {
+                        final n = int.tryParse(val) ?? 1200;
+                        provider.updatePoinPeak(n < 1200 ? 1200 : n);
+                      }
+                      _peakPerfController.text = provider
+                          .heroDetail
+                          .powerPerformaPeak
+                          .toString();
+                    },
+                    onEditingComplete: () {
+                      final val = _poinPeakController.text.trim();
+                      final n = int.tryParse(val);
+                      if (n != null && n < 1200) {
+                        _poinPeakController.text = '1200';
+                        provider.updatePoinPeak(1200);
+                      }
+                      FocusScope.of(context).unfocus();
                     },
                   ),
                 ),
@@ -317,8 +541,10 @@ class _HeroDetailTabViewState extends State<HeroDetailTabView> {
           // Pengali Keaktifan
           _buildItemCard(
             title: 'Pengali Keaktifan',
-            currentValueText: '${detail.pengaliKeaktifanPercent.toStringAsFixed(0)}%',
-            description: 'Keaktifan hero (${detail.pengaliKeaktifanPercent < 50 ? 'Tidak/Kurang Aktif' : 'Aktif'}). Menurun setiap minggu jika tidak dimainkan, dapat dipulihkan dengan bermain & MVP.',
+            currentValueText:
+                '${detail.pengaliKeaktifanPercent.toStringAsFixed(0)}%',
+            description:
+                'Keaktifan hero (${detail.pengaliKeaktifanPercent < 50 ? 'Tidak/Kurang Aktif' : 'Aktif'}). Menurun setiap minggu jika tidak dimainkan, dapat dipulihkan dengan bermain & MVP.',
             child: Slider(
               value: detail.pengaliKeaktifanPercent,
               min: 10,
@@ -343,12 +569,17 @@ class _HeroDetailTabViewState extends State<HeroDetailTabView> {
                 backgroundColor: HokTheme.neonLime,
                 foregroundColor: HokTheme.darkText,
                 padding: const EdgeInsets.symmetric(vertical: 16),
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12),
+                ),
               ),
               icon: const Icon(Icons.assignment_turned_in_rounded),
               label: Text(
                 'Terapkan Power ${HOKUtils.formatNumber(detail.finalHeroPower)} ke Slot Lane',
-                style: const TextStyle(fontWeight: FontWeight.w900, fontSize: 14),
+                style: const TextStyle(
+                  fontWeight: FontWeight.w900,
+                  fontSize: 14,
+                ),
               ),
             ),
           ),
@@ -369,10 +600,17 @@ class _HeroDetailTabViewState extends State<HeroDetailTabView> {
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Text('$label: ', style: const TextStyle(color: HokTheme.textSecondary, fontSize: 12)),
+          Text(
+            '$label: ',
+            style: const TextStyle(color: HokTheme.textSecondary, fontSize: 12),
+          ),
           Text(
             value,
-            style: const TextStyle(color: HokTheme.neonLime, fontWeight: FontWeight.bold, fontSize: 13),
+            style: const TextStyle(
+              color: HokTheme.neonLime,
+              fontWeight: FontWeight.bold,
+              fontSize: 13,
+            ),
           ),
         ],
       ),
@@ -400,7 +638,11 @@ class _HeroDetailTabViewState extends State<HeroDetailTabView> {
             children: [
               Text(
                 title,
-                style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 14),
+                style: const TextStyle(
+                  color: Colors.white,
+                  fontWeight: FontWeight.bold,
+                  fontSize: 14,
+                ),
               ),
               Container(
                 padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
@@ -422,7 +664,11 @@ class _HeroDetailTabViewState extends State<HeroDetailTabView> {
           const SizedBox(height: 6),
           Text(
             description,
-            style: const TextStyle(color: HokTheme.textSecondary, fontSize: 11, height: 1.3),
+            style: const TextStyle(
+              color: HokTheme.textSecondary,
+              fontSize: 11,
+              height: 1.3,
+            ),
           ),
           const SizedBox(height: 12),
           child,
@@ -431,7 +677,10 @@ class _HeroDetailTabViewState extends State<HeroDetailTabView> {
     );
   }
 
-  void _showApplyToSlotSheet(BuildContext context, CalculatorProvider provider) {
+  void _showApplyToSlotSheet(
+    BuildContext context,
+    CalculatorProvider provider,
+  ) {
     final laneData = provider.currentLaneData;
     showModalBottomSheet(
       context: context,
@@ -448,18 +697,32 @@ class _HeroDetailTabViewState extends State<HeroDetailTabView> {
             children: [
               Text(
                 'Pilih Slot di ${laneData.lane.displayName}',
-                style: const TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.bold),
+                style: const TextStyle(
+                  color: Colors.white,
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
               const SizedBox(height: 6),
               Text(
                 'Nilai power ${HOKUtils.formatNumber(provider.heroDetail.finalHeroPower)} akan disalin ke slot:',
-                style: const TextStyle(color: HokTheme.textSecondary, fontSize: 12),
+                style: const TextStyle(
+                  color: HokTheme.textSecondary,
+                  fontSize: 12,
+                ),
               ),
               const SizedBox(height: 14),
               Expanded(
                 child: ListView(
                   children: [
-                    const Text('Top 1-5 Hero Utama (100%):', style: TextStyle(color: HokTheme.neonLime, fontWeight: FontWeight.bold, fontSize: 12)),
+                    const Text(
+                      'Top 1-5 Hero Utama (100%):',
+                      style: TextStyle(
+                        color: HokTheme.neonLime,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 12,
+                      ),
+                    ),
                     const SizedBox(height: 6),
                     ...List.generate(5, (idx) {
                       final h = laneData.heroUtama[idx];
@@ -468,18 +731,47 @@ class _HeroDetailTabViewState extends State<HeroDetailTabView> {
                         leading: CircleAvatar(
                           radius: 14,
                           backgroundColor: const Color(0xFF1D2A1D),
-                          child: Text('#${idx + 1}', style: const TextStyle(color: HokTheme.neonLime, fontSize: 10, fontWeight: FontWeight.bold)),
+                          child: Text(
+                            '#${idx + 1}',
+                            style: const TextStyle(
+                              color: HokTheme.neonLime,
+                              fontSize: 10,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
                         ),
-                        title: Text(h.heroName, style: const TextStyle(color: Colors.white, fontSize: 13)),
-                        trailing: Text('${h.power} Power', style: const TextStyle(color: HokTheme.textSecondary, fontSize: 12)),
+                        title: Text(
+                          h.heroName,
+                          style: const TextStyle(
+                            color: Colors.white,
+                            fontSize: 13,
+                          ),
+                        ),
+                        trailing: Text(
+                          '${h.power} Power',
+                          style: const TextStyle(
+                            color: HokTheme.textSecondary,
+                            fontSize: 12,
+                          ),
+                        ),
                         onTap: () {
-                          provider.applyHeroPowerToSlot(isUtama: true, index: idx);
+                          provider.applyHeroPowerToSlot(
+                            isUtama: true,
+                            index: idx,
+                          );
                           Navigator.pop(ctx);
                         },
                       );
                     }),
                     const SizedBox(height: 10),
-                    const Text('Top 6-10 Hero OP (20%):', style: TextStyle(color: Colors.white70, fontWeight: FontWeight.bold, fontSize: 12)),
+                    const Text(
+                      'Top 6-10 Hero OP (20%):',
+                      style: TextStyle(
+                        color: Colors.white70,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 12,
+                      ),
+                    ),
                     const SizedBox(height: 6),
                     ...List.generate(5, (idx) {
                       final h = laneData.heroOP[idx];
@@ -488,12 +780,34 @@ class _HeroDetailTabViewState extends State<HeroDetailTabView> {
                         leading: CircleAvatar(
                           radius: 14,
                           backgroundColor: const Color(0xFF1D2A1D),
-                          child: Text('#${idx + 6}', style: const TextStyle(color: Colors.white70, fontSize: 10, fontWeight: FontWeight.bold)),
+                          child: Text(
+                            '#${idx + 6}',
+                            style: const TextStyle(
+                              color: Colors.white70,
+                              fontSize: 10,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
                         ),
-                        title: Text(h.heroName, style: const TextStyle(color: Colors.white, fontSize: 13)),
-                        trailing: Text('${h.power} Power', style: const TextStyle(color: HokTheme.textSecondary, fontSize: 12)),
+                        title: Text(
+                          h.heroName,
+                          style: const TextStyle(
+                            color: Colors.white,
+                            fontSize: 13,
+                          ),
+                        ),
+                        trailing: Text(
+                          '${h.power} Power',
+                          style: const TextStyle(
+                            color: HokTheme.textSecondary,
+                            fontSize: 12,
+                          ),
+                        ),
                         onTap: () {
-                          provider.applyHeroPowerToSlot(isUtama: false, index: idx);
+                          provider.applyHeroPowerToSlot(
+                            isUtama: false,
+                            index: idx,
+                          );
                           Navigator.pop(ctx);
                         },
                       );

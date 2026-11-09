@@ -84,7 +84,9 @@ class HOKUtils {
   }) {
     if (totalMatch <= 0) return 0;
     if (targetWRPercent <= currentWRPercent) return 0;
-    if (targetWRPercent >= 100.0) return null; // Mustahil dicapai jika pernah kalah
+    if (targetWRPercent >= 100.0) {
+      return null; // Mustahil dicapai jika pernah kalah
+    }
 
     final t = targetWRPercent / 100.0;
     final currentWins = totalMatch * (currentWRPercent / 100.0);

@@ -30,7 +30,9 @@ class _HeroPickerDialogState extends State<HeroPickerDialog> {
   @override
   Widget build(BuildContext context) {
     final filtered = AppConstants.allHeroes.where((hero) {
-      final matchesQuery = hero.name.toLowerCase().contains(_searchQuery.toLowerCase());
+      final matchesQuery = hero.name.toLowerCase().contains(
+        _searchQuery.toLowerCase(),
+      );
       final matchesLane = _filterLane == null || hero.lane == _filterLane;
       return matchesQuery && matchesLane;
     }).toList();
@@ -50,7 +52,10 @@ class _HeroPickerDialogState extends State<HeroPickerDialog> {
           children: [
             Row(
               children: [
-                const Icon(Icons.sports_esports_rounded, color: HokTheme.neonLime),
+                const Icon(
+                  Icons.sports_esports_rounded,
+                  color: HokTheme.neonLime,
+                ),
                 const SizedBox(width: 8),
                 const Text(
                   'Pilih Hero Honor of Kings',
@@ -103,7 +108,9 @@ class _HeroPickerDialogState extends State<HeroPickerDialog> {
                     },
                     selectedColor: HokTheme.neonLime,
                     labelStyle: TextStyle(
-                      color: _filterLane == null ? HokTheme.darkText : Colors.white,
+                      color: _filterLane == null
+                          ? HokTheme.darkText
+                          : Colors.white,
                       fontSize: 12,
                       fontWeight: FontWeight.bold,
                     ),
@@ -125,7 +132,9 @@ class _HeroPickerDialogState extends State<HeroPickerDialog> {
                         labelStyle: TextStyle(
                           color: isSel ? HokTheme.darkText : Colors.white,
                           fontSize: 12,
-                          fontWeight: isSel ? FontWeight.bold : FontWeight.normal,
+                          fontWeight: isSel
+                              ? FontWeight.bold
+                              : FontWeight.normal,
                         ),
                       ),
                     );
@@ -159,7 +168,9 @@ class _HeroPickerDialogState extends State<HeroPickerDialog> {
                           leading: CircleAvatar(
                             backgroundColor: const Color(0xFF1B281B),
                             child: Text(
-                              hero.name.substring(0, hero.name.length >= 2 ? 2 : 1).toUpperCase(),
+                              hero.name
+                                  .substring(0, hero.name.length >= 2 ? 2 : 1)
+                                  .toUpperCase(),
                               style: const TextStyle(
                                 color: HokTheme.neonLime,
                                 fontWeight: FontWeight.bold,
@@ -182,7 +193,10 @@ class _HeroPickerDialogState extends State<HeroPickerDialog> {
                             ),
                           ),
                           trailing: Container(
-                            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 10,
+                              vertical: 4,
+                            ),
                             decoration: BoxDecoration(
                               color: const Color(0xFF172217),
                               borderRadius: BorderRadius.circular(20),

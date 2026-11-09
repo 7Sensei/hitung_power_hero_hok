@@ -1,4 +1,3 @@
-import 'package:flutter/material.dart';
 import '../core/constants.dart';
 
 class HokHero {
@@ -19,10 +18,7 @@ class HeroSlotData {
   String heroName;
   int power;
 
-  HeroSlotData({
-    required this.heroName,
-    required this.power,
-  });
+  HeroSlotData({required this.heroName, required this.power});
 
   HeroSlotData copyWith({String? heroName, int? power}) {
     return HeroSlotData(
@@ -31,4 +27,3 @@ class HeroSlotData {
     );
   }
 }
-

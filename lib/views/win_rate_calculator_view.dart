@@ -3,8 +3,8 @@ import '../core/theme.dart';
 import '../core/utils.dart';
 
 enum WrMode {
-  winStreak,    // Hitung Win Streak (Home)
-  loseStreak,   // Hitung WR dengan lose streak
+  winStreak, // Hitung Win Streak (Home)
+  loseStreak, // Hitung WR dengan lose streak
   checkWinLose, // Cek total win atau lose
 }
 
@@ -19,10 +19,16 @@ class _WinRateCalculatorViewState extends State<WinRateCalculatorView>
     with SingleTickerProviderStateMixin {
   WrMode _mode = WrMode.winStreak;
 
-  final TextEditingController _matchController = TextEditingController(text: '100');
+  final TextEditingController _matchController = TextEditingController(
+    text: '100',
+  );
   final TextEditingController _wrController = TextEditingController(text: '50');
-  final TextEditingController _targetWrController = TextEditingController(text: '60');
-  final TextEditingController _loseStreakController = TextEditingController(text: '5');
+  final TextEditingController _targetWrController = TextEditingController(
+    text: '60',
+  );
+  final TextEditingController _loseStreakController = TextEditingController(
+    text: '5',
+  );
 
   bool _hasCalculated = true;
   int? _resultWinStreak;
@@ -213,9 +219,13 @@ class _WinRateCalculatorViewState extends State<WinRateCalculatorView>
                         label,
                         overflow: TextOverflow.ellipsis,
                         style: TextStyle(
-                          color: isActive ? HokTheme.darkText : HokTheme.textMuted,
+                          color: isActive
+                              ? HokTheme.darkText
+                              : HokTheme.textMuted,
                           fontSize: 12,
-                          fontWeight: isActive ? FontWeight.w900 : FontWeight.w500,
+                          fontWeight: isActive
+                              ? FontWeight.w900
+                              : FontWeight.w500,
                         ),
                       ),
                     ),
@@ -256,7 +266,9 @@ class _WinRateCalculatorViewState extends State<WinRateCalculatorView>
             decoration: BoxDecoration(
               color: HokTheme.neonLime.withValues(alpha: 0.15),
               borderRadius: BorderRadius.circular(20),
-              border: Border.all(color: HokTheme.neonLime.withValues(alpha: 0.3)),
+              border: Border.all(
+                color: HokTheme.neonLime.withValues(alpha: 0.3),
+              ),
             ),
             child: Text(
               _modeTitle,
@@ -382,7 +394,11 @@ class _WinRateCalculatorViewState extends State<WinRateCalculatorView>
       children: [
         Row(
           children: [
-            Icon(icon, size: 14, color: HokTheme.neonLime.withValues(alpha: 0.7)),
+            Icon(
+              icon,
+              size: 14,
+              color: HokTheme.neonLime.withValues(alpha: 0.7),
+            ),
             const SizedBox(width: 6),
             Text(
               label,
@@ -406,7 +422,10 @@ class _WinRateCalculatorViewState extends State<WinRateCalculatorView>
           decoration: InputDecoration(
             filled: true,
             fillColor: const Color(0xFF141E14),
-            contentPadding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
+            contentPadding: const EdgeInsets.symmetric(
+              horizontal: 14,
+              vertical: 12,
+            ),
             suffixText: suffixText,
             suffixStyle: TextStyle(
               color: HokTheme.neonLime.withValues(alpha: 0.5),
@@ -423,7 +442,10 @@ class _WinRateCalculatorViewState extends State<WinRateCalculatorView>
             ),
             focusedBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(10),
-              borderSide: const BorderSide(color: HokTheme.neonLime, width: 1.5),
+              borderSide: const BorderSide(
+                color: HokTheme.neonLime,
+                width: 1.5,
+              ),
             ),
           ),
           onSubmitted: (_) => _calculate(),
@@ -441,9 +463,7 @@ class _WinRateCalculatorViewState extends State<WinRateCalculatorView>
       decoration: BoxDecoration(
         color: const Color(0xFF0C120C),
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(
-          color: HokTheme.neonLime.withValues(alpha: 0.2),
-        ),
+        border: Border.all(color: HokTheme.neonLime.withValues(alpha: 0.2)),
         boxShadow: [
           BoxShadow(
             color: HokTheme.neonLime.withValues(alpha: 0.06),
@@ -477,13 +497,21 @@ class _WinRateCalculatorViewState extends State<WinRateCalculatorView>
               color: HokTheme.redAccent.withValues(alpha: 0.15),
               borderRadius: BorderRadius.circular(10),
             ),
-            child: const Icon(Icons.warning_rounded, color: HokTheme.redAccent, size: 20),
+            child: const Icon(
+              Icons.warning_rounded,
+              color: HokTheme.redAccent,
+              size: 20,
+            ),
           ),
           const SizedBox(width: 12),
           const Expanded(
             child: Text(
               'Target WR 100% mustahil dicapai jika sudah pernah mengalami kekalahan.',
-              style: TextStyle(color: HokTheme.redAccent, fontSize: 12, height: 1.4),
+              style: TextStyle(
+                color: HokTheme.redAccent,
+                fontSize: 12,
+                height: 1.4,
+              ),
             ),
           ),
         ],
@@ -492,12 +520,20 @@ class _WinRateCalculatorViewState extends State<WinRateCalculatorView>
 
     return Column(
       children: [
-        const Icon(Icons.emoji_events_rounded, color: HokTheme.neonLime, size: 32),
+        const Icon(
+          Icons.emoji_events_rounded,
+          color: HokTheme.neonLime,
+          size: 32,
+        ),
         const SizedBox(height: 10),
         RichText(
           textAlign: TextAlign.center,
           text: TextSpan(
-            style: const TextStyle(color: HokTheme.textSecondary, fontSize: 13, height: 1.6),
+            style: const TextStyle(
+              color: HokTheme.textSecondary,
+              fontSize: 13,
+              height: 1.6,
+            ),
             children: [
               const TextSpan(text: 'Kamu perlu '),
               TextSpan(
@@ -508,7 +544,9 @@ class _WinRateCalculatorViewState extends State<WinRateCalculatorView>
                   fontSize: 22,
                 ),
               ),
-              const TextSpan(text: ' win berturut-turut\nuntuk mencapai win rate '),
+              const TextSpan(
+                text: ' win berturut-turut\nuntuk mencapai win rate ',
+              ),
               TextSpan(
                 text: '$_lastCalculatedTargetWr%',
                 style: const TextStyle(
@@ -527,12 +565,20 @@ class _WinRateCalculatorViewState extends State<WinRateCalculatorView>
   Widget _buildLoseStreakResult() {
     return Column(
       children: [
-        const Icon(Icons.trending_down_rounded, color: HokTheme.redAccent, size: 32),
+        const Icon(
+          Icons.trending_down_rounded,
+          color: HokTheme.redAccent,
+          size: 32,
+        ),
         const SizedBox(height: 10),
         RichText(
           textAlign: TextAlign.center,
           text: TextSpan(
-            style: const TextStyle(color: HokTheme.textSecondary, fontSize: 13, height: 1.6),
+            style: const TextStyle(
+              color: HokTheme.textSecondary,
+              fontSize: 13,
+              height: 1.6,
+            ),
             children: [
               const TextSpan(text: 'Jika kamu lose streak sebanyak '),
               TextSpan(
@@ -547,7 +593,9 @@ class _WinRateCalculatorViewState extends State<WinRateCalculatorView>
               TextSpan(
                 text: '${_resultNewWr?.toStringAsFixed(1)}%',
                 style: TextStyle(
-                  color: (_resultNewWr ?? 0) < 50 ? HokTheme.redAccent : HokTheme.neonLime,
+                  color: (_resultNewWr ?? 0) < 50
+                      ? HokTheme.redAccent
+                      : HokTheme.neonLime,
                   fontWeight: FontWeight.w900,
                   fontSize: 22,
                 ),
@@ -569,11 +617,17 @@ class _WinRateCalculatorViewState extends State<WinRateCalculatorView>
             decoration: BoxDecoration(
               color: HokTheme.neonLime.withValues(alpha: 0.08),
               borderRadius: BorderRadius.circular(12),
-              border: Border.all(color: HokTheme.neonLime.withValues(alpha: 0.15)),
+              border: Border.all(
+                color: HokTheme.neonLime.withValues(alpha: 0.15),
+              ),
             ),
             child: Column(
               children: [
-                const Icon(Icons.check_circle_rounded, color: HokTheme.neonLime, size: 24),
+                const Icon(
+                  Icons.check_circle_rounded,
+                  color: HokTheme.neonLime,
+                  size: 24,
+                ),
                 const SizedBox(height: 6),
                 Text(
                   '$_resultTotalWin',
@@ -599,11 +653,17 @@ class _WinRateCalculatorViewState extends State<WinRateCalculatorView>
             decoration: BoxDecoration(
               color: HokTheme.redAccent.withValues(alpha: 0.08),
               borderRadius: BorderRadius.circular(12),
-              border: Border.all(color: HokTheme.redAccent.withValues(alpha: 0.15)),
+              border: Border.all(
+                color: HokTheme.redAccent.withValues(alpha: 0.15),
+              ),
             ),
             child: Column(
               children: [
-                const Icon(Icons.cancel_rounded, color: HokTheme.redAccent, size: 24),
+                const Icon(
+                  Icons.cancel_rounded,
+                  color: HokTheme.redAccent,
+                  size: 24,
+                ),
                 const SizedBox(height: 6),
                 Text(
                   '$_resultTotalLose',
@@ -679,7 +739,11 @@ class _WinRateCalculatorViewState extends State<WinRateCalculatorView>
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Icon(link.icon, size: 14, color: HokTheme.neonLime.withValues(alpha: 0.7)),
+                  Icon(
+                    link.icon,
+                    size: 14,
+                    color: HokTheme.neonLime.withValues(alpha: 0.7),
+                  ),
                   const SizedBox(width: 8),
                   Text(
                     link.label,

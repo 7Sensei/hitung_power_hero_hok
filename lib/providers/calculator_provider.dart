@@ -6,8 +6,8 @@ import '../models/hero_model.dart';
 import '../models/lane_model.dart';
 
 enum AppScreen {
-  powerCalculator,     // Kalkulator Power Lane & Hero HoK
-  winRateCalculator,   // Penghitung Win Rate (johsteven/penghitung-wr)
+  powerCalculator, // Kalkulator Power Lane & Hero HoK
+  winRateCalculator, // Penghitung Win Rate (johsteven/penghitung-wr)
 }
 
 enum CalculatorTab { lane, hero }
@@ -22,7 +22,8 @@ class CalculatorProvider with ChangeNotifier {
   double wrCurrentPercent = 50.0;
   double wrTargetPercent = 60.0;
   double wrDropTargetPercent = 45.0;
-  bool isWrWinStreakMode = true; // true = target win streak, false = lose streak check
+  bool isWrWinStreakMode =
+      true; // true = target win streak, false = lose streak check
 
   // Data 5 Lane terpisah
   late Map<HokLane, LaneData> laneDataMap;
@@ -186,7 +187,11 @@ class CalculatorProvider with ChangeNotifier {
   }
 
   // Quick delta power (+/-)
-  void quickDeltaPower({required bool isUtama, required int index, required int delta}) {
+  void quickDeltaPower({
+    required bool isUtama,
+    required int index,
+    required int delta,
+  }) {
     if (isUtama) {
       final current = currentLaneData.heroUtama[index].power;
       updateHeroUtamaPower(index, (current + delta).clamp(0, 99999));
@@ -197,7 +202,11 @@ class CalculatorProvider with ChangeNotifier {
   }
 
   // Ubah nama hero pada slot
-  void updateHeroName({required bool isUtama, required int index, required String newName}) {
+  void updateHeroName({
+    required bool isUtama,
+    required int index,
+    required String newName,
+  }) {
     if (isUtama) {
       currentLaneData.heroUtama[index].heroName = newName;
     } else {
@@ -214,10 +223,7 @@ class CalculatorProvider with ChangeNotifier {
 
   // Auto-sort seluruh 10 hero berdasarkan power tertinggi: Top 1-5 jadi Hero Utama, Top 6-10 jadi Hero OP
   void autoSortCurrentLane() {
-    final allTen = [
-      ...currentLaneData.heroUtama,
-      ...currentLaneData.heroOP,
-    ];
+    final allTen = [...currentLaneData.heroUtama, ...currentLaneData.heroOP];
     allTen.sort((a, b) => b.power.compareTo(a.power));
 
     currentLaneData.heroUtama = allTen.sublist(0, 5);
@@ -244,12 +250,23 @@ class CalculatorProvider with ChangeNotifier {
 
   // --- TAB HERO POWER DETAIL METHODS ---
   void updatePerformaRanked(int val) {
-    heroDetail.powerPerformaRanked = val.clamp(0, 3000);
+    heroDetail.powerPerformaRanked = val.clamp(0, 2500);
     notifyListeners();
   }
 
   void updatePerformaPeak(int val) {
-    heroDetail.powerPerformaPeak = val.clamp(0, 1000);
+    heroDetail.powerPerformaPeak = val.clamp(0, heroDetail.peakPowerCap);
+    notifyListeners();
+  }
+
+  void updateSelectedPeakTier(int tierPoints) {
+    heroDetail.selectedPeakPointsTier = tierPoints;
+    if (heroDetail.powerPerformaPeak > heroDetail.peakPowerCap) {
+      heroDetail.powerPerformaPeak = heroDetail.peakPowerCap;
+    }
+    if (heroDetail.poinPeakSaatIni < tierPoints) {
+      heroDetail.poinPeakSaatIni = tierPoints;
+    }
     notifyListeners();
   }
 
@@ -259,7 +276,18 @@ class CalculatorProvider with ChangeNotifier {
   }
 
   void updatePoinPeak(int val) {
-    heroDetail.poinPeakSaatIni = val.clamp(0, 3500);
+    final sanitized = val < 1200 ? 1200 : val.clamp(1200, 3500);
+    heroDetail.poinPeakSaatIni = sanitized;
+    int matchedTier = 1200;
+    for (final tier in kPeakCapTiers) {
+      if (heroDetail.poinPeakSaatIni >= tier.peakPoints) {
+        matchedTier = tier.peakPoints;
+      }
+    }
+    heroDetail.selectedPeakPointsTier = matchedTier;
+    if (heroDetail.powerPerformaPeak > heroDetail.peakPowerCap) {
+      heroDetail.powerPerformaPeak = heroDetail.peakPowerCap;
+    }
     notifyListeners();
   }
 
@@ -289,16 +317,16 @@ class CalculatorProvider with ChangeNotifier {
   int get wrCurrentWins => (wrTotalMatch * (wrCurrentPercent / 100.0)).round();
 
   int? get wrRequiredWinStreak => HOKUtils.calculateRequiredWinStreak(
-        totalMatch: wrTotalMatch,
-        currentWRPercent: wrCurrentPercent,
-        targetWRPercent: wrTargetPercent,
-      );
+    totalMatch: wrTotalMatch,
+    currentWRPercent: wrCurrentPercent,
+    targetWRPercent: wrTargetPercent,
+  );
 
   int? get wrAllowedLoseStreak => HOKUtils.calculateLoseStreakToDrop(
-        totalMatch: wrTotalMatch,
-        currentWRPercent: wrCurrentPercent,
-        targetLowerWRPercent: wrDropTargetPercent,
-      );
+    totalMatch: wrTotalMatch,
+    currentWRPercent: wrCurrentPercent,
+    targetLowerWRPercent: wrDropTargetPercent,
+  );
 
   void updateWrTotalMatch(int val) {
     wrTotalMatch = val.clamp(1, 999999);

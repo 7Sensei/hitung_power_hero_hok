@@ -14,7 +14,7 @@ class GamelandNavbar extends StatelessWidget {
 
     return LayoutBuilder(
       builder: (context, constraints) {
-        final isNarrow = constraints.maxWidth < 680;
+        final isNarrow = constraints.maxWidth < 720;
 
         final leftBrandBlock = Row(
           mainAxisSize: MainAxisSize.min,
@@ -73,7 +73,8 @@ class GamelandNavbar extends StatelessWidget {
           ],
         );
 
-        final centerSwitcherBlock = provider.activeScreen == AppScreen.powerCalculator
+        final centerSwitcherBlock =
+            provider.activeScreen == AppScreen.powerCalculator
             ? Container(
                 padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 4),
                 decoration: BoxDecoration(
@@ -100,7 +101,10 @@ class GamelandNavbar extends StatelessWidget {
                 ),
               )
             : Container(
-                padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 6),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 14,
+                  vertical: 6,
+                ),
                 decoration: BoxDecoration(
                   color: const Color(0xFF111711),
                   borderRadius: BorderRadius.circular(30),
@@ -109,7 +113,11 @@ class GamelandNavbar extends StatelessWidget {
                 child: const Row(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    Icon(Icons.insights_rounded, color: HokTheme.neonLime, size: 14),
+                    Icon(
+                      Icons.insights_rounded,
+                      color: HokTheme.neonLime,
+                      size: 14,
+                    ),
                     SizedBox(width: 6),
                     Text(
                       'Win Rate Tool',
@@ -123,17 +131,23 @@ class GamelandNavbar extends StatelessWidget {
                 ),
               );
 
+        final showPowerLaneActions =
+            provider.activeScreen == AppScreen.powerCalculator &&
+            provider.activeTab == CalculatorTab.lane;
+
         final rightActionsBlock = Row(
           mainAxisSize: MainAxisSize.min,
           children: [
-            if (provider.activeScreen == AppScreen.powerCalculator) ...[
+            if (showPowerLaneActions) ...[
               // Pill Muat Contoh HoK
               InkWell(
                 onTap: () {
                   provider.resetToSampleData();
                   ScaffoldMessenger.of(context).showSnackBar(
                     const SnackBar(
-                      content: Text('Data contoh screenshot HoK (29.782 Power) dimuat!'),
+                      content: Text(
+                        'Data contoh screenshot HoK (29.782 Power) dimuat!',
+                      ),
                       backgroundColor: Color(0xFF162416),
                       duration: Duration(seconds: 2),
                     ),
@@ -141,7 +155,10 @@ class GamelandNavbar extends StatelessWidget {
                 },
                 borderRadius: BorderRadius.circular(30),
                 child: Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 7),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 10,
+                    vertical: 7,
+                  ),
                   decoration: BoxDecoration(
                     color: const Color(0xFF121912),
                     borderRadius: BorderRadius.circular(30),
@@ -149,7 +166,11 @@ class GamelandNavbar extends StatelessWidget {
                   ),
                   child: const Row(
                     children: [
-                      Icon(Icons.refresh_rounded, color: HokTheme.neonLime, size: 14),
+                      Icon(
+                        Icons.refresh_rounded,
+                        color: HokTheme.neonLime,
+                        size: 14,
+                      ),
                       SizedBox(width: 4),
                       Text(
                         'Sample',
@@ -180,44 +201,6 @@ class GamelandNavbar extends StatelessWidget {
                   );
                 },
               ),
-            ] else ...[
-              InkWell(
-                onTap: () {
-                  provider.updateWrTotalMatch(100);
-                  provider.updateWrCurrentPercent(50.0);
-                  provider.updateWrTargetPercent(60.0);
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(
-                      content: Text('Nilai Win Rate di-reset ke default.'),
-                      backgroundColor: Color(0xFF162416),
-                      duration: Duration(seconds: 2),
-                    ),
-                  );
-                },
-                borderRadius: BorderRadius.circular(30),
-                child: Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 7),
-                  decoration: BoxDecoration(
-                    color: const Color(0xFF121912),
-                    borderRadius: BorderRadius.circular(30),
-                    border: Border.all(color: const Color(0xFF223222)),
-                  ),
-                  child: const Row(
-                    children: [
-                      Icon(Icons.refresh_rounded, color: HokTheme.neonLime, size: 14),
-                      SizedBox(width: 4),
-                      Text(
-                        'Reset',
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 11,
-                          fontWeight: FontWeight.w600,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
             ],
           ],
         );
@@ -229,10 +212,7 @@ class GamelandNavbar extends StatelessWidget {
               children: [
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    leftBrandBlock,
-                    rightActionsBlock,
-                  ],
+                  children: [leftBrandBlock, rightActionsBlock],
                 ),
                 const SizedBox(height: 10),
                 centerSwitcherBlock,
@@ -243,12 +223,14 @@ class GamelandNavbar extends StatelessWidget {
 
         return Container(
           padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 14),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          child: Stack(
+            alignment: Alignment.center,
             children: [
-              leftBrandBlock,
-              centerSwitcherBlock,
-              rightActionsBlock,
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [leftBrandBlock, rightActionsBlock],
+              ),
+              Center(child: centerSwitcherBlock),
             ],
           ),
         );
@@ -322,9 +304,7 @@ class GamelandNavbar extends StatelessWidget {
             shape: BoxShape.circle,
             border: Border.all(color: const Color(0xFF223222)),
           ),
-          child: Center(
-            child: Icon(icon, color: Colors.white70, size: 16),
-          ),
+          child: Center(child: Icon(icon, color: Colors.white70, size: 16)),
         ),
       ),
     );

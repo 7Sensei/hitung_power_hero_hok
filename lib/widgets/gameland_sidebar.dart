@@ -45,7 +45,7 @@ class GamelandSidebar extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        'Gameland Tools',
+                        'HOK by 7Sensei',
                         style: TextStyle(
                           color: Colors.white,
                           fontSize: 18,
@@ -54,7 +54,7 @@ class GamelandSidebar extends StatelessWidget {
                         ),
                       ),
                       Text(
-                        'Koleksi Kalkulator Gaming',
+                        'Tools & Utilities for HOK',
                         style: TextStyle(
                           color: HokTheme.textSecondary,
                           fontSize: 11,
@@ -64,7 +64,10 @@ class GamelandSidebar extends StatelessWidget {
                   ),
                   const Spacer(),
                   IconButton(
-                    icon: const Icon(Icons.close_rounded, color: HokTheme.textMuted),
+                    icon: const Icon(
+                      Icons.close_rounded,
+                      color: HokTheme.textMuted,
+                    ),
                     onPressed: () => Navigator.pop(context),
                   ),
                 ],
@@ -75,7 +78,7 @@ class GamelandSidebar extends StatelessWidget {
               const SizedBox(height: 20),
 
               const Text(
-                'PILIH ALAT KALKULATOR',
+                'PILIH TOOLS',
                 style: TextStyle(
                   color: HokTheme.textMuted,
                   fontSize: 10,
@@ -90,7 +93,7 @@ class GamelandSidebar extends StatelessWidget {
                 title: 'Kalkulator Power HoK',
                 subtitle: 'Power Lane & Rincian Hero Power',
                 icon: Icons.shield_rounded,
-                badge: 'HoK In-Game',
+                badge: 'Tools',
                 isSelected: provider.activeScreen == AppScreen.powerCalculator,
                 onTap: () {
                   provider.setAppScreen(AppScreen.powerCalculator);
@@ -105,8 +108,9 @@ class GamelandSidebar extends StatelessWidget {
                 title: 'Penghitung Win Rate (WR)',
                 subtitle: 'Target Win Streak & Lose Streak',
                 icon: Icons.insights_rounded,
-                badge: 'johsteven Tool',
-                isSelected: provider.activeScreen == AppScreen.winRateCalculator,
+                badge: 'Tools',
+                isSelected:
+                    provider.activeScreen == AppScreen.winRateCalculator,
                 onTap: () {
                   provider.setAppScreen(AppScreen.winRateCalculator);
                   Navigator.pop(context);
@@ -128,7 +132,11 @@ class GamelandSidebar extends StatelessWidget {
                   children: [
                     Row(
                       children: [
-                        Icon(Icons.code_rounded, color: HokTheme.neonLime, size: 16),
+                        Icon(
+                          Icons.code_rounded,
+                          color: HokTheme.neonLime,
+                          size: 16,
+                        ),
                         SizedBox(width: 8),
                         Text(
                           'Open Source Tools',
@@ -142,7 +150,7 @@ class GamelandSidebar extends StatelessWidget {
                     ),
                     SizedBox(height: 6),
                     Text(
-                      '• HOK Power: 7Sensei\n• Penghitung WR: johsteven',
+                      '• HOK by 7Sensei',
                       style: TextStyle(
                         color: HokTheme.textSecondary,
                         fontSize: 11,
@@ -258,4 +266,3 @@ class GamelandSidebar extends StatelessWidget {
     );
   }
 }
-
