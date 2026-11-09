@@ -168,4 +168,35 @@ void main() {
     }
     expect(exception, isNull);
   });
+
+  testWidgets('Sidebar drawer test and no overflow on narrow screens', (
+    WidgetTester tester,
+  ) async {
+    // Set ukuran layar mobile tipikal misal 375x812
+    tester.view.physicalSize = const Size(375, 812);
+    tester.view.devicePixelRatio = 1.0;
+    addTearDown(() {
+      tester.view.resetPhysicalSize();
+      tester.view.resetDevicePixelRatio();
+    });
+
+    await tester.pumpWidget(const HOKPowerCalculatorApp());
+    await tester.pumpAndSettle();
+
+    // Buka Drawer melalui tombol menu
+    await tester.tap(find.byIcon(Icons.menu_rounded));
+    await tester.pumpAndSettle();
+
+    // Pastikan menu drawer tampil
+    expect(find.text('PILIH TOOLS'), findsOneWidget);
+    expect(find.text('Kalkulator Power HoK'), findsOneWidget);
+    expect(find.text('Penghitung Win Rate (WR)'), findsOneWidget);
+
+    // Ganti ke Penghitung Win Rate dari drawer
+    await tester.tap(find.text('Penghitung Win Rate (WR)'));
+    await tester.pumpAndSettle();
+
+    expect(find.text('Hitung Win Streak'), findsWidgets);
+    expect(tester.takeException(), isNull);
+  });
 }

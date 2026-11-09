@@ -59,15 +59,19 @@ class GamelandNavbar extends StatelessWidget {
               ),
             ),
             const SizedBox(width: 8),
-            Text(
-              provider.activeScreen == AppScreen.powerCalculator
-                  ? 'HOK Power'
-                  : 'Penghitung WR',
-              style: const TextStyle(
-                color: Colors.white,
-                fontSize: 16,
-                fontWeight: FontWeight.w900,
-                letterSpacing: -0.5,
+            Flexible(
+              child: Text(
+                provider.activeScreen == AppScreen.powerCalculator
+                    ? 'HOK Power'
+                    : 'Penghitung WR',
+                style: const TextStyle(
+                  color: Colors.white,
+                  fontSize: 16,
+                  fontWeight: FontWeight.w900,
+                  letterSpacing: -0.5,
+                ),
+                overflow: TextOverflow.ellipsis,
+                maxLines: 1,
               ),
             ),
           ],
@@ -82,22 +86,25 @@ class GamelandNavbar extends StatelessWidget {
                   borderRadius: BorderRadius.circular(30),
                   border: Border.all(color: const Color(0xFF202E20)),
                 ),
-                child: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    _buildTabPill(
-                      label: 'Power Lane',
-                      icon: Icons.alt_route_rounded,
-                      isActive: provider.activeTab == CalculatorTab.lane,
-                      onTap: () => provider.setTab(CalculatorTab.lane),
-                    ),
-                    _buildTabPill(
-                      label: 'Rincian Hero',
-                      icon: Icons.calculate_outlined,
-                      isActive: provider.activeTab == CalculatorTab.hero,
-                      onTap: () => provider.setTab(CalculatorTab.hero),
-                    ),
-                  ],
+                child: FittedBox(
+                  fit: BoxFit.scaleDown,
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      _buildTabPill(
+                        label: 'Power Lane',
+                        icon: Icons.alt_route_rounded,
+                        isActive: provider.activeTab == CalculatorTab.lane,
+                        onTap: () => provider.setTab(CalculatorTab.lane),
+                      ),
+                      _buildTabPill(
+                        label: 'Rincian Hero',
+                        icon: Icons.calculate_outlined,
+                        isActive: provider.activeTab == CalculatorTab.hero,
+                        onTap: () => provider.setTab(CalculatorTab.hero),
+                      ),
+                    ],
+                  ),
                 ),
               )
             : Container(
@@ -212,7 +219,11 @@ class GamelandNavbar extends StatelessWidget {
               children: [
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [leftBrandBlock, rightActionsBlock],
+                  children: [
+                    Flexible(child: leftBrandBlock),
+                    const SizedBox(width: 8),
+                    rightActionsBlock,
+                  ],
                 ),
                 const SizedBox(height: 10),
                 centerSwitcherBlock,

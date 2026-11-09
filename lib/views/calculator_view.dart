@@ -65,7 +65,7 @@ class _CalculatorViewState extends State<CalculatorView> {
                           else
                             const HeroDetailTabView(),
                         ]
-                        // KONTEN SCREEN 2: PENGHITUNG WIN RATE (johsteven/penghitung-wr)
+                        // KONTEN SCREEN 2: PENGHITUNG WIN RATE
                         else ...[
                           const WinRateCalculatorView(),
                         ],

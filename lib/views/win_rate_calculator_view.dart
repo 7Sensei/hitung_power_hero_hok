@@ -745,12 +745,16 @@ class _WinRateCalculatorViewState extends State<WinRateCalculatorView>
                     color: HokTheme.neonLime.withValues(alpha: 0.7),
                   ),
                   const SizedBox(width: 8),
-                  Text(
-                    link.label,
-                    style: TextStyle(
-                      color: HokTheme.neonLime.withValues(alpha: 0.85),
-                      fontSize: 13,
-                      fontWeight: FontWeight.w600,
+                  Flexible(
+                    child: Text(
+                      link.label,
+                      style: TextStyle(
+                        color: HokTheme.neonLime.withValues(alpha: 0.85),
+                        fontSize: 13,
+                        fontWeight: FontWeight.w600,
+                      ),
+                      overflow: TextOverflow.ellipsis,
+                      maxLines: 1,
                     ),
                   ),
                 ],

@@ -25,21 +25,24 @@ class GamelandHeroHeader extends StatelessWidget {
             borderRadius: BorderRadius.circular(30),
             border: Border.all(color: const Color(0xFF233223)),
           ),
-          child: Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Text(
-                isLaneMode
-                    ? '⚡ HOK POWER  •  ${provider.currentLaneData.lane.displayName.toUpperCase()}'
-                    : '⚡ HOK POWER  •  RINCIAN HERO POWER INDIVIDUAL',
-                style: const TextStyle(
-                  color: HokTheme.limeAccent,
-                  fontSize: 11,
-                  fontWeight: FontWeight.w700,
-                  letterSpacing: 0.8,
+          child: FittedBox(
+            fit: BoxFit.scaleDown,
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text(
+                  isLaneMode
+                      ? '⚡ HOK POWER  •  ${provider.currentLaneData.lane.displayName.toUpperCase()}'
+                      : '⚡ HOK POWER  •  RINCIAN HERO POWER INDIVIDUAL',
+                  style: const TextStyle(
+                    color: HokTheme.limeAccent,
+                    fontSize: 11,
+                    fontWeight: FontWeight.w700,
+                    letterSpacing: 0.8,
+                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
 

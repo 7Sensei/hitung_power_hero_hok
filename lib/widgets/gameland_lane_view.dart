@@ -159,43 +159,47 @@ class GamelandLaneView extends StatelessWidget {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Row(
-                            children: [
-                              Container(
-                                padding: const EdgeInsets.symmetric(
-                                  horizontal: 10,
-                                  vertical: 4,
+                          FittedBox(
+                            fit: BoxFit.scaleDown,
+                            alignment: Alignment.centerLeft,
+                            child: Container(
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 10,
+                                vertical: 4,
+                              ),
+                              decoration: BoxDecoration(
+                                color: HokTheme.neonLime.withValues(
+                                  alpha: 0.15,
                                 ),
-                                decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(20),
+                                border: Border.all(
                                   color: HokTheme.neonLime.withValues(
-                                    alpha: 0.15,
-                                  ),
-                                  borderRadius: BorderRadius.circular(20),
-                                  border: Border.all(
-                                    color: HokTheme.neonLime.withValues(
-                                      alpha: 0.4,
-                                    ),
-                                  ),
-                                ),
-                                child: Text(
-                                  '${laneData.lane.displayName} • Tier ${laneData.currentTier}',
-                                  style: const TextStyle(
-                                    color: HokTheme.neonLime,
-                                    fontSize: 11,
-                                    fontWeight: FontWeight.bold,
+                                    alpha: 0.4,
                                   ),
                                 ),
                               ),
-                            ],
+                              child: Text(
+                                '${laneData.lane.displayName} • Tier ${laneData.currentTier}',
+                                style: const TextStyle(
+                                  color: HokTheme.neonLime,
+                                  fontSize: 11,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ),
                           ),
                           const SizedBox(height: 8),
-                          Text(
-                            HOKUtils.formatNumber(laneData.totalPowerLane),
-                            style: const TextStyle(
-                              color: Colors.white,
-                              fontSize: 34,
-                              fontWeight: FontWeight.w900,
-                              letterSpacing: -0.5,
+                          FittedBox(
+                            fit: BoxFit.scaleDown,
+                            alignment: Alignment.centerLeft,
+                            child: Text(
+                              HOKUtils.formatNumber(laneData.totalPowerLane),
+                              style: const TextStyle(
+                                color: Colors.white,
+                                fontSize: 34,
+                                fontWeight: FontWeight.w900,
+                                letterSpacing: -0.5,
+                              ),
                             ),
                           ),
                         ],
@@ -204,46 +208,55 @@ class GamelandLaneView extends StatelessWidget {
                     const SizedBox(width: 12),
 
                     // Kolom Target Power
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.end,
-                      children: [
-                        InkWell(
-                          onTap: () => _showEditTargetDialog(context, provider),
-                          borderRadius: BorderRadius.circular(6),
-                          child: Row(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              Text(
-                                'Target ${HOKUtils.formatNumber(laneData.targetPower)}',
-                                style: const TextStyle(
-                                  color: HokTheme.limeAccent,
-                                  fontSize: 20,
-                                  fontWeight: FontWeight.w800,
-                                ),
+                    Flexible(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.end,
+                        children: [
+                          InkWell(
+                            onTap: () =>
+                                _showEditTargetDialog(context, provider),
+                            borderRadius: BorderRadius.circular(6),
+                            child: FittedBox(
+                              fit: BoxFit.scaleDown,
+                              child: Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  Text(
+                                    'Target ${HOKUtils.formatNumber(laneData.targetPower)}',
+                                    style: const TextStyle(
+                                      color: HokTheme.limeAccent,
+                                      fontSize: 20,
+                                      fontWeight: FontWeight.w800,
+                                    ),
+                                  ),
+                                  const SizedBox(width: 4),
+                                  const Icon(
+                                    Icons.edit_outlined,
+                                    size: 14,
+                                    color: HokTheme.limeAccent,
+                                  ),
+                                ],
                               ),
-                              const SizedBox(width: 4),
-                              const Icon(
-                                Icons.edit_outlined,
-                                size: 14,
-                                color: HokTheme.limeAccent,
+                            ),
+                          ),
+                          const SizedBox(height: 6),
+                          FittedBox(
+                            fit: BoxFit.scaleDown,
+                            child: Text(
+                              laneData.remainingPowerToTarget > 0
+                                  ? 'Kurang ${HOKUtils.formatNumber(laneData.remainingPowerToTarget)} poin lagi'
+                                  : 'Target Tercapai! 🎉',
+                              style: TextStyle(
+                                color: laneData.remainingPowerToTarget > 0
+                                    ? HokTheme.textSecondary
+                                    : HokTheme.neonLime,
+                                fontSize: 11,
+                                fontWeight: FontWeight.w600,
                               ),
-                            ],
+                            ),
                           ),
-                        ),
-                        const SizedBox(height: 6),
-                        Text(
-                          laneData.remainingPowerToTarget > 0
-                              ? 'Kurang ${HOKUtils.formatNumber(laneData.remainingPowerToTarget)} poin lagi'
-                              : 'Target Tercapai! 🎉',
-                          style: TextStyle(
-                            color: laneData.remainingPowerToTarget > 0
-                                ? HokTheme.textSecondary
-                                : HokTheme.neonLime,
-                            fontSize: 11,
-                            fontWeight: FontWeight.w600,
-                          ),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
                   ],
                 ),
