@@ -45,6 +45,7 @@ class GamelandLaneView extends StatelessWidget {
             collapsedHMargin: 48,
             expandedRadius: 20,
             collapsedRadius: 32,
+            maxWidth: 960,
             expandedBuilder: (context) =>
                 _buildTierCardExpanded(context, provider, laneData),
             collapsedBuilder: (context) =>

@@ -7,6 +7,7 @@ import '../models/hero_detail_model.dart';
 import '../providers/calculator_provider.dart';
 import 'collapsible_card_delegate.dart';
 import 'gameland_footer.dart';
+import 'gameland_hero_header.dart';
 
 class HeroDetailTabView extends StatefulWidget {
   const HeroDetailTabView({super.key});
@@ -57,9 +58,22 @@ class _HeroDetailTabViewState extends State<HeroDetailTabView> {
 
     return CustomScrollView(
       slivers: [
-        const SliverToBoxAdapter(child: SizedBox(height: 12)),
+        // 1. HEADER: Judul + Badge (sama seperti Power Lane, tapi menampilkan "Rincian Hero")
+        SliverToBoxAdapter(
+          child: Center(
+            child: ConstrainedBox(
+              constraints: const BoxConstraints(maxWidth: 960),
+              child: const Padding(
+                padding: EdgeInsets.symmetric(horizontal: 16),
+                child: GamelandHeroHeader(),
+              ),
+            ),
+          ),
+        ),
 
-        // KARTU POWER COLLAPSIBLE (Menyusut jadi pill melayang saat scroll)
+        const SliverToBoxAdapter(child: SizedBox(height: 8)),
+
+        // 2. KARTU POWER COLLAPSIBLE (Menyusut jadi pill melayang saat scroll)
         SliverPersistentHeader(
           pinned: true,
           delegate: CollapsibleCardDelegate(
@@ -70,6 +84,7 @@ class _HeroDetailTabViewState extends State<HeroDetailTabView> {
             collapsedHMargin: 64,
             expandedRadius: 20,
             collapsedRadius: 32,
+            maxWidth: 960,
             expandedBuilder: (context) =>
                 _buildHeroPowerExpanded(context, detail),
             collapsedBuilder: (context) =>

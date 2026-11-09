@@ -13,6 +13,7 @@ class CollapsibleCardDelegate extends SliverPersistentHeaderDelegate {
     this.collapsedHMargin = 48,
     this.expandedRadius = 20,
     this.collapsedRadius = 32,
+    this.maxWidth = double.infinity,
     this.background = const Color(0xFF0C140D),
     this.border = const Color(0xFF1E2E1F),
     this.glow = HokTheme.neonLime,
@@ -25,6 +26,8 @@ class CollapsibleCardDelegate extends SliverPersistentHeaderDelegate {
   final double collapsedHMargin;
   final double expandedRadius;
   final double collapsedRadius;
+  /// Batas lebar maksimal kartu (agar sejajar dengan konten di bawahnya).
+  final double maxWidth;
   final Color background;
   final Color border;
   final Color glow;
@@ -51,46 +54,51 @@ class CollapsibleCardDelegate extends SliverPersistentHeaderDelegate {
       alignment: Alignment.topCenter,
       child: Padding(
         padding: EdgeInsets.fromLTRB(h, lerpDouble(0, topGap, t)!, h, 0),
-        child: Container(
-          width: double.infinity,
-          height: lerpDouble(expandedHeight, collapsedHeight, t),
-          clipBehavior: Clip.antiAlias,
-          decoration: BoxDecoration(
-            color: background,
-            borderRadius: BorderRadius.circular(
-              lerpDouble(expandedRadius, collapsedRadius, t)!,
-            ),
-            border: Border.all(color: border),
-            boxShadow: [
-              BoxShadow(
-                color: glow.withValues(alpha: 0.08 + 0.12 * t),
-                blurRadius: 24,
-              ),
-            ],
-          ),
-          child: Stack(
-            children: [
-              // Konten Expanded (fade out saat scroll ke bawah)
-              IgnorePointer(
-                ignoring: t > 0.5,
-                child: Opacity(
-                  opacity: (1 - t * 1.8).clamp(0.0, 1.0),
-                  child: OverflowBox(
-                    maxHeight: expandedHeight,
-                    alignment: Alignment.topCenter,
-                    child: expandedBuilder(context),
+        child: Center(
+          child: ConstrainedBox(
+            constraints: BoxConstraints(maxWidth: maxWidth),
+            child: Container(
+              width: double.infinity,
+              height: lerpDouble(expandedHeight, collapsedHeight, t),
+              clipBehavior: Clip.antiAlias,
+              decoration: BoxDecoration(
+                color: background,
+                borderRadius: BorderRadius.circular(
+                  lerpDouble(expandedRadius, collapsedRadius, t)!,
+                ),
+                border: Border.all(color: border),
+                boxShadow: [
+                  BoxShadow(
+                    color: glow.withValues(alpha: 0.08 + 0.12 * t),
+                    blurRadius: 24,
                   ),
-                ),
+                ],
               ),
-              // Konten Collapsed Pill (fade in saat menyusut)
-              IgnorePointer(
-                ignoring: t < 0.5,
-                child: Opacity(
-                  opacity: ((t - 0.5) / 0.5).clamp(0.0, 1.0),
-                  child: Center(child: collapsedBuilder(context)),
-                ),
+              child: Stack(
+                children: [
+                  // Konten Expanded (fade out saat scroll ke bawah)
+                  IgnorePointer(
+                    ignoring: t > 0.5,
+                    child: Opacity(
+                      opacity: (1 - t * 1.8).clamp(0.0, 1.0),
+                      child: OverflowBox(
+                        maxHeight: expandedHeight,
+                        alignment: Alignment.topCenter,
+                        child: expandedBuilder(context),
+                      ),
+                    ),
+                  ),
+                  // Konten Collapsed Pill (fade in saat menyusut)
+                  IgnorePointer(
+                    ignoring: t < 0.5,
+                    child: Opacity(
+                      opacity: ((t - 0.5) / 0.5).clamp(0.0, 1.0),
+                      child: Center(child: collapsedBuilder(context)),
+                    ),
+                  ),
+                ],
               ),
-            ],
+            ),
           ),
         ),
       ),
