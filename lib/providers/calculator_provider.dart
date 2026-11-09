@@ -296,15 +296,25 @@ class CalculatorProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  // Salin hasil kalkulasi Hero Power ke slot hero di Lane aktif
-  void applyHeroPowerToSlot({required bool isUtama, required int index}) {
+  // Salin hasil kalkulasi Hero Power ke slot hero di lane tertentu
+  // [targetLane] menentukan lane tujuan (default: lane aktif saat ini)
+  void applyHeroPowerToSlot({
+    required bool isUtama,
+    required int index,
+    HokLane? targetLane,
+  }) {
     final power = heroDetail.finalHeroPower;
+    final lane = targetLane ?? activeLane;
+    final data = laneDataMap[lane]!;
     if (isUtama) {
-      updateHeroUtamaPower(index, power);
+      data.heroUtama[index].power = power.clamp(0, 99999);
     } else {
-      updateHeroOPPower(index, power);
+      data.heroOP[index].power = power.clamp(0, 99999);
     }
-    setTab(CalculatorTab.lane);
+    // Pindah ke tab Lane dan aktifkan lane tujuan
+    activeLane = lane;
+    activeTab = CalculatorTab.lane;
+    notifyListeners();
   }
 
   // --- SCREEN SWITCHER (Sidebar Menu) ---

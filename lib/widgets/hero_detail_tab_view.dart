@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import '../core/constants.dart';
 import '../core/theme.dart';
 import '../core/utils.dart';
 import '../models/hero_detail_model.dart';
@@ -677,148 +678,507 @@ class _HeroDetailTabViewState extends State<HeroDetailTabView> {
     );
   }
 
+  /// Step 1 — Pilih Lane tujuan
   void _showApplyToSlotSheet(
     BuildContext context,
     CalculatorProvider provider,
   ) {
-    final laneData = provider.currentLaneData;
+    final heroPower = provider.heroDetail.finalHeroPower;
+
     showModalBottomSheet(
       context: context,
       backgroundColor: const Color(0xFF0F150F),
+      isScrollControlled: true,
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
       ),
       builder: (ctx) {
         return Padding(
-          padding: const EdgeInsets.all(20),
+          padding: const EdgeInsets.fromLTRB(20, 20, 20, 32),
           child: Column(
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(
-                'Pilih Slot di ${laneData.lane.displayName}',
-                style: const TextStyle(
-                  color: Colors.white,
-                  fontSize: 16,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              const SizedBox(height: 6),
-              Text(
-                'Nilai power ${HOKUtils.formatNumber(provider.heroDetail.finalHeroPower)} akan disalin ke slot:',
-                style: const TextStyle(
-                  color: HokTheme.textSecondary,
-                  fontSize: 12,
-                ),
-              ),
-              const SizedBox(height: 14),
-              Expanded(
-                child: ListView(
-                  children: [
-                    const Text(
-                      'Top 1-5 Hero Utama (100%):',
-                      style: TextStyle(
-                        color: HokTheme.neonLime,
-                        fontWeight: FontWeight.bold,
-                        fontSize: 12,
-                      ),
+              // Header
+              Row(
+                children: [
+                  Container(
+                    padding: const EdgeInsets.all(8),
+                    decoration: BoxDecoration(
+                      color: HokTheme.neonLime.withValues(alpha: 0.15),
+                      borderRadius: BorderRadius.circular(10),
                     ),
-                    const SizedBox(height: 6),
-                    ...List.generate(5, (idx) {
-                      final h = laneData.heroUtama[idx];
-                      return ListTile(
-                        dense: true,
-                        leading: CircleAvatar(
-                          radius: 14,
-                          backgroundColor: const Color(0xFF1D2A1D),
-                          child: Text(
-                            '#${idx + 1}',
-                            style: const TextStyle(
-                              color: HokTheme.neonLime,
-                              fontSize: 10,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                        ),
-                        title: Text(
-                          h.heroName,
-                          style: const TextStyle(
+                    child: const Icon(
+                      Icons.assignment_turned_in_rounded,
+                      color: HokTheme.neonLime,
+                      size: 20,
+                    ),
+                  ),
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const Text(
+                          'Pilih Lane Tujuan',
+                          style: TextStyle(
                             color: Colors.white,
-                            fontSize: 13,
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
                           ),
                         ),
-                        trailing: Text(
-                          '${h.power} Power',
+                        Text(
+                          'Terapkan power ${HOKUtils.formatNumber(heroPower)} ke lane mana?',
                           style: const TextStyle(
                             color: HokTheme.textSecondary,
                             fontSize: 12,
                           ),
                         ),
-                        onTap: () {
-                          provider.applyHeroPowerToSlot(
-                            isUtama: true,
-                            index: idx,
-                          );
-                          Navigator.pop(ctx);
-                        },
-                      );
-                    }),
-                    const SizedBox(height: 10),
-                    const Text(
-                      'Top 6-10 Hero OP (20%):',
-                      style: TextStyle(
-                        color: Colors.white70,
-                        fontWeight: FontWeight.bold,
-                        fontSize: 12,
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 20),
+
+              // Grid 5 Lane
+              ...HokLane.values.map((lane) {
+                final laneData = provider.laneDataMap[lane]!;
+                final isActive = lane == provider.activeLane;
+                return Padding(
+                  padding: const EdgeInsets.only(bottom: 10),
+                  child: Material(
+                    color: Colors.transparent,
+                    child: InkWell(
+                      borderRadius: BorderRadius.circular(14),
+                      onTap: () {
+                        Navigator.pop(ctx);
+                        // Buka step 2: pilih slot di lane yang dipilih
+                        _showPickSlotSheet(context, provider, lane);
+                      },
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 16,
+                          vertical: 14,
+                        ),
+                        decoration: BoxDecoration(
+                          color: isActive
+                              ? lane.accentColor.withValues(alpha: 0.12)
+                              : const Color(0xFF0D130D),
+                          borderRadius: BorderRadius.circular(14),
+                          border: Border.all(
+                            color: isActive
+                                ? lane.accentColor.withValues(alpha: 0.5)
+                                : const Color(0xFF1C2A1C),
+                            width: isActive ? 1.5 : 1,
+                          ),
+                        ),
+                        child: Row(
+                          children: [
+                            // Warna aksen lane
+                            Container(
+                              width: 4,
+                              height: 36,
+                              decoration: BoxDecoration(
+                                color: lane.accentColor,
+                                borderRadius: BorderRadius.circular(4),
+                              ),
+                            ),
+                            const SizedBox(width: 14),
+                            Expanded(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Row(
+                                    children: [
+                                      Text(
+                                        lane.displayName,
+                                        style: const TextStyle(
+                                          color: Colors.white,
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 14,
+                                        ),
+                                      ),
+                                      if (isActive) ...[
+                                        const SizedBox(width: 8),
+                                        Container(
+                                          padding: const EdgeInsets.symmetric(
+                                            horizontal: 7,
+                                            vertical: 2,
+                                          ),
+                                          decoration: BoxDecoration(
+                                            color: HokTheme.neonLime.withValues(
+                                              alpha: 0.2,
+                                            ),
+                                            borderRadius: BorderRadius.circular(
+                                              6,
+                                            ),
+                                          ),
+                                          child: const Text(
+                                            'Aktif',
+                                            style: TextStyle(
+                                              color: HokTheme.neonLime,
+                                              fontSize: 10,
+                                              fontWeight: FontWeight.bold,
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    ],
+                                  ),
+                                  const SizedBox(height: 2),
+                                  Text(
+                                    'Total: ${HOKUtils.formatNumber(laneData.totalPowerLane)} Power  •  Tier ${laneData.currentTier}',
+                                    style: const TextStyle(
+                                      color: HokTheme.textSecondary,
+                                      fontSize: 11,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            Icon(
+                              Icons.chevron_right_rounded,
+                              color: lane.accentColor.withValues(alpha: 0.7),
+                            ),
+                          ],
+                        ),
                       ),
                     ),
-                    const SizedBox(height: 6),
-                    ...List.generate(5, (idx) {
-                      final h = laneData.heroOP[idx];
-                      return ListTile(
-                        dense: true,
-                        leading: CircleAvatar(
-                          radius: 14,
-                          backgroundColor: const Color(0xFF1D2A1D),
-                          child: Text(
-                            '#${idx + 6}',
-                            style: const TextStyle(
-                              color: Colors.white70,
-                              fontSize: 10,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                        ),
-                        title: Text(
-                          h.heroName,
-                          style: const TextStyle(
-                            color: Colors.white,
-                            fontSize: 13,
-                          ),
-                        ),
-                        trailing: Text(
-                          '${h.power} Power',
-                          style: const TextStyle(
-                            color: HokTheme.textSecondary,
-                            fontSize: 12,
-                          ),
-                        ),
-                        onTap: () {
-                          provider.applyHeroPowerToSlot(
-                            isUtama: false,
-                            index: idx,
-                          );
-                          Navigator.pop(ctx);
-                        },
-                      );
-                    }),
-                  ],
-                ),
-              ),
+                  ),
+                );
+              }),
             ],
           ),
         );
       },
+    );
+  }
+
+  /// Step 2 — Pilih Slot di lane yang sudah dipilih
+  void _showPickSlotSheet(
+    BuildContext context,
+    CalculatorProvider provider,
+    HokLane targetLane,
+  ) {
+    final heroPower = provider.heroDetail.finalHeroPower;
+    final laneData = provider.laneDataMap[targetLane]!;
+
+    showModalBottomSheet(
+      context: context,
+      backgroundColor: const Color(0xFF0F150F),
+      isScrollControlled: true,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+      ),
+      builder: (ctx) {
+        return DraggableScrollableSheet(
+          expand: false,
+          initialChildSize: 0.65,
+          minChildSize: 0.4,
+          maxChildSize: 0.9,
+          builder: (_, scrollCtrl) {
+            return Padding(
+              padding: const EdgeInsets.fromLTRB(20, 0, 20, 20),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  // Handle bar
+                  Center(
+                    child: Container(
+                      margin: const EdgeInsets.symmetric(vertical: 10),
+                      width: 40,
+                      height: 4,
+                      decoration: BoxDecoration(
+                        color: const Color(0xFF2A3A2A),
+                        borderRadius: BorderRadius.circular(2),
+                      ),
+                    ),
+                  ),
+
+                  // Header step 2
+                  Row(
+                    children: [
+                      // Tombol kembali ke step 1
+                      GestureDetector(
+                        onTap: () {
+                          Navigator.pop(ctx);
+                          _showApplyToSlotSheet(context, provider);
+                        },
+                        child: Container(
+                          padding: const EdgeInsets.all(6),
+                          decoration: BoxDecoration(
+                            color: const Color(0xFF141E14),
+                            borderRadius: BorderRadius.circular(8),
+                            border: Border.all(color: const Color(0xFF223022)),
+                          ),
+                          child: const Icon(
+                            Icons.arrow_back_rounded,
+                            color: Colors.white70,
+                            size: 18,
+                          ),
+                        ),
+                      ),
+                      const SizedBox(width: 12),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Row(
+                              children: [
+                                Container(
+                                  width: 10,
+                                  height: 10,
+                                  decoration: BoxDecoration(
+                                    color: targetLane.accentColor,
+                                    shape: BoxShape.circle,
+                                  ),
+                                ),
+                                const SizedBox(width: 6),
+                                Text(
+                                  targetLane.displayName,
+                                  style: TextStyle(
+                                    color: targetLane.accentColor,
+                                    fontSize: 13,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              ],
+                            ),
+                            const Text(
+                              'Pilih Slot Tujuan',
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 16,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      // Badge power
+                      Container(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 10,
+                          vertical: 5,
+                        ),
+                        decoration: BoxDecoration(
+                          color: HokTheme.neonLime.withValues(alpha: 0.15),
+                          borderRadius: BorderRadius.circular(10),
+                          border: Border.all(
+                            color: HokTheme.neonLime.withValues(alpha: 0.3),
+                          ),
+                        ),
+                        child: Text(
+                          '${HOKUtils.formatNumber(heroPower)} Power',
+                          style: const TextStyle(
+                            color: HokTheme.neonLime,
+                            fontSize: 12,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 16),
+
+                  // Daftar slot
+                  Expanded(
+                    child: ListView(
+                      controller: scrollCtrl,
+                      children: [
+                        // Seksi Hero Utama
+                        _buildSlotSectionHeader(
+                          'Hero Utama (Bobot 100%)',
+                          HokTheme.neonLime,
+                        ),
+                        const SizedBox(height: 8),
+                        ...List.generate(5, (idx) {
+                          final h = laneData.heroUtama[idx];
+                          return _buildSlotTile(
+                            ctx: ctx,
+                            label: '#${idx + 1}',
+                            labelColor: HokTheme.neonLime,
+                            heroName: h.heroName,
+                            currentPower: h.power,
+                            newPower: heroPower,
+                            onTap: () {
+                              provider.applyHeroPowerToSlot(
+                                isUtama: true,
+                                index: idx,
+                                targetLane: targetLane,
+                              );
+                              Navigator.pop(ctx);
+                            },
+                          );
+                        }),
+                        const SizedBox(height: 14),
+
+                        // Seksi Hero OP
+                        _buildSlotSectionHeader(
+                          'Hero OP Kamu (Bobot 20%)',
+                          Colors.white54,
+                        ),
+                        const SizedBox(height: 8),
+                        ...List.generate(5, (idx) {
+                          final h = laneData.heroOP[idx];
+                          return _buildSlotTile(
+                            ctx: ctx,
+                            label: '#${idx + 6}',
+                            labelColor: Colors.white54,
+                            heroName: h.heroName,
+                            currentPower: h.power,
+                            newPower: heroPower,
+                            onTap: () {
+                              provider.applyHeroPowerToSlot(
+                                isUtama: false,
+                                index: idx,
+                                targetLane: targetLane,
+                              );
+                              Navigator.pop(ctx);
+                            },
+                          );
+                        }),
+                        const SizedBox(height: 20),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            );
+          },
+        );
+      },
+    );
+  }
+
+  Widget _buildSlotSectionHeader(String label, Color color) {
+    return Row(
+      children: [
+        Container(width: 3, height: 14, color: color),
+        const SizedBox(width: 8),
+        Text(
+          label,
+          style: TextStyle(
+            color: color,
+            fontWeight: FontWeight.bold,
+            fontSize: 12,
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildSlotTile({
+    required BuildContext ctx,
+    required String label,
+    required Color labelColor,
+    required String heroName,
+    required int currentPower,
+    required int newPower,
+    required VoidCallback onTap,
+  }) {
+    final diff = newPower - currentPower;
+    final diffColor = diff > 0
+        ? const Color(0xFF4ADE80)
+        : diff < 0
+        ? const Color(0xFFFF6B6B)
+        : Colors.white38;
+    final diffText = diff > 0
+        ? '+${HOKUtils.formatNumber(diff)}'
+        : HOKUtils.formatNumber(diff);
+
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 8),
+      child: Material(
+        color: Colors.transparent,
+        child: InkWell(
+          borderRadius: BorderRadius.circular(12),
+          onTap: onTap,
+          child: Container(
+            padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
+            decoration: BoxDecoration(
+              color: const Color(0xFF0D130D),
+              borderRadius: BorderRadius.circular(12),
+              border: Border.all(color: const Color(0xFF1C281C)),
+            ),
+            child: Row(
+              children: [
+                // Badge nomor slot
+                CircleAvatar(
+                  radius: 15,
+                  backgroundColor: labelColor.withValues(alpha: 0.15),
+                  child: Text(
+                    label,
+                    style: TextStyle(
+                      color: labelColor,
+                      fontSize: 10,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
+                const SizedBox(width: 12),
+                // Nama hero
+                Expanded(
+                  child: Text(
+                    heroName,
+                    style: const TextStyle(
+                      color: Colors.white,
+                      fontSize: 13,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                ),
+                // Power lama
+                Text(
+                  HOKUtils.formatNumber(currentPower),
+                  style: const TextStyle(
+                    color: HokTheme.textSecondary,
+                    fontSize: 12,
+                  ),
+                ),
+                const Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 6),
+                  child: Icon(
+                    Icons.arrow_forward_rounded,
+                    color: Colors.white24,
+                    size: 14,
+                  ),
+                ),
+                // Power baru
+                Text(
+                  HOKUtils.formatNumber(newPower),
+                  style: const TextStyle(
+                    color: Colors.white,
+                    fontSize: 13,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                const SizedBox(width: 6),
+                // Delta +/-
+                Container(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 6,
+                    vertical: 2,
+                  ),
+                  decoration: BoxDecoration(
+                    color: diffColor.withValues(alpha: 0.12),
+                    borderRadius: BorderRadius.circular(6),
+                  ),
+                  child: Text(
+                    diffText,
+                    style: TextStyle(
+                      color: diffColor,
+                      fontSize: 11,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
     );
   }
 }
