@@ -4,6 +4,9 @@ import '../core/theme.dart';
 import '../core/utils.dart';
 import '../models/lane_model.dart';
 import '../providers/calculator_provider.dart';
+import 'collapsible_card_delegate.dart';
+import 'gameland_footer.dart';
+import 'gameland_hero_header.dart';
 import 'hero_picker_dialog.dart';
 
 class GamelandLaneView extends StatelessWidget {
@@ -14,295 +17,395 @@ class GamelandLaneView extends StatelessWidget {
     final provider = context.watch<CalculatorProvider>();
     final laneData = provider.currentLaneData;
 
-    return LayoutBuilder(
-      builder: (context, constraints) {
-        final isDesktop = constraints.maxWidth >= 768;
-
-        return Column(
-          children: [
-            // 1. STATS BANNER ALA GAMELAND (Ambient Glow & Key Stats)
-            _buildStatOverviewBanner(context, provider, laneData),
-
-            const SizedBox(height: 20),
-
-            // 2. DUA KARTU UTAMA (HERO UTAMA 100% & HERO OP 20%)
-            if (isDesktop)
-              Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  // Kolom Kiri: Hero Utama (100%)
-                  Expanded(
-                    child: _buildHeroGroupCard(
-                      context: context,
-                      provider: provider,
-                      laneData: laneData,
-                      isUtama: true,
-                      title: 'Hero Utama',
-                      weightTag: 'Bobot 100%',
-                      subtotalText: HOKUtils.formatNumber(
-                        laneData.subtotalUtama,
-                      ),
-                      icon: Icons.workspace_premium_rounded,
-                      iconColor: HokTheme.neonLime,
-                    ),
-                  ),
-                  const SizedBox(width: 20),
-                  // Kolom Kanan: Hero OP (20%)
-                  Expanded(
-                    child: _buildHeroGroupCard(
-                      context: context,
-                      provider: provider,
-                      laneData: laneData,
-                      isUtama: false,
-                      title: 'Hero OP Kamu',
-                      weightTag: 'Bobot 20%',
-                      subtotalText: HOKUtils.formatNumber(laneData.subtotalOP),
-                      extraSubtotalText:
-                          '(20% dari ${HOKUtils.formatNumber(laneData.sumRawOP)})',
-                      icon: Icons.shield_outlined,
-                      iconColor: HokTheme.limeAccent,
-                    ),
-                  ),
-                ],
-              )
-            else
-              Column(
-                children: [
-                  _buildHeroGroupCard(
-                    context: context,
-                    provider: provider,
-                    laneData: laneData,
-                    isUtama: true,
-                    title: 'Hero Utama',
-                    weightTag: 'Bobot 100%',
-                    subtotalText: HOKUtils.formatNumber(laneData.subtotalUtama),
-                    icon: Icons.workspace_premium_rounded,
-                    iconColor: HokTheme.neonLime,
-                  ),
-                  const SizedBox(height: 20),
-                  _buildHeroGroupCard(
-                    context: context,
-                    provider: provider,
-                    laneData: laneData,
-                    isUtama: false,
-                    title: 'Hero OP Kamu',
-                    weightTag: 'Bobot 20%',
-                    subtotalText: HOKUtils.formatNumber(laneData.subtotalOP),
-                    extraSubtotalText:
-                        '(20% dari ${HOKUtils.formatNumber(laneData.sumRawOP)})',
-                    icon: Icons.shield_outlined,
-                    iconColor: HokTheme.limeAccent,
-                  ),
-                ],
+    return CustomScrollView(
+      slivers: [
+        // 1. BAGIAN DI ATAS KARTU: Judul + Pilihan 5 Lane (SliverToBoxAdapter sebelum header)
+        SliverToBoxAdapter(
+          child: Center(
+            child: ConstrainedBox(
+              constraints: const BoxConstraints(maxWidth: 960),
+              child: const Padding(
+                padding: EdgeInsets.symmetric(horizontal: 16),
+                child: GamelandHeroHeader(),
               ),
+            ),
+          ),
+        ),
 
-            const SizedBox(height: 20),
+        const SliverToBoxAdapter(child: SizedBox(height: 14)),
 
-            // 3. KARTU REKOMENDASI PINTAR (Bento Card Ala Gameland)
-            _buildSmartStrategyCard(context, provider, laneData),
+        // 2. KARTU TIER COLLAPSIBLE (Menyusut jadi pill melayang saat scroll)
+        SliverPersistentHeader(
+          pinned: true,
+          delegate: CollapsibleCardDelegate(
+            expandedHeight: 188,
+            collapsedHeight: 52,
+            topGap: 8,
+            expandedHMargin: 16,
+            collapsedHMargin: 48,
+            expandedRadius: 20,
+            collapsedRadius: 32,
+            expandedBuilder: (context) =>
+                _buildTierCardExpanded(context, provider, laneData),
+            collapsedBuilder: (context) =>
+                _buildTierCardCollapsed(context, laneData),
+          ),
+        ),
 
-            const SizedBox(height: 40),
-          ],
-        );
-      },
+        const SliverToBoxAdapter(child: SizedBox(height: 18)),
+
+        // 3. KONTEN DI BAWAH KARTU (Hero Utama, Hero OP, Rekomendasi Push, Footer)
+        SliverToBoxAdapter(
+          child: Center(
+            child: ConstrainedBox(
+              constraints: const BoxConstraints(maxWidth: 960),
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16),
+                child: LayoutBuilder(
+                  builder: (context, constraints) {
+                    final isDesktop = constraints.maxWidth >= 768;
+
+                    return Column(
+                      children: [
+                        // DUA KARTU UTAMA (HERO UTAMA 100% & HERO OP 20%)
+                        if (isDesktop)
+                          Row(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              // Kolom Kiri: Hero Utama (100%)
+                              Expanded(
+                                child: _buildHeroGroupCard(
+                                  context: context,
+                                  provider: provider,
+                                  laneData: laneData,
+                                  isUtama: true,
+                                  title: 'Hero Utama',
+                                  weightTag: 'Bobot 100%',
+                                  subtotalText: HOKUtils.formatNumber(
+                                    laneData.subtotalUtama,
+                                  ),
+                                  icon: Icons.workspace_premium_rounded,
+                                  iconColor: HokTheme.neonLime,
+                                ),
+                              ),
+                              const SizedBox(width: 20),
+                              // Kolom Kanan: Hero OP (20%)
+                              Expanded(
+                                child: _buildHeroGroupCard(
+                                  context: context,
+                                  provider: provider,
+                                  laneData: laneData,
+                                  isUtama: false,
+                                  title: 'Hero OP Kamu',
+                                  weightTag: 'Bobot 20%',
+                                  subtotalText: HOKUtils.formatNumber(
+                                    laneData.subtotalOP,
+                                  ),
+                                  extraSubtotalText:
+                                      '(20% dari ${HOKUtils.formatNumber(laneData.sumRawOP)})',
+                                  icon: Icons.shield_outlined,
+                                  iconColor: HokTheme.limeAccent,
+                                ),
+                              ),
+                            ],
+                          )
+                        else
+                          Column(
+                            children: [
+                              _buildHeroGroupCard(
+                                context: context,
+                                provider: provider,
+                                laneData: laneData,
+                                isUtama: true,
+                                title: 'Hero Utama',
+                                weightTag: 'Bobot 100%',
+                                subtotalText: HOKUtils.formatNumber(
+                                  laneData.subtotalUtama,
+                                ),
+                                icon: Icons.workspace_premium_rounded,
+                                iconColor: HokTheme.neonLime,
+                              ),
+                              const SizedBox(height: 20),
+                              _buildHeroGroupCard(
+                                context: context,
+                                provider: provider,
+                                laneData: laneData,
+                                isUtama: false,
+                                title: 'Hero OP Kamu',
+                                weightTag: 'Bobot 20%',
+                                subtotalText: HOKUtils.formatNumber(
+                                  laneData.subtotalOP,
+                                ),
+                                extraSubtotalText:
+                                    '(20% dari ${HOKUtils.formatNumber(laneData.sumRawOP)})',
+                                icon: Icons.shield_outlined,
+                                iconColor: HokTheme.limeAccent,
+                              ),
+                            ],
+                          ),
+
+                        const SizedBox(height: 20),
+
+                        // KARTU REKOMENDASI PINTAR (Bento Card Ala Gameland)
+                        _buildSmartStrategyCard(context, provider, laneData),
+
+                        const SizedBox(height: 20),
+
+                        // Footer
+                        const GamelandFooter(),
+                      ],
+                    );
+                  },
+                ),
+              ),
+            ),
+          ),
+        ),
+      ],
     );
   }
 
-  // --- STAT OVERVIEW BANNER DENGAN AMBIENT GLOW ---
-  Widget _buildStatOverviewBanner(
+  // --- KARTU TIER EXPANDED ---
+  Widget _buildTierCardExpanded(
     BuildContext context,
     CalculatorProvider provider,
     LaneData laneData,
   ) {
-    return Container(
-      width: double.infinity,
-      decoration: BoxDecoration(
-        color: const Color(0xFF0C120C),
-        borderRadius: BorderRadius.circular(20),
-        border: Border.all(color: const Color(0xFF1E2C1E)),
-        boxShadow: [
-          BoxShadow(
-            color: HokTheme.neonLime.withValues(alpha: 0.08),
-            blurRadius: 30,
-            spreadRadius: 2,
-            offset: const Offset(0, 10),
+    return Stack(
+      children: [
+        // Ambient Glow Hijau di Latar Belakang
+        Positioned(
+          bottom: -40,
+          right: 40,
+          child: Container(
+            width: 180,
+            height: 120,
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              color: HokTheme.neonLime.withValues(alpha: 0.12),
+            ),
           ),
-        ],
-      ),
-      child: Stack(
-        children: [
-          // Ambient Glow Hijau di Latar Belakang
-          Positioned(
-            bottom: -40,
-            right: 40,
-            child: Container(
-              width: 180,
-              height: 120,
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                color: HokTheme.neonLime.withValues(alpha: 0.12),
+        ),
+
+        Padding(
+          padding: const EdgeInsets.all(22),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  // Kolom Power Saat Ini
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        FittedBox(
+                          fit: BoxFit.scaleDown,
+                          alignment: Alignment.centerLeft,
+                          child: Container(
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 10,
+                              vertical: 4,
+                            ),
+                            decoration: BoxDecoration(
+                              color: HokTheme.neonLime.withValues(alpha: 0.15),
+                              borderRadius: BorderRadius.circular(20),
+                              border: Border.all(
+                                color: HokTheme.neonLime.withValues(alpha: 0.4),
+                              ),
+                            ),
+                            child: Text(
+                              '${laneData.lane.displayName} • Tier ${laneData.currentTier}',
+                              style: const TextStyle(
+                                color: HokTheme.neonLime,
+                                fontSize: 11,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ),
+                        ),
+                        const SizedBox(height: 8),
+                        FittedBox(
+                          fit: BoxFit.scaleDown,
+                          alignment: Alignment.centerLeft,
+                          child: Text(
+                            HOKUtils.formatNumber(laneData.totalPowerLane),
+                            style: const TextStyle(
+                              color: Colors.white,
+                              fontSize: 34,
+                              fontWeight: FontWeight.w900,
+                              letterSpacing: -0.5,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  const SizedBox(width: 12),
+
+                  // Kolom Target Power
+                  Flexible(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.end,
+                      children: [
+                        InkWell(
+                          onTap: () => _showEditTargetDialog(context, provider),
+                          borderRadius: BorderRadius.circular(6),
+                          child: FittedBox(
+                            fit: BoxFit.scaleDown,
+                            child: Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Text(
+                                  'Target ${HOKUtils.formatNumber(laneData.targetPower)}',
+                                  style: const TextStyle(
+                                    color: HokTheme.limeAccent,
+                                    fontSize: 20,
+                                    fontWeight: FontWeight.w800,
+                                  ),
+                                ),
+                                const SizedBox(width: 4),
+                                const Icon(
+                                  Icons.edit_outlined,
+                                  size: 14,
+                                  color: HokTheme.limeAccent,
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                        const SizedBox(height: 6),
+                        FittedBox(
+                          fit: BoxFit.scaleDown,
+                          child: Text(
+                            laneData.remainingPowerToTarget > 0
+                                ? 'Kurang ${HOKUtils.formatNumber(laneData.remainingPowerToTarget)} poin lagi'
+                                : 'Target Tercapai! 🎉',
+                            style: TextStyle(
+                              color: laneData.remainingPowerToTarget > 0
+                                  ? HokTheme.textSecondary
+                                  : HokTheme.neonLime,
+                              fontSize: 11,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+
+              const SizedBox(height: 18),
+
+              // Linear Progress Bar Ala Gameland
+              ClipRRect(
+                borderRadius: BorderRadius.circular(8),
+                child: LinearProgressIndicator(
+                  value: laneData.progressToTarget,
+                  minHeight: 6,
+                  backgroundColor: const Color(0xFF172217),
+                  valueColor: const AlwaysStoppedAnimation<Color>(
+                    HokTheme.neonLime,
+                  ),
+                ),
+              ),
+              const SizedBox(height: 8),
+
+              Wrap(
+                alignment: WrapAlignment.spaceBetween,
+                runSpacing: 4,
+                children: [
+                  Text(
+                    'Progress ke target: ${(laneData.progressToTarget * 100).toStringAsFixed(1)}%',
+                    style: const TextStyle(
+                      color: HokTheme.textMuted,
+                      fontSize: 11,
+                    ),
+                  ),
+                  const SizedBox(width: 8),
+                  Text(
+                    'Formula: Utama (${HOKUtils.formatNumber(laneData.subtotalUtama)}) + OP (${HOKUtils.formatNumber(laneData.subtotalOP)})',
+                    style: const TextStyle(
+                      color: HokTheme.textSecondary,
+                      fontSize: 11,
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+
+  // --- KARTU TIER COLLAPSED (PILL KECIL MELAYANG) ---
+  Widget _buildTierCardCollapsed(BuildContext context, LaneData laneData) {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        FittedBox(
+          fit: BoxFit.scaleDown,
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Container(
+                width: 8,
+                height: 8,
+                decoration: BoxDecoration(
+                  color: laneData.lane.accentColor,
+                  shape: BoxShape.circle,
+                ),
+              ),
+              const SizedBox(width: 8),
+              Text(
+                '${laneData.lane.displayName} • Tier ${laneData.currentTier}',
+                style: const TextStyle(
+                  color: HokTheme.neonLime,
+                  fontWeight: FontWeight.bold,
+                  fontSize: 13,
+                ),
+              ),
+              const SizedBox(width: 8),
+              const Text(
+                '·',
+                style: TextStyle(
+                  color: Colors.white54,
+                  fontWeight: FontWeight.bold,
+                  fontSize: 14,
+                ),
+              ),
+              const SizedBox(width: 8),
+              Text(
+                HOKUtils.formatNumber(laneData.totalPowerLane),
+                style: const TextStyle(
+                  color: Colors.white,
+                  fontWeight: FontWeight.w900,
+                  fontSize: 15,
+                ),
+              ),
+            ],
+          ),
+        ),
+        const SizedBox(height: 4),
+        SizedBox(
+          width: 130,
+          child: ClipRRect(
+            borderRadius: BorderRadius.circular(2),
+            child: LinearProgressIndicator(
+              value: laneData.progressToTarget,
+              minHeight: 2.5,
+              backgroundColor: const Color(0xFF172217),
+              valueColor: const AlwaysStoppedAnimation<Color>(
+                HokTheme.neonLime,
               ),
             ),
           ),
-
-          Padding(
-            padding: const EdgeInsets.all(22),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    // Kolom Power Saat Ini
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          FittedBox(
-                            fit: BoxFit.scaleDown,
-                            alignment: Alignment.centerLeft,
-                            child: Container(
-                              padding: const EdgeInsets.symmetric(
-                                horizontal: 10,
-                                vertical: 4,
-                              ),
-                              decoration: BoxDecoration(
-                                color: HokTheme.neonLime.withValues(
-                                  alpha: 0.15,
-                                ),
-                                borderRadius: BorderRadius.circular(20),
-                                border: Border.all(
-                                  color: HokTheme.neonLime.withValues(
-                                    alpha: 0.4,
-                                  ),
-                                ),
-                              ),
-                              child: Text(
-                                '${laneData.lane.displayName} • Tier ${laneData.currentTier}',
-                                style: const TextStyle(
-                                  color: HokTheme.neonLime,
-                                  fontSize: 11,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                            ),
-                          ),
-                          const SizedBox(height: 8),
-                          FittedBox(
-                            fit: BoxFit.scaleDown,
-                            alignment: Alignment.centerLeft,
-                            child: Text(
-                              HOKUtils.formatNumber(laneData.totalPowerLane),
-                              style: const TextStyle(
-                                color: Colors.white,
-                                fontSize: 34,
-                                fontWeight: FontWeight.w900,
-                                letterSpacing: -0.5,
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    const SizedBox(width: 12),
-
-                    // Kolom Target Power
-                    Flexible(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.end,
-                        children: [
-                          InkWell(
-                            onTap: () =>
-                                _showEditTargetDialog(context, provider),
-                            borderRadius: BorderRadius.circular(6),
-                            child: FittedBox(
-                              fit: BoxFit.scaleDown,
-                              child: Row(
-                                mainAxisSize: MainAxisSize.min,
-                                children: [
-                                  Text(
-                                    'Target ${HOKUtils.formatNumber(laneData.targetPower)}',
-                                    style: const TextStyle(
-                                      color: HokTheme.limeAccent,
-                                      fontSize: 20,
-                                      fontWeight: FontWeight.w800,
-                                    ),
-                                  ),
-                                  const SizedBox(width: 4),
-                                  const Icon(
-                                    Icons.edit_outlined,
-                                    size: 14,
-                                    color: HokTheme.limeAccent,
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ),
-                          const SizedBox(height: 6),
-                          FittedBox(
-                            fit: BoxFit.scaleDown,
-                            child: Text(
-                              laneData.remainingPowerToTarget > 0
-                                  ? 'Kurang ${HOKUtils.formatNumber(laneData.remainingPowerToTarget)} poin lagi'
-                                  : 'Target Tercapai! 🎉',
-                              style: TextStyle(
-                                color: laneData.remainingPowerToTarget > 0
-                                    ? HokTheme.textSecondary
-                                    : HokTheme.neonLime,
-                                fontSize: 11,
-                                fontWeight: FontWeight.w600,
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
-
-                const SizedBox(height: 18),
-
-                // Linear Progress Bar Ala Gameland
-                ClipRRect(
-                  borderRadius: BorderRadius.circular(8),
-                  child: LinearProgressIndicator(
-                    value: laneData.progressToTarget,
-                    minHeight: 6,
-                    backgroundColor: const Color(0xFF172217),
-                    valueColor: const AlwaysStoppedAnimation<Color>(
-                      HokTheme.neonLime,
-                    ),
-                  ),
-                ),
-                const SizedBox(height: 8),
-
-                Wrap(
-                  alignment: WrapAlignment.spaceBetween,
-                  runSpacing: 4,
-                  children: [
-                    Text(
-                      'Progress ke target: ${(laneData.progressToTarget * 100).toStringAsFixed(1)}%',
-                      style: const TextStyle(
-                        color: HokTheme.textMuted,
-                        fontSize: 11,
-                      ),
-                    ),
-                    const SizedBox(width: 8),
-                    Text(
-                      'Formula: Utama (${HOKUtils.formatNumber(laneData.subtotalUtama)}) + OP (${HOKUtils.formatNumber(laneData.subtotalOP)})',
-                      style: const TextStyle(
-                        color: HokTheme.textSecondary,
-                        fontSize: 11,
-                      ),
-                    ),
-                  ],
-                ),
-              ],
-            ),
-          ),
-        ],
-      ),
+        ),
+      ],
     );
   }
 
