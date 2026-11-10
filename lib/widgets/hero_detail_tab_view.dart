@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../core/constants.dart';
+import '../core/numeric_input_formatter.dart';
 import '../core/theme.dart';
 import '../core/utils.dart';
 import '../models/hero_detail_model.dart';
@@ -145,6 +146,9 @@ class _HeroDetailTabViewState extends State<HeroDetailTabView> {
                             child: TextField(
                               controller: _rankedController,
                               keyboardType: TextInputType.number,
+                              inputFormatters: [
+                                NumericInputFormatter(context: context),
+                              ],
                               textAlign: TextAlign.center,
                               style: const TextStyle(
                                 color: Colors.white,
@@ -329,6 +333,9 @@ class _HeroDetailTabViewState extends State<HeroDetailTabView> {
                                 child: TextField(
                                   controller: _peakPerfController,
                                   keyboardType: TextInputType.number,
+                                  inputFormatters: [
+                                    NumericInputFormatter(context: context),
+                                  ],
                                   textAlign: TextAlign.center,
                                   style: const TextStyle(
                                     color: Colors.white,
@@ -388,6 +395,7 @@ class _HeroDetailTabViewState extends State<HeroDetailTabView> {
                               controller: _kemenanganController,
                               keyboardType: TextInputType.number,
                               textAlign: TextAlign.center,
+                              inputFormatters: [NumericInputFormatter(context: context)],
                               style: const TextStyle(
                                 color: Colors.white,
                                 fontSize: 13,
@@ -446,6 +454,7 @@ class _HeroDetailTabViewState extends State<HeroDetailTabView> {
                             child: TextField(
                               controller: _poinPeakController,
                               keyboardType: TextInputType.number,
+                              inputFormatters: [NumericInputFormatter(context: context)],
                               style: const TextStyle(
                                 color: Colors.white,
                                 fontSize: 13,

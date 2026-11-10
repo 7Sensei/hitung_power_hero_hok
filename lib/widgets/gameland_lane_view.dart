@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
 import '../core/constants.dart';
+import '../core/numeric_input_formatter.dart';
 import '../core/theme.dart';
 import '../core/utils.dart';
 import '../models/lane_model.dart';
@@ -879,6 +880,9 @@ class GamelandLaneView extends StatelessWidget {
         content: TextField(
           controller: controller,
           keyboardType: TextInputType.number,
+          inputFormatters: [
+            NumericInputFormatter(context: context),
+          ],
           autofocus: true,
           decoration: const InputDecoration(
             labelText: 'Target Power (misal: 33190)',
@@ -953,6 +957,9 @@ class _GamelandPowerFieldState extends State<_GamelandPowerField> {
     return TextField(
       controller: _controller,
       keyboardType: TextInputType.number,
+      inputFormatters: [
+        NumericInputFormatter(context: context),
+      ],
       textAlign: TextAlign.end,
       style: const TextStyle(
         color: Colors.white,

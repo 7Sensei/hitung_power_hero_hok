@@ -100,7 +100,7 @@ void main() {
     await tester.pumpAndSettle();
 
     // Verifikasi brand navbar & komponen utama muncul
-    expect(find.text('HOK Power'), findsOneWidget);
+    expect(find.text('kalkulator Power Lane'), findsOneWidget);
     expect(find.text('Hero Utama'), findsOneWidget);
     expect(find.byType(SvgPicture), findsNWidgets(5));
     expect(tester.takeException(), isNull);
@@ -211,7 +211,7 @@ void main() {
       await tester.pumpAndSettle();
 
       // 1. Verifikasi Navbar tetap diam di atas
-      expect(find.text('HOK Power'), findsOneWidget);
+      expect(find.text('kalkulator Power Lane'), findsOneWidget);
       expect(find.text('Power Lane'), findsWidgets);
 
       // 2. Scroll ke bawah di tab Power Lane (angka TIER menyusut jadi pill & 5 lane tetap floating)

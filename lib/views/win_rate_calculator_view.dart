@@ -1,5 +1,6 @@
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
+import '../core/numeric_input_formatter.dart';
 import '../core/theme.dart';
 import '../core/utils.dart';
 import '../widgets/gameland_footer.dart';
@@ -279,6 +280,7 @@ class _WinRateCalculatorViewState extends State<WinRateCalculatorView>
             controller: _wrController,
             hintText: '50',
             suffixText: '%',
+            allowDecimal: true,
           ),
 
           const SizedBox(height: 14),
@@ -291,6 +293,7 @@ class _WinRateCalculatorViewState extends State<WinRateCalculatorView>
               controller: _targetWrController,
               hintText: '60',
               suffixText: '%',
+              allowDecimal: true,
             )
           else if (_mode == WrMode.loseStreak)
             _buildInputGroup(
@@ -339,6 +342,7 @@ class _WinRateCalculatorViewState extends State<WinRateCalculatorView>
     required TextEditingController controller,
     String? hintText,
     String? suffixText,
+    bool allowDecimal = false,
   }) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -364,7 +368,10 @@ class _WinRateCalculatorViewState extends State<WinRateCalculatorView>
         const SizedBox(height: 6),
         TextField(
           controller: controller,
-          keyboardType: const TextInputType.numberWithOptions(decimal: true),
+          keyboardType: TextInputType.numberWithOptions(decimal: allowDecimal),
+          inputFormatters: [
+            NumericInputFormatter(context: context, allowDecimal: allowDecimal),
+          ],
           style: const TextStyle(
             color: Colors.white,
             fontSize: 14,

@@ -62,7 +62,7 @@ class GamelandNavbar extends StatelessWidget {
             Flexible(
               child: Text(
                 provider.activeScreen == AppScreen.powerCalculator
-                    ? 'HOK Power'
+                    ? 'kalkulator Power Lane'
                     : 'Penghitung WR',
                 style: const TextStyle(
                   color: Colors.white,
