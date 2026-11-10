@@ -22,10 +22,6 @@ enum HokLane {
 }
 
 class AppConstants {
-  static const String appTitle = 'HOK Power Lane & Hero Calculator';
-  static const String appSubtitle =
-      'Kalkulator Power Lane & Target 段位 Honor of Kings';
-
   // Daftar Hero Resmi Honor of Kings per Role/Lane
   static const List<HokHero> allHeroes = [
     // Clash Lane

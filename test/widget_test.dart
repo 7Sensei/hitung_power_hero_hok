@@ -53,14 +53,14 @@ void main() {
     });
 
     test('Verifikasi batas cap Power Performa Peak berdasarkan Poin Peak', () {
-      final detail = HeroPowerDetail(selectedPeakPointsTier: 1200);
-      expect(detail.peakPowerCap, 200);
+      final detail1 = HeroPowerDetail(selectedPeakPointsTier: 1200);
+      expect(detail1.peakPowerCap, 200);
 
-      detail.selectedPeakPointsTier = 1500;
-      expect(detail.peakPowerCap, 900);
+      final detail2 = HeroPowerDetail(selectedPeakPointsTier: 1500);
+      expect(detail2.peakPowerCap, 900);
 
-      detail.selectedPeakPointsTier = 2400;
-      expect(detail.peakPowerCap, 5400);
+      final detail3 = HeroPowerDetail(selectedPeakPointsTier: 2400);
+      expect(detail3.peakPowerCap, 5400);
     });
   });
 
