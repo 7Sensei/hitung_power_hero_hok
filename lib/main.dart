@@ -1,26 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-import 'core/theme.dart';
-import 'providers/calculator_provider.dart';
-import 'views/calculator_view.dart';
+import 'app/app.dart';
 
 void main() {
-  runApp(const HOKPowerCalculatorApp());
+  runApp(const HokApp());
 }
 
-class HOKPowerCalculatorApp extends StatelessWidget {
-  const HOKPowerCalculatorApp({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return MultiProvider(
-      providers: [ChangeNotifierProvider(create: (_) => CalculatorProvider())],
-      child: MaterialApp(
-        title: 'HOK by 7Sensei',
-        debugShowCheckedModeBanner: false,
-        theme: HokTheme.darkTheme,
-        home: const CalculatorView(),
-      ),
-    );
-  }
-}
+/// Backward compatibility alias for tests
+typedef HOKPowerCalculatorApp = HokApp;
