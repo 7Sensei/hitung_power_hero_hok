@@ -165,11 +165,6 @@ class _WinRateCalculatorViewState extends State<WinRateCalculatorView>
                     // Result Card (dengan visualisasi fl_chart)
                     if (_hasCalculated) _buildResultCard(),
 
-                    const SizedBox(height: 16),
-
-                    // Quick Nav Links
-                    _buildQuickNavLinks(),
-
                     const SizedBox(height: 28),
 
                     // Gameland Footer
@@ -935,78 +930,6 @@ class _WinRateCalculatorViewState extends State<WinRateCalculatorView>
     );
   }
 
-  // ═══════════════════════════════════════════════════════════════════
-  //  QUICK NAV LINKS (Neon lime text links instead of yellow)
-  // ═══════════════════════════════════════════════════════════════════
-  Widget _buildQuickNavLinks() {
-    final List<({String label, IconData icon, VoidCallback onTap})> links = [];
-
-    if (_mode != WrMode.winStreak) {
-      links.add((
-        label: 'Kembali ke Hitung Win Streak',
-        icon: Icons.trending_up_rounded,
-        onTap: () {
-          setState(() => _mode = WrMode.winStreak);
-          _calculate();
-        },
-      ));
-    }
-    if (_mode != WrMode.loseStreak) {
-      links.add((
-        label: 'Hitung WR dengan Lose Streak',
-        icon: Icons.trending_down_rounded,
-        onTap: () {
-          setState(() => _mode = WrMode.loseStreak);
-          _calculate();
-        },
-      ));
-    }
-    if (_mode != WrMode.checkWinLose) {
-      links.add((
-        label: 'Cek Total Win atau Lose',
-        icon: Icons.pie_chart_rounded,
-        onTap: () {
-          setState(() => _mode = WrMode.checkWinLose);
-          _calculate();
-        },
-      ));
-    }
-
-    return Column(
-        children: links.map((link) {
-          return InkWell(
-            onTap: link.onTap,
-            borderRadius: BorderRadius.circular(8),
-            child: Padding(
-              padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 4),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Icon(
-                    link.icon,
-                    size: 14,
-                    color: HokTheme.neonLime.withValues(alpha: 0.7),
-                  ),
-                  const SizedBox(width: 8),
-                  Flexible(
-                    child: Text(
-                      link.label,
-                      style: TextStyle(
-                        color: HokTheme.neonLime.withValues(alpha: 0.85),
-                        fontSize: 13,
-                        fontWeight: FontWeight.w600,
-                      ),
-                      overflow: TextOverflow.ellipsis,
-                      maxLines: 1,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          );
-        }).toList(),
-    );
-  }
 }
 
 
