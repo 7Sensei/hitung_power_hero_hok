@@ -35,13 +35,13 @@ class _CalculatorViewState extends State<CalculatorView> {
               onMenuTap: () => _scaffoldKey.currentState?.openDrawer(),
             ),
 
-            // 2. KONTEN HALAMAN (Masing-masing memiliki CustomScrollView dengan Collapsible Card)
+            // 2. KONTEN HALAMAN (Masing-masing memiliki CustomScrollView dengan Collapsible / Pinned Card)
             Expanded(
               child: provider.activeScreen == AppScreen.powerCalculator
                   ? (provider.activeTab == CalculatorTab.lane
                         ? const GamelandLaneView()
                         : const HeroDetailTabView())
-                  : const SingleChildScrollView(child: WinRateCalculatorView()),
+                  : const WinRateCalculatorView(),
             ),
           ],
         ),

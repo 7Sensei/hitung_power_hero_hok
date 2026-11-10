@@ -1,3 +1,4 @@
+import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -111,25 +112,28 @@ void main() {
     await tester.pumpWidget(
       const MaterialApp(
         home: Scaffold(
-          body: SingleChildScrollView(child: WinRateCalculatorView()),
+          body: WinRateCalculatorView(),
         ),
       ),
     );
     await tester.pumpAndSettle();
 
-    // Pastikan default di mode Win Streak
+    // Pastikan default di mode Win Streak dan BarChart fl_chart muncul
     expect(find.text('Hitung Win Streak'), findsWidgets);
     expect(find.text('Hitung Sekarang'), findsOneWidget);
+    expect(find.byType(BarChart), findsOneWidget);
 
-    // Switch ke Lose Streak
+    // Switch ke Lose Streak dan pastikan BarChart tetap muncul
     await tester.tap(find.text('Lose Streak'));
     await tester.pumpAndSettle();
     expect(find.text('Hitung WR × Lose Streak'), findsOneWidget);
+    expect(find.byType(BarChart), findsOneWidget);
 
-    // Switch ke Win / Lose
+    // Switch ke Win / Lose dan pastikan PieChart (Donut) fl_chart muncul
     await tester.tap(find.text('Win / Lose'));
     await tester.pumpAndSettle();
     expect(find.text('Cek Total Win / Lose'), findsOneWidget);
+    expect(find.byType(PieChart), findsOneWidget);
     expect(find.text('Win'), findsOneWidget);
     expect(find.text('Lose'), findsOneWidget);
   });

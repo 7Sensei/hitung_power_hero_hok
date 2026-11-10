@@ -1,6 +1,8 @@
+import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import '../core/theme.dart';
 import '../core/utils.dart';
+import '../widgets/gameland_footer.dart';
 
 enum WrMode {
   winStreak, // Hitung Win Streak (Home)
@@ -117,125 +119,75 @@ class _WinRateCalculatorViewState extends State<WinRateCalculatorView>
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 10),
-      child: Center(
-        child: ConstrainedBox(
-          constraints: const BoxConstraints(maxWidth: 580),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              // ─── Mode Selector Pills ───
-              _buildModeSelector(),
+    return CustomScrollView(
+      slivers: [
+        const SliverToBoxAdapter(child: SizedBox(height: 14)),
 
-              const SizedBox(height: 20),
-
-              // ─── Header Banner ───
-              _buildHeaderBanner(),
-
-              const SizedBox(height: 20),
-
-              // ─── Form Card ───
-              _buildFormCard(),
-
-              const SizedBox(height: 16),
-
-              // ─── Result Card ───
-              if (_hasCalculated) _buildResultCard(),
-
-              const SizedBox(height: 16),
-
-              // ─── Quick Nav Links ───
-              _buildQuickNavLinks(),
-
-              const SizedBox(height: 40),
-            ],
+        // 1. Header Banner
+        SliverToBoxAdapter(
+          child: Center(
+            child: ConstrainedBox(
+              constraints: const BoxConstraints(maxWidth: 580),
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16),
+                child: _buildHeaderBanner(),
+              ),
+            ),
           ),
         ),
-      ),
-    );
-  }
 
-  // ═══════════════════════════════════════════════════════════════════
-  //  MODE SELECTOR (Pill tabs matching Gameland lane pills)
-  // ═══════════════════════════════════════════════════════════════════
-  Widget _buildModeSelector() {
-    return Container(
-      padding: const EdgeInsets.all(4),
-      decoration: BoxDecoration(
-        color: HokTheme.cardBackground,
-        borderRadius: BorderRadius.circular(14),
-        border: Border.all(color: HokTheme.cardBorder),
-      ),
-      child: Row(
-        children: WrMode.values.map((mode) {
-          final isActive = mode == _mode;
-          String label;
-          IconData icon;
-          switch (mode) {
-            case WrMode.winStreak:
-              label = 'Win Streak';
-              icon = Icons.trending_up_rounded;
-            case WrMode.loseStreak:
-              label = 'Lose Streak';
-              icon = Icons.trending_down_rounded;
-            case WrMode.checkWinLose:
-              label = 'Win / Lose';
-              icon = Icons.pie_chart_rounded;
-          }
-          return Expanded(
-            child: GestureDetector(
-              onTap: () {
-                setState(() => _mode = mode);
-                _calculate();
-              },
-              child: AnimatedContainer(
-                duration: const Duration(milliseconds: 200),
-                padding: const EdgeInsets.symmetric(vertical: 10),
-                decoration: BoxDecoration(
-                  color: isActive ? HokTheme.neonLime : Colors.transparent,
-                  borderRadius: BorderRadius.circular(10),
-                  boxShadow: isActive
-                      ? [
-                          BoxShadow(
-                            color: HokTheme.neonLime.withValues(alpha: 0.3),
-                            blurRadius: 12,
-                            offset: const Offset(0, 2),
-                          ),
-                        ]
-                      : null,
-                ),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
+        const SliverToBoxAdapter(child: SizedBox(height: 12)),
+
+        // 2. Floating Mode Selector (Melayang/pinned saat di-scroll)
+        SliverPersistentHeader(
+          pinned: true,
+          delegate: _WrModeSelectorDelegate(
+            selectedMode: _mode,
+            onModeChanged: (mode) {
+              setState(() => _mode = mode);
+              _calculate();
+            },
+          ),
+        ),
+
+        const SliverToBoxAdapter(child: SizedBox(height: 16)),
+
+        // 3. Form Card, Result Card (dengan visualisasi fl_chart), Quick Nav, dan Footer
+        SliverToBoxAdapter(
+          child: Center(
+            child: ConstrainedBox(
+              constraints: const BoxConstraints(maxWidth: 580),
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
-                    Icon(
-                      icon,
-                      size: 15,
-                      color: isActive ? HokTheme.darkText : HokTheme.textMuted,
-                    ),
-                    const SizedBox(width: 5),
-                    Flexible(
-                      child: Text(
-                        label,
-                        overflow: TextOverflow.ellipsis,
-                        style: TextStyle(
-                          color: isActive
-                              ? HokTheme.darkText
-                              : HokTheme.textMuted,
-                          fontSize: 12,
-                          fontWeight: isActive
-                              ? FontWeight.w900
-                              : FontWeight.w500,
-                        ),
-                      ),
-                    ),
+                    // Form Input Card
+                    _buildFormCard(),
+
+                    const SizedBox(height: 16),
+
+                    // Result Card (dengan visualisasi fl_chart)
+                    if (_hasCalculated) _buildResultCard(),
+
+                    const SizedBox(height: 16),
+
+                    // Quick Nav Links
+                    _buildQuickNavLinks(),
+
+                    const SizedBox(height: 28),
+
+                    // Gameland Footer
+                    const GamelandFooter(),
+
+                    const SizedBox(height: 40),
                   ],
                 ),
               ),
             ),
-          );
-        }).toList(),
-      ),
+          ),
+        ),
+      ],
     );
   }
 
@@ -518,6 +470,9 @@ class _WinRateCalculatorViewState extends State<WinRateCalculatorView>
       );
     }
 
+    final currentWr = double.tryParse(_wrController.text) ?? 50.0;
+    final targetWr = double.tryParse(_targetWrController.text) ?? 60.0;
+
     return Column(
       children: [
         const Icon(
@@ -558,11 +513,26 @@ class _WinRateCalculatorViewState extends State<WinRateCalculatorView>
             ],
           ),
         ),
+        const SizedBox(height: 16),
+        const Divider(color: Color(0xFF1B2B1B), height: 1),
+        const SizedBox(height: 14),
+        // Visualisasi fl_chart BarChart perbandingan WR Saat Ini vs Target
+        _buildComparisonBarChart(
+          labelA: 'Saat Ini',
+          valueA: currentWr,
+          colorA: const Color(0xFF2C3E2C),
+          labelB: 'Target',
+          valueB: targetWr,
+          colorB: HokTheme.neonLime,
+        ),
       ],
     );
   }
 
   Widget _buildLoseStreakResult() {
+    final currentWr = double.tryParse(_wrController.text) ?? 50.0;
+    final newWr = _resultNewWr ?? currentWr;
+
     return Column(
       children: [
         const Icon(
@@ -603,83 +573,350 @@ class _WinRateCalculatorViewState extends State<WinRateCalculatorView>
             ],
           ),
         ),
+        const SizedBox(height: 16),
+        const Divider(color: Color(0xFF1B2B1B), height: 1),
+        const SizedBox(height: 14),
+        // Visualisasi fl_chart BarChart perbandingan WR Sebelum vs Setelah Lose Streak
+        _buildComparisonBarChart(
+          labelA: 'Sebelum',
+          valueA: currentWr,
+          colorA: const Color(0xFF2C3E2C),
+          labelB: 'Setelah',
+          valueB: newWr,
+          colorB: HokTheme.redAccent,
+        ),
       ],
     );
   }
 
   Widget _buildCheckWinLoseResult() {
-    return Row(
+    final win = _resultTotalWin ?? 0;
+    final lose = _resultTotalLose ?? 0;
+    final total = win + lose;
+    final winPercent = total > 0 ? (win / total) * 100 : 0.0;
+    final losePercent = total > 0 ? (lose / total) * 100 : 0.0;
+
+    return Column(
       children: [
-        // Win Side
-        Expanded(
-          child: Container(
-            padding: const EdgeInsets.symmetric(vertical: 16),
-            decoration: BoxDecoration(
-              color: HokTheme.neonLime.withValues(alpha: 0.08),
-              borderRadius: BorderRadius.circular(12),
-              border: Border.all(
-                color: HokTheme.neonLime.withValues(alpha: 0.15),
-              ),
-            ),
-            child: Column(
+        // 1. Donut PieChart dari fl_chart
+        if (total > 0)
+          SizedBox(
+            height: 170,
+            child: Stack(
+              alignment: Alignment.center,
               children: [
-                const Icon(
-                  Icons.check_circle_rounded,
-                  color: HokTheme.neonLime,
-                  size: 24,
-                ),
-                const SizedBox(height: 6),
-                Text(
-                  '$_resultTotalWin',
-                  style: const TextStyle(
-                    color: HokTheme.neonLime,
-                    fontSize: 28,
-                    fontWeight: FontWeight.w900,
+                PieChart(
+                  PieChartData(
+                    sectionsSpace: 3,
+                    centerSpaceRadius: 46,
+                    startDegreeOffset: -90,
+                    sections: [
+                      PieChartSectionData(
+                        color: HokTheme.neonLime,
+                        value: win.toDouble(),
+                        title: '${winPercent.toStringAsFixed(0)}%',
+                        radius: 26,
+                        titleStyle: const TextStyle(
+                          fontSize: 12,
+                          fontWeight: FontWeight.w900,
+                          color: HokTheme.darkText,
+                        ),
+                      ),
+                      PieChartSectionData(
+                        color: HokTheme.redAccent,
+                        value: lose.toDouble(),
+                        title: '${losePercent.toStringAsFixed(0)}%',
+                        radius: 26,
+                        titleStyle: const TextStyle(
+                          fontSize: 12,
+                          fontWeight: FontWeight.w900,
+                          color: Colors.white,
+                        ),
+                      ),
+                    ],
                   ),
                 ),
-                const Text(
-                  'Win',
-                  style: TextStyle(color: HokTheme.textSecondary, fontSize: 12),
+                Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Text(
+                      '${winPercent.toStringAsFixed(1)}%',
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontSize: 16,
+                        fontWeight: FontWeight.w900,
+                      ),
+                    ),
+                    const Text(
+                      'WIN RATE',
+                      style: TextStyle(
+                        color: HokTheme.textMuted,
+                        fontSize: 9,
+                        fontWeight: FontWeight.w800,
+                        letterSpacing: 0.5,
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+
+        const SizedBox(height: 16),
+
+        // 2. Kotak Angka Rincian Win & Lose
+        Row(
+          children: [
+            // Win Side
+            Expanded(
+              child: Container(
+                padding: const EdgeInsets.symmetric(vertical: 16),
+                decoration: BoxDecoration(
+                  color: HokTheme.neonLime.withValues(alpha: 0.08),
+                  borderRadius: BorderRadius.circular(12),
+                  border: Border.all(
+                    color: HokTheme.neonLime.withValues(alpha: 0.15),
+                  ),
+                ),
+                child: Column(
+                  children: [
+                    const Icon(
+                      Icons.check_circle_rounded,
+                      color: HokTheme.neonLime,
+                      size: 24,
+                    ),
+                    const SizedBox(height: 6),
+                    Text(
+                      '$win',
+                      style: const TextStyle(
+                        color: HokTheme.neonLime,
+                        fontSize: 28,
+                        fontWeight: FontWeight.w900,
+                      ),
+                    ),
+                    const Text(
+                      'Win',
+                      style: TextStyle(
+                        color: HokTheme.textSecondary,
+                        fontSize: 12,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+            const SizedBox(width: 12),
+            // Lose Side
+            Expanded(
+              child: Container(
+                padding: const EdgeInsets.symmetric(vertical: 16),
+                decoration: BoxDecoration(
+                  color: HokTheme.redAccent.withValues(alpha: 0.08),
+                  borderRadius: BorderRadius.circular(12),
+                  border: Border.all(
+                    color: HokTheme.redAccent.withValues(alpha: 0.15),
+                  ),
+                ),
+                child: Column(
+                  children: [
+                    const Icon(
+                      Icons.cancel_rounded,
+                      color: HokTheme.redAccent,
+                      size: 24,
+                    ),
+                    const SizedBox(height: 6),
+                    Text(
+                      '$lose',
+                      style: const TextStyle(
+                        color: HokTheme.redAccent,
+                        fontSize: 28,
+                        fontWeight: FontWeight.w900,
+                      ),
+                    ),
+                    const Text(
+                      'Lose',
+                      style: TextStyle(
+                        color: HokTheme.textSecondary,
+                        fontSize: 12,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ],
+        ),
+      ],
+    );
+  }
+
+  // ═══════════════════════════════════════════════════════════════════
+  //  FL_CHART HELPER: BAR CHART PERBANDINGAN WR
+  // ═══════════════════════════════════════════════════════════════════
+  Widget _buildComparisonBarChart({
+    required String labelA,
+    required double valueA,
+    required Color colorA,
+    required String labelB,
+    required double valueB,
+    required Color colorB,
+  }) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Wrap(
+          alignment: WrapAlignment.spaceBetween,
+          crossAxisAlignment: WrapCrossAlignment.center,
+          spacing: 8,
+          runSpacing: 6,
+          children: [
+            const Text(
+              'Perbandingan Win Rate',
+              style: TextStyle(
+                color: HokTheme.textSecondary,
+                fontSize: 12,
+                fontWeight: FontWeight.w700,
+              ),
+            ),
+            Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                _buildChartLegend(labelA, colorA),
+                const SizedBox(width: 10),
+                _buildChartLegend(labelB, colorB),
+              ],
+            ),
+          ],
+        ),
+        const SizedBox(height: 12),
+        SizedBox(
+          height: 140,
+          child: BarChart(
+            BarChartData(
+              alignment: BarChartAlignment.spaceAround,
+              maxY: 100,
+              minY: 0,
+              barTouchData: BarTouchData(
+                enabled: true,
+                touchTooltipData: BarTouchTooltipData(
+                  getTooltipColor: (_) => const Color(0xFF141F14),
+                  getTooltipItem: (group, groupIndex, rod, rodIndex) {
+                    final label = groupIndex == 0 ? labelA : labelB;
+                    return BarTooltipItem(
+                      '$label: ${rod.toY.toStringAsFixed(1)}%',
+                      const TextStyle(
+                        color: HokTheme.neonLime,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 11,
+                      ),
+                    );
+                  },
+                ),
+              ),
+              titlesData: FlTitlesData(
+                show: true,
+                topTitles: const AxisTitles(
+                  sideTitles: SideTitles(showTitles: false),
+                ),
+                rightTitles: const AxisTitles(
+                  sideTitles: SideTitles(showTitles: false),
+                ),
+                leftTitles: AxisTitles(
+                  sideTitles: SideTitles(
+                    showTitles: true,
+                    reservedSize: 36,
+                    interval: 25,
+                    getTitlesWidget: (val, meta) => Text(
+                      '${val.toInt()}%',
+                      style: const TextStyle(
+                        color: HokTheme.textMuted,
+                        fontSize: 10,
+                      ),
+                    ),
+                  ),
+                ),
+                bottomTitles: AxisTitles(
+                  sideTitles: SideTitles(
+                    showTitles: true,
+                    getTitlesWidget: (val, meta) {
+                      final isFirst = val == 0;
+                      final title = isFirst ? labelA : labelB;
+                      final percent = isFirst ? valueA : valueB;
+                      return Padding(
+                        padding: const EdgeInsets.only(top: 6),
+                        child: Text(
+                          '$title\n${percent.toStringAsFixed(1)}%',
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                            color: isFirst ? colorA : colorB,
+                            fontSize: 10,
+                            fontWeight: FontWeight.w700,
+                            height: 1.2,
+                          ),
+                        ),
+                      );
+                    },
+                  ),
+                ),
+              ),
+              gridData: FlGridData(
+                show: true,
+                drawVerticalLine: false,
+                horizontalInterval: 25,
+                getDrawingHorizontalLine: (val) => const FlLine(
+                  color: Color(0xFF182418),
+                  strokeWidth: 1,
+                ),
+              ),
+              borderData: FlBorderData(show: false),
+              barGroups: [
+                BarChartGroupData(
+                  x: 0,
+                  barRods: [
+                    BarChartRodData(
+                      toY: valueA.clamp(0, 100),
+                      color: colorA,
+                      width: 32,
+                      borderRadius: const BorderRadius.vertical(
+                        top: Radius.circular(8),
+                      ),
+                    ),
+                  ],
+                ),
+                BarChartGroupData(
+                  x: 1,
+                  barRods: [
+                    BarChartRodData(
+                      toY: valueB.clamp(0, 100),
+                      color: colorB,
+                      width: 32,
+                      borderRadius: const BorderRadius.vertical(
+                        top: Radius.circular(8),
+                      ),
+                    ),
+                  ],
                 ),
               ],
             ),
           ),
         ),
-        const SizedBox(width: 12),
-        // Lose Side
-        Expanded(
-          child: Container(
-            padding: const EdgeInsets.symmetric(vertical: 16),
-            decoration: BoxDecoration(
-              color: HokTheme.redAccent.withValues(alpha: 0.08),
-              borderRadius: BorderRadius.circular(12),
-              border: Border.all(
-                color: HokTheme.redAccent.withValues(alpha: 0.15),
-              ),
-            ),
-            child: Column(
-              children: [
-                const Icon(
-                  Icons.cancel_rounded,
-                  color: HokTheme.redAccent,
-                  size: 24,
-                ),
-                const SizedBox(height: 6),
-                Text(
-                  '$_resultTotalLose',
-                  style: const TextStyle(
-                    color: HokTheme.redAccent,
-                    fontSize: 28,
-                    fontWeight: FontWeight.w900,
-                  ),
-                ),
-                const Text(
-                  'Lose',
-                  style: TextStyle(color: HokTheme.textSecondary, fontSize: 12),
-                ),
-              ],
-            ),
-          ),
+      ],
+    );
+  }
+
+  Widget _buildChartLegend(String label, Color color) {
+    return Row(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Container(
+          width: 8,
+          height: 8,
+          decoration: BoxDecoration(color: color, shape: BoxShape.circle),
+        ),
+        const SizedBox(width: 4),
+        Text(
+          label,
+          style: const TextStyle(color: HokTheme.textMuted, fontSize: 10),
         ),
       ],
     );
@@ -765,4 +1002,130 @@ class _WinRateCalculatorViewState extends State<WinRateCalculatorView>
       ),
     );
   }
+}
+
+
+// ═══════════════════════════════════════════════════════════════════════════
+//  WIN RATE MODE SELECTOR FLOATING DELEGATE
+//  Menempel (pinned) di bawah navbar saat halaman Penghitung WR di-scroll.
+// ═══════════════════════════════════════════════════════════════════════════
+class _WrModeSelectorDelegate extends SliverPersistentHeaderDelegate {
+  const _WrModeSelectorDelegate({
+    required this.selectedMode,
+    required this.onModeChanged,
+  });
+
+  final WrMode selectedMode;
+  final ValueChanged<WrMode> onModeChanged;
+
+  static const double _height = 58;
+
+  @override
+  double get minExtent => _height;
+
+  @override
+  double get maxExtent => _height;
+
+  @override
+  Widget build(
+    BuildContext context,
+    double shrinkOffset,
+    bool overlapsContent,
+  ) {
+    return Container(
+      color: HokTheme.darkBackground,
+      alignment: Alignment.center,
+      child: Center(
+        child: ConstrainedBox(
+          constraints: const BoxConstraints(maxWidth: 580),
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
+            child: Container(
+              padding: const EdgeInsets.all(4),
+              decoration: BoxDecoration(
+                color: HokTheme.cardBackground,
+                borderRadius: BorderRadius.circular(14),
+                border: Border.all(color: HokTheme.cardBorder),
+              ),
+              child: Row(
+                children: WrMode.values.map((mode) {
+                  final isActive = mode == selectedMode;
+                  String label;
+                  IconData icon;
+                  switch (mode) {
+                    case WrMode.winStreak:
+                      label = 'Win Streak';
+                      icon = Icons.trending_up_rounded;
+                    case WrMode.loseStreak:
+                      label = 'Lose Streak';
+                      icon = Icons.trending_down_rounded;
+                    case WrMode.checkWinLose:
+                      label = 'Win / Lose';
+                      icon = Icons.pie_chart_rounded;
+                  }
+                  return Expanded(
+                    child: GestureDetector(
+                      onTap: () => onModeChanged(mode),
+                      child: AnimatedContainer(
+                        duration: const Duration(milliseconds: 200),
+                        padding: const EdgeInsets.symmetric(vertical: 9),
+                        decoration: BoxDecoration(
+                          color: isActive
+                              ? HokTheme.neonLime
+                              : Colors.transparent,
+                          borderRadius: BorderRadius.circular(10),
+                          boxShadow: isActive
+                              ? [
+                                  BoxShadow(
+                                    color: HokTheme.neonLime.withValues(
+                                      alpha: 0.3,
+                                    ),
+                                    blurRadius: 12,
+                                    offset: const Offset(0, 2),
+                                  ),
+                                ]
+                              : null,
+                        ),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Icon(
+                              icon,
+                              size: 15,
+                              color: isActive
+                                  ? HokTheme.darkText
+                                  : HokTheme.textMuted,
+                            ),
+                            const SizedBox(width: 5),
+                            Flexible(
+                              child: Text(
+                                label,
+                                overflow: TextOverflow.ellipsis,
+                                style: TextStyle(
+                                  color: isActive
+                                      ? HokTheme.darkText
+                                      : HokTheme.textMuted,
+                                  fontSize: 12,
+                                  fontWeight: isActive
+                                      ? FontWeight.w900
+                                      : FontWeight.w500,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  );
+                }).toList(),
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  @override
+  bool shouldRebuild(covariant _WrModeSelectorDelegate oldDelegate) => true;
 }
