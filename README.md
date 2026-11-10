@@ -9,11 +9,18 @@
 </p>
 
 <p align="center">
-  <img src="https://img.shields.io/badge/Flutter-3.x-02569B?logo=flutter&logoColor=white" alt="Flutter">
-  <img src="https://img.shields.io/badge/Dart-3.x-0175C2?logo=dart&logoColor=white" alt="Dart">
+  <a href="https://7sensei.github.io/hok-by-7sensei/">
+    <img src="https://img.shields.io/badge/Demo-Live%20Web-brightgreen?logo=googlechrome&logoColor=white" alt="Live Demo">
+  </a>
+  <img src="https://img.shields.io/badge/Flutter-3.44+-02569B?logo=flutter&logoColor=white" alt="Flutter">
+  <img src="https://img.shields.io/badge/Dart-3.12+-0175C2?logo=dart&logoColor=white" alt="Dart">
   <img src="https://img.shields.io/badge/Platform-Web-4CAF50?logo=googlechrome&logoColor=white" alt="Platform: Web">
   <img src="https://img.shields.io/github/last-commit/7Sensei/hok-by-7sensei" alt="Last Commit">
   <img src="https://img.shields.io/github/stars/7Sensei/hok-by-7sensei?style=social" alt="Stars">
+</p>
+
+<p align="center">
+  <b>🌐 Akses Web:</b> <a href="https://7sensei.github.io/hok-by-7sensei/">https://7sensei.github.io/hok-by-7sensei/</a>
 </p>
 
 ---
@@ -86,7 +93,7 @@
 
 | Komponen | Detail |
 |---|---|
-| **Framework** | [Flutter](https://flutter.dev) 3.x |
+| **Framework** | [Flutter](https://flutter.dev) 3.44+ |
 | **Bahasa** | [Dart](https://dart.dev) ^3.12.2 |
 | **Arsitektur** | Modern MVVM (Feature-first) |
 | **State Management** | [provider](https://pub.dev/packages/provider) ^6.1.2 |
@@ -100,10 +107,10 @@
 
 ### Prasyarat
 
-- [Flutter SDK](https://docs.flutter.dev/get-started/install) versi **^3.12.2**
+- [Flutter SDK](https://docs.flutter.dev/get-started/install) versi **3.44.x** atau lebih baru
 - Browser modern (Google Chrome direkomendasikan)
 
-### Instalasi
+### Instalasi & Menjalankan
 
 ```bash
 # 1. Clone repositori
@@ -115,7 +122,10 @@ cd hok-by-7sensei
 # 3. Install dependensi
 flutter pub get
 
-# 4. Jalankan di browser
+# 4. Jalankan pengujian
+flutter test
+
+# 5. Jalankan aplikasi di browser
 flutter run -d chrome
 ```
 
