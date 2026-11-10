@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
+import '../core/constants.dart';
 import '../core/theme.dart';
 import '../core/utils.dart';
 import '../models/lane_model.dart';
@@ -19,26 +21,33 @@ class GamelandLaneView extends StatelessWidget {
 
     return CustomScrollView(
       slivers: [
-        // 1. BAGIAN DI ATAS KARTU: Judul + Pilihan 5 Lane (SliverToBoxAdapter sebelum header)
+        // 1. BAGIAN DI ATAS KARTU: Judul + Badge + Subtitle (tanpa lane selector)
         SliverToBoxAdapter(
           child: Center(
             child: ConstrainedBox(
               constraints: const BoxConstraints(maxWidth: 960),
               child: const Padding(
                 padding: EdgeInsets.symmetric(horizontal: 16),
-                child: GamelandHeroHeader(),
+                // Lane selector DIPISAH ke sliver pinned sendiri di bawah
+                child: GamelandHeroHeader(showLaneSelector: false),
               ),
             ),
           ),
         ),
 
+        // 2. LANE SELECTOR FLOATING (Tetap terlihat saat scroll ke bawah)
+        SliverPersistentHeader(
+          pinned: true,
+          delegate: _LaneSelectorDelegate(provider: provider),
+        ),
+
         const SliverToBoxAdapter(child: SizedBox(height: 14)),
 
-        // 2. KARTU TIER COLLAPSIBLE (Menyusut jadi pill melayang saat scroll)
+        // 3. KARTU TIER COLLAPSIBLE (Menyusut jadi pill melayang saat scroll)
         SliverPersistentHeader(
           pinned: true,
           delegate: CollapsibleCardDelegate(
-            expandedHeight: 188,
+            expandedHeight: 198,
             collapsedHeight: 52,
             topGap: 8,
             expandedHMargin: 16,
@@ -55,7 +64,7 @@ class GamelandLaneView extends StatelessWidget {
 
         const SliverToBoxAdapter(child: SizedBox(height: 18)),
 
-        // 3. KONTEN DI BAWAH KARTU (Hero Utama, Hero OP, Rekomendasi Push, Footer)
+        // 4. KONTEN DI BAWAH KARTU (Hero Utama, Hero OP, Rekomendasi Push, Footer)
         SliverToBoxAdapter(
           child: Center(
             child: ConstrainedBox(
@@ -972,4 +981,125 @@ class _GamelandPowerFieldState extends State<_GamelandPowerField> {
       },
     );
   }
+}
+
+
+// ═══════════════════════════════════════════════════════════════════════════
+//  LANE SELECTOR PINNED DELEGATE
+//  Dipakai oleh SliverPersistentHeader agar lane selector tetap terlihat
+//  saat user scroll ke bawah (pinned di bawah kartu tier).
+// ═══════════════════════════════════════════════════════════════════════════
+class _LaneSelectorDelegate extends SliverPersistentHeaderDelegate {
+  const _LaneSelectorDelegate({required this.provider});
+
+  final CalculatorProvider provider;
+
+  static const double _height = 58;
+
+  @override
+  double get minExtent => _height;
+
+  @override
+  double get maxExtent => _height;
+
+  @override
+  Widget build(
+    BuildContext context,
+    double shrinkOffset,
+    bool overlapsContent,
+  ) {
+    return Container(
+      color: HokTheme.darkBackground,
+      alignment: Alignment.center,
+      child: Center(
+        child: ConstrainedBox(
+          constraints: const BoxConstraints(maxWidth: 960),
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+            child: Container(
+              padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 5),
+              decoration: BoxDecoration(
+                color: const Color(0xFF0E140E),
+                borderRadius: BorderRadius.circular(40),
+                border: Border.all(color: const Color(0xFF1E2B1E)),
+              ),
+              child: SingleChildScrollView(
+                scrollDirection: Axis.horizontal,
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: HokLane.values.map((lane) {
+                    final isSelected = provider.activeLane == lane;
+
+                    return Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 3),
+                      child: InkWell(
+                        onTap: () => provider.switchLane(lane),
+                        borderRadius: BorderRadius.circular(30),
+                        child: AnimatedContainer(
+                          duration: const Duration(milliseconds: 180),
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 16,
+                            vertical: 8,
+                          ),
+                          decoration: BoxDecoration(
+                            color: isSelected
+                                ? HokTheme.neonLime
+                                : Colors.transparent,
+                            borderRadius: BorderRadius.circular(30),
+                            boxShadow: isSelected
+                                ? [
+                                    BoxShadow(
+                                      color: HokTheme.neonLime.withValues(
+                                        alpha: 0.35,
+                                      ),
+                                      blurRadius: 10,
+                                      offset: const Offset(0, 2),
+                                    ),
+                                  ]
+                                : null,
+                          ),
+                          child: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              SvgPicture.asset(
+                                lane.iconAssetPath,
+                                width: 14,
+                                height: 14,
+                                colorFilter: ColorFilter.mode(
+                                  isSelected
+                                      ? HokTheme.darkText
+                                      : HokTheme.textSecondary,
+                                  BlendMode.srcIn,
+                                ),
+                              ),
+                              const SizedBox(width: 6),
+                              Text(
+                                lane.displayName,
+                                style: TextStyle(
+                                  color: isSelected
+                                      ? HokTheme.darkText
+                                      : HokTheme.textSecondary,
+                                  fontSize: 12,
+                                  fontWeight: isSelected
+                                      ? FontWeight.w800
+                                      : FontWeight.w500,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    );
+                  }).toList(),
+                ),
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  @override
+  bool shouldRebuild(covariant _LaneSelectorDelegate old) => true;
 }

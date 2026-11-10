@@ -6,7 +6,11 @@ import '../core/theme.dart';
 import '../providers/calculator_provider.dart';
 
 class GamelandHeroHeader extends StatelessWidget {
-  const GamelandHeroHeader({super.key});
+  /// Jika false, lane selector (5 pill) tidak dirender di sini —
+  /// digunakan saat lane selector dipindah ke SliverPersistentHeader sendiri.
+  final bool showLaneSelector;
+
+  const GamelandHeroHeader({super.key, this.showLaneSelector = true});
 
   @override
   Widget build(BuildContext context) {
@@ -108,8 +112,8 @@ class GamelandHeroHeader extends StatelessWidget {
 
         const SizedBox(height: 20),
 
-        // 4. Selector 5 Lane (Hanya tampil saat mode Power Lane aktif)
-        if (isLaneMode)
+        // 4. Selector 5 Lane (Hanya tampil saat mode Power Lane aktif DAN showLaneSelector true)
+        if (isLaneMode && showLaneSelector)
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 5),
             decoration: BoxDecoration(

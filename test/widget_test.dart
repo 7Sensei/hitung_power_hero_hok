@@ -210,13 +210,25 @@ void main() {
       expect(find.text('HOK Power'), findsOneWidget);
       expect(find.text('Power Lane'), findsWidgets);
 
-      // 2. Scroll ke bawah di tab Power Lane (angka TIER menyusut jadi pill)
+      // 2. Scroll ke bawah di tab Power Lane (angka TIER menyusut jadi pill & 5 lane tetap floating)
       await tester.drag(find.byType(CustomScrollView), const Offset(0, -350));
       await tester.pumpAndSettle();
 
       // Konten Tier Card tetap kelihatan saat di-scroll
       expect(find.textContaining('Tier 29'), findsWidgets);
       expect(find.textContaining('29.782'), findsWidgets);
+
+      // Verifikasi 5 Lane selector tetap melayang (floating) saat di-scroll
+      expect(find.text('Clash Lane'), findsWidgets);
+      expect(find.text('Jungle'), findsWidgets);
+      expect(find.text('Mid Lane'), findsWidgets);
+      expect(find.text('Farm Lane'), findsWidgets);
+      expect(find.text('Roamer'), findsWidgets);
+
+      // Coba tap Jungle dari floating lane selector saat posisi ter-scroll
+      await tester.tap(find.text('Jungle'));
+      await tester.pumpAndSettle();
+      expect(find.textContaining('Jungle'), findsWidgets);
 
       // 3. Pindah ke tab Rincian Hero saat posisi ter-scroll
       await tester.tap(find.text('Rincian Hero'));
