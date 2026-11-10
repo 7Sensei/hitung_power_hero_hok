@@ -94408,8 +94408,8 @@ r=A.hy(q.r.a.a)
 if(r==null)r=60
 return A.bX(A.b([B.PF,B.cO,A.Sl(p,p,p,B.bY,p,p,!0,p,A.d9(A.b([B.a1o,A.d9(p,p,p,p,p,p,p,p,p,B.a5Z,A.j(q.y)),B.a1r,A.d9(p,p,p,p,p,p,p,p,p,B.a1Y,""+q.at+"%")],t.VO),p,p,p,p,p,p,p,p,B.Db,p),B.bi,p,p,B.aI,B.am),B.cP,B.qd,B.da,q.Pu(B.pq,B.o,"Saat Ini","Target",s,r)],t.p),B.q,B.n,B.p)},
 Pu(a,b,c,d,e,f){var s=null,r=t.p,q=A.UL(B.ka,A.b([B.a6l,A.bD(A.b([this.Pt(c,a),B.ht,this.Pt(d,b)],r),B.q,B.n,B.ai,0,s)],r),B.kb,6,8),p=A.aIG(s,!0,s,s,s,s,s,new A.Ml(B.iG,16,B.Nx,0,120,new A.aBJ(c,d),!1,!1,B.Dn,0,B.u,new A.aBK())),o=A.aat(s,!1),n=t.UA
-o=A.aEw(B.Eh,s,A.b([A.a5F(A.b([A.aEy(s,s,B.oE,s,a,s,s,B.ov,s,B.c.bq(e,0,100),s,32)],n),s,s,s,0),A.a5F(A.b([A.aEy(s,s,B.oE,s,b,s,s,B.ov,s,B.c.bq(f,0,100),s,32)],n),s,s,s,1)],t.hn),p,s,o,B.NA,s,new A.By(!0,!0,25,new A.aBL(),A.aOQ(),!1,s,A.b2U(),A.aOQ()),s,100,0,s,0,new A.BF(!0,new A.q0(16,s,new A.tr(!0,new A.aBM(),36,25,!0,!0),!0,B.nf),B.ou,B.ou,new A.q0(16,s,new A.tr(!0,new A.aBN(c,d,e,f,a,b),22,s,!0,!0),!0,B.nf)))
-return A.bX(A.b([q,B.by,A.dp(new A.zP(o,B.a_,B.bP,s,s),140,s)],r),B.a4,B.n,B.p)},
+o=A.aEw(B.Eh,s,A.b([A.a5F(A.b([A.aEy(s,s,B.oE,s,a,s,s,B.ov,s,B.c.bq(e,0,100),s,32)],n),s,s,s,0),A.a5F(A.b([A.aEy(s,s,B.oE,s,b,s,s,B.ov,s,B.c.bq(f,0,100),s,32)],n),s,s,s,1)],t.hn),p,s,o,B.NA,s,new A.By(!0,!0,25,new A.aBL(),A.aOQ(),!1,s,A.b2U(),A.aOQ()),s,100,0,s,0,new A.BF(!0,new A.q0(16,s,new A.tr(!0,new A.aBM(),36,25,!0,!0),!0,B.nf),B.ou,B.ou,new A.q0(16,s,new A.tr(!0,new A.aBN(c,d,e,f,a,b),42,s,!0,!0),!0,B.nf)))
+return A.bX(A.b([q,B.by,A.dp(new A.zP(o,B.a_,B.bP,s,s),165,s)],r),B.a4,B.n,B.p)},
 Pt(a,b){var s=null
 return A.bD(A.b([A.b2(s,s,B.l,s,s,new A.aS(b,s,s,s,s,s,B.cw),s,8,s,s,s,s,s,8),B.nv,A.aY(a,s,s,s,B.jZ,s,s)],t.p),B.q,B.n,B.ai,0,s)},
 aa2(){var s,r,q,p=this,o=null,n=A.b([],t.vf)
@@ -94462,7 +94462,7 @@ return A.aY(""+B.c.er(a)+"%",s,s,s,B.jZ,s,s)},
 $S:563}
 A.aBN.prototype={
 $2(a,b){var s=this,r=null,q=a===0,p=q?s.a:s.b,o=B.c.aa(q?s.c:s.d,1)
-return new A.bh(B.MO,A.aY(p+"\n"+o+"%",r,r,r,A.cO(r,r,q?s.e:s.f,r,r,r,r,r,r,r,r,10,r,r,B.Z,r,1.2,!0,r,r,r,r,r,r,r,r),B.bi,r),r)},
+return new A.bh(B.MO,A.aY(p+"\n"+o+"%",r,r,r,A.cO(r,r,q?s.e:s.f,r,r,r,r,r,r,r,r,11,r,r,B.Z,r,1.3,!0,r,r,r,r,r,r,r,r),B.bi,r),r)},
 $S:564}
 A.aBL.prototype={
 $1(a){return B.NB},
@@ -103939,7 +103939,7 @@ B.lx=new A.a7(0,16,0,16)
 B.ML=new A.a7(0,2,0,2)
 B.MM=new A.a7(0,30,0,30)
 B.MN=new A.a7(0,48,0,0)
-B.MO=new A.a7(0,6,0,0)
+B.MO=new A.a7(0,8,0,0)
 B.ly=new A.a7(0,8,0,8)
 B.MP=new A.a7(0,9,0,9)
 B.iE=new A.a7(10,4,10,4)
