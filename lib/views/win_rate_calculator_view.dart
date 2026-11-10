@@ -972,14 +972,7 @@ class _WinRateCalculatorViewState extends State<WinRateCalculatorView>
       ));
     }
 
-    return Container(
-      padding: const EdgeInsets.all(14),
-      decoration: BoxDecoration(
-        color: const Color(0xFF0D130D),
-        borderRadius: BorderRadius.circular(14),
-        border: Border.all(color: const Color(0xFF1C281C)),
-      ),
-      child: Column(
+    return Column(
         children: links.map((link) {
           return InkWell(
             onTap: link.onTap,
@@ -1012,7 +1005,6 @@ class _WinRateCalculatorViewState extends State<WinRateCalculatorView>
             ),
           );
         }).toList(),
-      ),
     );
   }
 }
