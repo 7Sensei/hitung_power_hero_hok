@@ -3,9 +3,9 @@ import 'package:provider/provider.dart';
 import 'package:hitung_power_hero_hok/app/theme.dart';
 import 'package:hitung_power_hero_hok/features/hero_detail/viewmodel/hero_detail_viewmodel.dart';
 import 'package:hitung_power_hero_hok/features/power_lane/viewmodel/power_lane_viewmodel.dart';
+import 'package:hitung_power_hero_hok/features/shell/view/shell_view.dart';
 import 'package:hitung_power_hero_hok/features/shell/viewmodel/shell_viewmodel.dart';
 import 'package:hitung_power_hero_hok/features/win_rate/viewmodel/win_rate_viewmodel.dart';
-import 'package:hitung_power_hero_hok/views/calculator_view.dart';
 
 class HokApp extends StatelessWidget {
   const HokApp({super.key});
@@ -23,7 +23,7 @@ class HokApp extends StatelessWidget {
         title: 'HOK by 7Sensei',
         debugShowCheckedModeBanner: false,
         theme: HokTheme.darkTheme,
-        home: const CalculatorView(),
+        home: const ShellView(),
       ),
     );
   }

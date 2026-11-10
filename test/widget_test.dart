@@ -4,8 +4,8 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:hitung_power_hero_hok/core/utils.dart';
 import 'package:hitung_power_hero_hok/main.dart';
-import 'package:hitung_power_hero_hok/models/hero_detail_model.dart';
-import 'package:hitung_power_hero_hok/views/win_rate_calculator_view.dart';
+import 'package:hitung_power_hero_hok/data/models/hero_detail_model.dart';
+import 'package:hitung_power_hero_hok/features/win_rate/view/win_rate_view.dart';
 
 void main() {
   group('HOK Calculation Logic Unit Tests', () {

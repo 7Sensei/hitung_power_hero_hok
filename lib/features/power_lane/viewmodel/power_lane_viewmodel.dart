@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:hitung_power_hero_hok/core/constants.dart';
-import 'package:hitung_power_hero_hok/models/hero_model.dart';
-import 'package:hitung_power_hero_hok/models/lane_model.dart';
+import 'package:hitung_power_hero_hok/data/models/hero_model.dart';
+import 'package:hitung_power_hero_hok/data/models/lane_model.dart';
 
 /// ViewModel untuk fitur Power Lane: data 5 lane, hero slot, dan perhitungan lane.
 class PowerLaneViewModel extends ChangeNotifier {

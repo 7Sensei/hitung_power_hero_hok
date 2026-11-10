@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:hitung_power_hero_hok/models/hero_detail_model.dart';
+import 'package:hitung_power_hero_hok/data/models/hero_detail_model.dart';
 
 /// ViewModel untuk tab Rincian Hero Power Individual.
 class HeroDetailViewModel extends ChangeNotifier {

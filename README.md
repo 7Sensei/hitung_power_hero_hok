@@ -136,14 +136,16 @@ flutter build web --release --base-href "/hok-by-7sensei/"
 
 ```
 lib/
-├── app/            # Entry point HokApp & tema global HokTheme
-├── core/           # Konstanta, formatter input, dan utilitas kalkulator
-├── data/models/    # Model data: hero_model, lane_model, hero_detail_model
+├── main.dart       # Titik masuk utama aplikasi (entry point)
+├── app/            # Setup aplikasi (HokApp) & tema global (HokTheme)
+├── core/           # Konstanta, numeric input formatter, dan utilitas kalkulator
+├── data/           # Data layer
+│   └── models/     # Model data immutable (hero, lane, hero detail)
 └── features/       # Arsitektur feature-first (MVVM):
-    ├── hero_detail/    # view & viewmodel untuk rincian hero power
-    ├── power_lane/     # view & viewmodel untuk kalkulator 5 power lane
-    ├── shell/          # view & viewmodel untuk navbar, sidebar, dan layout
-    └── win_rate/       # view & viewmodel untuk kalkulator win rate
+    ├── hero_detail/    # View & ViewModel untuk rincian Hero Power individual
+    ├── power_lane/     # View & ViewModel untuk kalkulator 5 Power Lane
+    ├── shell/          # View & ViewModel untuk navbar, sidebar, dan layout shell
+    └── win_rate/       # View & ViewModel untuk kalkulator Win Rate
 ```
 
 ---

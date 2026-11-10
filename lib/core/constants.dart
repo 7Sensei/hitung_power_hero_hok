@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../models/hero_model.dart';
+import '../data/models/hero_model.dart';
 
 enum HokLane {
   clash('Clash Lane', '对抗路', 'assets/icon_clashlane.svg', Color(0xFFE67E22)),
