@@ -1,67 +1,173 @@
-# HOK Power Calculator (Honor of Kings - 分路战力 & 英雄战力计算器)
+<p align="center">
+  <img src="assets/icon_app.png" alt="HOK by 7Sensei Logo" width="96" />
+</p>
 
-Aplikasi kalkulator pintar dan simulator untuk menghitung **Power Lane (分路战力)** dan **Power Hero Individual (英雄战力)** resmi sesuai sistem game **Honor of Kings (HoK)**.
+<h1 align="center">HOK by 7Sensei</h1>
 
----
+<p align="center">
+  Kalkulator resmi Power Lane & Power Hero Individual untuk Honor of Kings — akurat, cepat, dan mudah digunakan.
+</p>
 
-## 📸 Fitur Utama Sesuai In-Game HoK
-
-### 1. Kalkulator Power Lane (分路战力)
-* **Dukungan 5 Lane**: Clash Lane (对抗路), Jungle (打野), Mid Lane (中路), Farm Lane (发育路), dan Roamer (游走).
-* **Perhitungan Hero Utama (Top 1–5)**:
-  * Bobot kontribusi **100%**.
-  * $\text{Subtotal Utama} = \sum_{i=1}^5 \text{Power Hero}_i$
-* **Perhitungan Hero OP Kamu (Top 6–10)**:
-  * Bobot kontribusi **20%**.
-  * $\text{Subtotal OP} = \left(\sum_{j=6}^{10} \text{Power Hero}_j\right) \times 20\%$
-* **Total Power Lane**:
-  $$\text{Power Lane} = \text{Subtotal Utama} + \text{Subtotal OP}$$
-* **Sistem Tier Lane**:
-  * Setiap kelipatan **1.000 Power** = **1 Tier** (Contoh: `29.782` Power = `Tier 29`).
-* **Target Simulator & Strategi Push Paling Efisien**:
-  * Menghitung sisa poin menuju target (misal target `33.190` Top 1%).
-  * Memberikan rekomendasi hero mana yang paling hemat dan cepat dinaikkan (efisiensi 100% vs trik lompatan bobot 20% ke 100%).
-* **Fitur Auto-Sort 10 Hero**: Secara otomatis menempatkan 5 hero ber-power tertinggi ke Hero Utama dan 5 berikutnya ke Hero OP.
+<p align="center">
+  <img src="https://img.shields.io/badge/Flutter-3.x-02569B?logo=flutter&logoColor=white" alt="Flutter">
+  <img src="https://img.shields.io/badge/Dart-3.x-0175C2?logo=dart&logoColor=white" alt="Dart">
+  <img src="https://img.shields.io/badge/Platform-Web-4CAF50?logo=googlechrome&logoColor=white" alt="Platform: Web">
+  <img src="https://img.shields.io/github/last-commit/7Sensei/hok-by-7sensei" alt="Last Commit">
+  <img src="https://img.shields.io/github/stars/7Sensei/hok-by-7sensei?style=social" alt="Stars">
+</p>
 
 ---
 
-### 2. Kalkulator Rincian Hero Power (英雄战力明细)
-Berdasarkan rumus resmi in-game HoK:
-$$\text{Power Hero} = \text{Power Total} \times \text{Pengali Total}$$
+## 📋 Daftar Isi
 
-* **Komponen Power Total**:
-  1. **Power Performa Ranked**: Berdasarkan tier & performa pertandingan ranked (Maks 1.500 poin).
-  2. **Power Performa Peak**: Berdasarkan performa Peak Tournament (Poin Tourney).
-  3. **Power Kemenangan**: Akumulasi kemenangan ranked & peak (Maks 3.000 poin).
-* **Komponen Pengali Total**:
-  1. **Pengali Peak (%)**: Diperoleh dari Poin Tourney Peak saat ini ($+1\%$ setiap kelipatan 20 poin di atas 1.200 poin).
-     $$\text{Pengali Peak} = \max\left(0, \lfloor(\text{Poin Peak} - 1200) / 20\rfloor\right)\%$$
-  2. **Pengali Keaktifan (%)**: Persentase keaktifan hero ($10\% - 100\%$).
-  $$\text{Pengali Total} = (1 + \text{Pengali Peak}) \times \text{Pengali Keaktifan}$$
-* **Fitur Integrasi**: Hasil kalkulasi Hero Power dapat langsung disalin ke slot hero mana pun di Kalkulator Lane!
+- [Tentang Aplikasi](#tentang-aplikasi)
+- [Fitur](#fitur)
+- [Screenshot](#screenshot)
+- [Teknologi](#teknologi)
+- [Memulai](#memulai)
+- [Build & Deploy](#build--deploy)
+- [Struktur Folder](#struktur-folder)
+- [Kontribusi](#kontribusi)
+- [Disclaimer](#disclaimer)
 
 ---
 
-### 3. Database Hero HoK Lengkap
-* Tersedia dialog pencarian hero resmi HoK per role/lane (Dharma, Allain, Biron, Mayene, Arthur, Lam, Wukong, Diaochan, Marco Polo, Dolia, dll).
+## Tentang Aplikasi
+
+**HOK by 7Sensei** adalah aplikasi web berbasis Flutter yang membantu pemain Honor of Kings menghitung **Power Lane (分路战力)** dan **Power Hero Individual (英雄战力)** secara akurat sesuai rumus resmi in-game. Aplikasi ini juga dilengkapi kalkulator Win Rate untuk membantu pemain merencanakan strategi ranked mereka.
 
 ---
 
-## 🚀 Menjalankan Project
+## Fitur
 
-1. Pastikan Flutter SDK sudah terpasang.
-2. Jalankan aplikasi:
-   ```bash
-   flutter run -d chrome  # Untuk Web
-   # atau
-   flutter run            # Untuk Android / iOS / Desktop
-   ```
+### 🗺️ Kalkulator Power Lane
+- 🛣️ Mendukung **5 lane**: Clash Lane, Jungle, Mid Lane, Farm Lane, dan Roamer
+- 🏆 Kalkulasi otomatis **Hero Utama (bobot 100%)** dan **Hero OP (bobot 20%)**
+- 🎯 **Target Simulator** — hitung sisa poin menuju target tier
+- 📊 Rekomendasi hero yang paling efisien untuk di-push
+- 🔀 **Auto-sort** 10 hero berdasarkan power tertinggi ke slot yang tepat
+- 🏅 **Sistem Tier** — setiap 1.000 Power = 1 Tier
+- ✏️ Input target tier/poin dapat diubah langsung di UI
+
+### 🧮 Rincian Power Hero Individual
+- 📈 Kalkulasi **Power Performa Ranked** berdasarkan performa pertandingan
+- ⛰️ Kalkulasi **Power Performa Peak** berdasarkan Poin Tourney
+- 🏅 Kalkulasi **Power Kemenangan** dari akumulasi kemenangan ranked & peak
+- ✖️ Kalkulasi **Pengali Peak** dan **Pengali Keaktifan**
+- 🔗 Hasil kalkulasi dapat langsung disalin ke slot hero di Kalkulator Lane
+
+### 📉 Penghitung Win Rate
+- 📈 Mode **Win Streak** — prediksi Win Rate baru setelah win streak berturut-turut
+- 📉 Mode **Lose Streak** — prediksi Win Rate baru setelah lose streak berturut-turut
+- ⚖️ Mode **Win / Lose** — hitung total win & lose dari WR dan total match
+- 📊 Visualisasi grafik interaktif dengan **fl_chart** (BarChart & PieChart)
+
+### 🗃️ Database Hero
+- 🔍 Dialog pencarian hero Honor of Kings berdasarkan lane/role
+- ⚡ Validasi input angka di seluruh form dengan peringatan SnackBar
+
+### 🎨 UI / UX
+- 🌙 Tema dark **Gameland** dengan aksen neon lime
+- 📌 Floating mode selector (lane & WR mode) yang tetap terlihat saat scroll
+- 📱 Desain responsif untuk berbagai ukuran layar
 
 ---
 
-## 🧪 Unit & Widget Testing
+## Screenshot
 
-Jalankan test untuk memverifikasi akurasi matematis rumus:
+<!-- Tambahkan screenshot di sini setelah tersedia: -->
+<!-- ![Power Lane Calculator](docs/screenshot-power-lane.png) -->
+<!-- ![Hero Detail](docs/screenshot-hero-detail.png) -->
+<!-- ![Win Rate Calculator](docs/screenshot-win-rate.png) -->
+
+---
+
+## Teknologi
+
+| Komponen | Detail |
+|---|---|
+| **Framework** | [Flutter](https://flutter.dev) 3.x |
+| **Bahasa** | [Dart](https://dart.dev) ^3.12.2 |
+| **Arsitektur** | Modern MVVM (Feature-first) |
+| **State Management** | [provider](https://pub.dev/packages/provider) ^6.1.2 |
+| **Grafik** | [fl_chart](https://pub.dev/packages/fl_chart) ^1.3.1 |
+| **SVG Assets** | [flutter_svg](https://pub.dev/packages/flutter_svg) ^2.3.2 |
+| **Platform** | Web (Flutter Web) |
+
+---
+
+## Memulai
+
+### Prasyarat
+
+- [Flutter SDK](https://docs.flutter.dev/get-started/install) versi **^3.12.2**
+- Browser modern (Google Chrome direkomendasikan)
+
+### Instalasi
+
 ```bash
-flutter test
+# 1. Clone repositori
+git clone https://github.com/7Sensei/hok-by-7sensei.git
+
+# 2. Masuk ke folder proyek
+cd hok-by-7sensei
+
+# 3. Install dependensi
+flutter pub get
+
+# 4. Jalankan di browser
+flutter run -d chrome
 ```
+
+---
+
+## Build & Deploy
+
+```bash
+flutter build web --release --base-href "/hok-by-7sensei/"
+```
+
+> [!NOTE]
+> Nilai `--base-href` harus sesuai dengan nama repositori GitHub jika di-hosting di **GitHub Pages**. Jika menggunakan domain kustom atau subdomain lain, sesuaikan nilainya.
+
+---
+
+## Struktur Folder
+
+```
+lib/
+├── app/            # Entry point HokApp & tema global HokTheme
+├── core/           # Konstanta, formatter input, dan utilitas kalkulator
+├── data/models/    # Model data: hero_model, lane_model, hero_detail_model
+└── features/       # Arsitektur feature-first (MVVM):
+    ├── hero_detail/    # view & viewmodel untuk rincian hero power
+    ├── power_lane/     # view & viewmodel untuk kalkulator 5 power lane
+    ├── shell/          # view & viewmodel untuk navbar, sidebar, dan layout
+    └── win_rate/       # view & viewmodel untuk kalkulator win rate
+```
+
+---
+
+## Kontribusi
+
+Kontribusi sangat disambut! Caranya:
+
+1. **Fork** repositori ini
+2. Buat branch baru: `git checkout -b fitur/nama-fitur`
+3. Commit perubahan: `git commit -m "feat: tambahkan fitur X"`
+4. Push ke branch: `git push origin fitur/nama-fitur`
+5. Buka **Pull Request** ke branch `main`
+
+---
+
+## Disclaimer
+
+Aplikasi ini adalah **tools buatan penggemar** yang bersifat tidak resmi (*unofficial fan-made tool*). Aplikasi ini **tidak berafiliasi dengan, disponsori oleh, atau didukung oleh** Tencent, TiMi Studio Group, atau tim resmi Honor of Kings dalam bentuk apapun.
+
+Semua nama game, karakter, merek dagang, dan aset terkait **Honor of Kings** adalah milik dari pemiliknya masing-masing (© Tencent / TiMi Studio Group).
+
+---
+
+<p align="center">
+  Dibuat oleh <a href="https://github.com/7Sensei">7Sensei</a>
+</p>
