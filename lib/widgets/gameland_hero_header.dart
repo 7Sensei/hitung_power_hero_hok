@@ -76,7 +76,12 @@ class GamelandHeroHeader extends StatelessWidget {
                   shape: BoxShape.circle,
                   border: Border.all(color: const Color(0xFF2E422E)),
                 ),
-                child: const Text('🎮', style: TextStyle(fontSize: 20)),
+                child: Image.asset(
+                  'assets/icon_app.png',
+                  width: 28,
+                  height: 28,
+                  fit: BoxFit.contain,
+                ),
               ),
               const SizedBox(width: 12),
               Text(
