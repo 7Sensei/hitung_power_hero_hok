@@ -127,7 +127,7 @@ class GamelandNavbar extends StatelessWidget {
                     ),
                     SizedBox(width: 6),
                     Text(
-                      'Win Rate Tool',
+                      'WR Tools',
                       style: TextStyle(
                         color: HokTheme.neonLime,
                         fontSize: 12,

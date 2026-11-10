@@ -21,16 +21,10 @@ class _WinRateCalculatorViewState extends State<WinRateCalculatorView>
     with SingleTickerProviderStateMixin {
   WrMode _mode = WrMode.winStreak;
 
-  final TextEditingController _matchController = TextEditingController(
-    text: '100',
-  );
-  final TextEditingController _wrController = TextEditingController(text: '50');
-  final TextEditingController _targetWrController = TextEditingController(
-    text: '60',
-  );
-  final TextEditingController _loseStreakController = TextEditingController(
-    text: '5',
-  );
+  final TextEditingController _matchController = TextEditingController();
+  final TextEditingController _wrController = TextEditingController();
+  final TextEditingController _targetWrController = TextEditingController();
+  final TextEditingController _loseStreakController = TextEditingController();
 
   bool _hasCalculated = true;
   int? _resultWinStreak;
@@ -272,6 +266,7 @@ class _WinRateCalculatorViewState extends State<WinRateCalculatorView>
             icon: Icons.sports_esports_rounded,
             label: 'Total Match',
             controller: _matchController,
+            hintText: '100',
             suffixText: 'match',
           ),
 
@@ -282,6 +277,7 @@ class _WinRateCalculatorViewState extends State<WinRateCalculatorView>
             icon: Icons.percent_rounded,
             label: 'Win Rate Saat Ini',
             controller: _wrController,
+            hintText: '50',
             suffixText: '%',
           ),
 
@@ -293,6 +289,7 @@ class _WinRateCalculatorViewState extends State<WinRateCalculatorView>
               icon: Icons.flag_rounded,
               label: 'Target Win Rate',
               controller: _targetWrController,
+              hintText: '60',
               suffixText: '%',
             )
           else if (_mode == WrMode.loseStreak)
@@ -300,6 +297,7 @@ class _WinRateCalculatorViewState extends State<WinRateCalculatorView>
               icon: Icons.heart_broken_rounded,
               label: 'Jumlah Lose Streak',
               controller: _loseStreakController,
+              hintText: '5',
               suffixText: '×',
             ),
 
@@ -339,6 +337,7 @@ class _WinRateCalculatorViewState extends State<WinRateCalculatorView>
     required IconData icon,
     required String label,
     required TextEditingController controller,
+    String? hintText,
     String? suffixText,
   }) {
     return Column(
@@ -372,6 +371,12 @@ class _WinRateCalculatorViewState extends State<WinRateCalculatorView>
             fontWeight: FontWeight.bold,
           ),
           decoration: InputDecoration(
+            hintText: hintText,
+            hintStyle: const TextStyle(
+              color: HokTheme.textMuted,
+              fontSize: 14,
+              fontWeight: FontWeight.w500,
+            ),
             filled: true,
             fillColor: const Color(0xFF141E14),
             contentPadding: const EdgeInsets.symmetric(
