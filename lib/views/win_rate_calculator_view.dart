@@ -790,7 +790,7 @@ class _WinRateCalculatorViewState extends State<WinRateCalculatorView>
         ),
         const SizedBox(height: 12),
         SizedBox(
-          height: 140,
+          height: 165,
           child: BarChart(
             BarChartData(
               alignment: BarChartAlignment.spaceAround,
@@ -838,20 +838,21 @@ class _WinRateCalculatorViewState extends State<WinRateCalculatorView>
                 bottomTitles: AxisTitles(
                   sideTitles: SideTitles(
                     showTitles: true,
+                    reservedSize: 42,
                     getTitlesWidget: (val, meta) {
                       final isFirst = val == 0;
                       final title = isFirst ? labelA : labelB;
                       final percent = isFirst ? valueA : valueB;
                       return Padding(
-                        padding: const EdgeInsets.only(top: 6),
+                        padding: const EdgeInsets.only(top: 8),
                         child: Text(
                           '$title\n${percent.toStringAsFixed(1)}%',
                           textAlign: TextAlign.center,
                           style: TextStyle(
                             color: isFirst ? colorA : colorB,
-                            fontSize: 10,
+                            fontSize: 11,
                             fontWeight: FontWeight.w700,
-                            height: 1.2,
+                            height: 1.3,
                           ),
                         ),
                       );
