@@ -52,9 +52,11 @@ class _HeroPickerDialogState extends State<HeroPickerDialog> {
           children: [
             Row(
               children: [
-                const Icon(
-                  Icons.sports_esports_rounded,
-                  color: HokTheme.neonLime,
+                Image.asset(
+                  'assets/icon_app.png',
+                  width: 22,
+                  height: 22,
+                  fit: BoxFit.contain,
                 ),
                 const SizedBox(width: 8),
                 const Text(

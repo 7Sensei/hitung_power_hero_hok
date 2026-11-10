@@ -50,11 +50,12 @@ class GamelandNavbar extends StatelessWidget {
                 color: HokTheme.neonLime,
                 borderRadius: BorderRadius.circular(8),
               ),
-              child: const Center(
-                child: Icon(
-                  Icons.sports_esports_rounded,
-                  color: HokTheme.darkText,
-                  size: 18,
+              child: Center(
+                child: Image.asset(
+                  'assets/icon_app.png',
+                  width: 20,
+                  height: 20,
+                  fit: BoxFit.contain,
                 ),
               ),
             ),

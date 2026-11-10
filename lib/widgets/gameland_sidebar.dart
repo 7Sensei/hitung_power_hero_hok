@@ -32,11 +32,12 @@ class GamelandSidebar extends StatelessWidget {
                       color: HokTheme.neonLime,
                       borderRadius: BorderRadius.circular(10),
                     ),
-                    child: const Center(
-                      child: Icon(
-                        Icons.sports_esports_rounded,
-                        color: HokTheme.darkText,
-                        size: 22,
+                    child: Center(
+                      child: Image.asset(
+                        'assets/icon_app.png',
+                        width: 24,
+                        height: 24,
+                        fit: BoxFit.contain,
                       ),
                     ),
                   ),

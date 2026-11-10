@@ -259,7 +259,7 @@ class _WinRateCalculatorViewState extends State<WinRateCalculatorView>
         children: [
           // 1. Total match
           _buildInputGroup(
-            icon: Icons.sports_esports_rounded,
+            useAppIcon: true,
             label: 'Total Match',
             controller: _matchController,
             hintText: '100',
@@ -332,7 +332,8 @@ class _WinRateCalculatorViewState extends State<WinRateCalculatorView>
   }
 
   Widget _buildInputGroup({
-    required IconData icon,
+    IconData? icon,
+    bool useAppIcon = false,
     required String label,
     required TextEditingController controller,
     String? hintText,
@@ -344,11 +345,19 @@ class _WinRateCalculatorViewState extends State<WinRateCalculatorView>
       children: [
         Row(
           children: [
-            Icon(
-              icon,
-              size: 14,
-              color: HokTheme.neonLime.withValues(alpha: 0.7),
-            ),
+            if (useAppIcon)
+              Image.asset(
+                'assets/icon_app.png',
+                width: 14,
+                height: 14,
+                fit: BoxFit.contain,
+              )
+            else if (icon != null)
+              Icon(
+                icon,
+                size: 14,
+                color: HokTheme.neonLime.withValues(alpha: 0.7),
+              ),
             const SizedBox(width: 6),
             Text(
               label,
