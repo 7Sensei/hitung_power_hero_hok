@@ -32,7 +32,7 @@ jobs:
         run: flutter pub get
 
       - name: Build Flutter Web
-        run: flutter build web --release --base-href "/hitung_power_hero_hok/"
+        run: flutter build web --release --base-href "/hok-by-7sensei/"
 
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v4
