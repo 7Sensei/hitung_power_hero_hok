@@ -110,11 +110,7 @@ void main() {
     WidgetTester tester,
   ) async {
     await tester.pumpWidget(
-      const MaterialApp(
-        home: Scaffold(
-          body: WinRateCalculatorView(),
-        ),
-      ),
+      const MaterialApp(home: Scaffold(body: WinRateCalculatorView())),
     );
     await tester.pumpAndSettle();
 
@@ -230,7 +226,7 @@ void main() {
       expect(find.text('Roamer'), findsWidgets);
 
       // Coba tap Jungle dari floating lane selector saat posisi ter-scroll
-      await tester.tap(find.text('Jungle'));
+      await tester.tap(find.byKey(const ValueKey('lane-picker-jungle')));
       await tester.pumpAndSettle();
       expect(find.textContaining('Jungle'), findsWidgets);
 

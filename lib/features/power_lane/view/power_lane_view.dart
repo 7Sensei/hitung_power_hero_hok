@@ -1,5 +1,8 @@
+import 'package:animated_flip_counter/animated_flip_counter.dart';
+import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 import 'package:provider/provider.dart';
 import 'package:hitung_power_hero_hok/app/theme.dart';
 import 'package:hitung_power_hero_hok/core/constants.dart';
@@ -85,7 +88,52 @@ class PowerLaneView extends StatelessWidget {
                             children: [
                               // Kolom Kiri: Hero Utama (100%)
                               Expanded(
-                                child: _buildHeroGroupCard(
+                                child: _animateCard(
+                                  _buildHeroGroupCard(
+                                    context: context,
+                                    provider: provider,
+                                    laneData: laneData,
+                                    isUtama: true,
+                                    title: 'Hero Utama',
+                                    weightTag: 'Bobot 100%',
+                                    subtotalText: HOKUtils.formatNumber(
+                                      laneData.subtotalUtama,
+                                    ),
+                                    icon: Icons.workspace_premium_rounded,
+                                    iconColor: HokTheme.neonLime,
+                                  ),
+                                  delayMs: 0,
+                                ),
+                              ),
+                              const SizedBox(width: 20),
+                              // Kolom Kanan: Hero OP (20%)
+                              Expanded(
+                                child: _animateCard(
+                                  _buildHeroGroupCard(
+                                    context: context,
+                                    provider: provider,
+                                    laneData: laneData,
+                                    isUtama: false,
+                                    title: 'Hero OP Kamu',
+                                    weightTag: 'Bobot 20%',
+                                    subtotalText: HOKUtils.formatNumber(
+                                      laneData.subtotalOP,
+                                    ),
+                                    extraSubtotalText:
+                                        '(20% dari ${HOKUtils.formatNumber(laneData.sumRawOP)})',
+                                    icon: Icons.shield_outlined,
+                                    iconColor: HokTheme.limeAccent,
+                                  ),
+                                  delayMs: 70,
+                                ),
+                              ),
+                            ],
+                          )
+                        else
+                          Column(
+                            children: [
+                              _animateCard(
+                                _buildHeroGroupCard(
                                   context: context,
                                   provider: provider,
                                   laneData: laneData,
@@ -98,11 +146,11 @@ class PowerLaneView extends StatelessWidget {
                                   icon: Icons.workspace_premium_rounded,
                                   iconColor: HokTheme.neonLime,
                                 ),
+                                delayMs: 0,
                               ),
-                              const SizedBox(width: 20),
-                              // Kolom Kanan: Hero OP (20%)
-                              Expanded(
-                                child: _buildHeroGroupCard(
+                              const SizedBox(height: 20),
+                              _animateCard(
+                                _buildHeroGroupCard(
                                   context: context,
                                   provider: provider,
                                   laneData: laneData,
@@ -117,48 +165,26 @@ class PowerLaneView extends StatelessWidget {
                                   icon: Icons.shield_outlined,
                                   iconColor: HokTheme.limeAccent,
                                 ),
-                              ),
-                            ],
-                          )
-                        else
-                          Column(
-                            children: [
-                              _buildHeroGroupCard(
-                                context: context,
-                                provider: provider,
-                                laneData: laneData,
-                                isUtama: true,
-                                title: 'Hero Utama',
-                                weightTag: 'Bobot 100%',
-                                subtotalText: HOKUtils.formatNumber(
-                                  laneData.subtotalUtama,
-                                ),
-                                icon: Icons.workspace_premium_rounded,
-                                iconColor: HokTheme.neonLime,
-                              ),
-                              const SizedBox(height: 20),
-                              _buildHeroGroupCard(
-                                context: context,
-                                provider: provider,
-                                laneData: laneData,
-                                isUtama: false,
-                                title: 'Hero OP Kamu',
-                                weightTag: 'Bobot 20%',
-                                subtotalText: HOKUtils.formatNumber(
-                                  laneData.subtotalOP,
-                                ),
-                                extraSubtotalText:
-                                    '(20% dari ${HOKUtils.formatNumber(laneData.sumRawOP)})',
-                                icon: Icons.shield_outlined,
-                                iconColor: HokTheme.limeAccent,
+                                delayMs: 70,
                               ),
                             ],
                           ),
 
                         const SizedBox(height: 20),
 
+                        _animateCard(
+                          _buildLanePowerChart(provider),
+                          delayMs: 140,
+                        ),
+
+                        const SizedBox(height: 20),
+
                         // KARTU REKOMENDASI PINTAR (Bento Card Ala Gameland)
-                        _buildSmartStrategyCard(context, provider, laneData),
+                        _animateCard(
+                          _buildSmartStrategyCard(context, provider, laneData),
+                          delayMs: 180,
+                          durationMs: 200,
+                        ),
 
                         const SizedBox(height: 20),
 
@@ -173,6 +199,161 @@ class PowerLaneView extends StatelessWidget {
           ),
         ),
       ],
+    );
+  }
+
+  Widget _animateCard(
+    Widget child, {
+    required int delayMs,
+    int durationMs = 220,
+  }) {
+    final duration = Duration(milliseconds: durationMs);
+    return child
+        .animate(delay: Duration(milliseconds: delayMs))
+        .fadeIn(duration: duration, curve: Curves.easeOutCubic)
+        .slideY(
+          begin: 0.035,
+          end: 0,
+          duration: duration,
+          curve: Curves.easeOutCubic,
+        );
+  }
+
+  Widget _buildLanePowerChart(PowerLaneViewModel provider) {
+    final lanes = HokLane.values
+        .map((lane) => provider.laneDataMap[lane]!)
+        .toList(growable: false);
+    final maximumPower = lanes
+        .map((lane) => lane.totalPowerLane)
+        .reduce((a, b) => a > b ? a : b);
+    final maxY = ((maximumPower / 10000).ceil() * 10000).toDouble();
+    final interval = maxY / 4;
+    const shortNames = ['Clash', 'JG', 'Mid', 'Farm', 'Roam'];
+
+    return Container(
+      padding: const EdgeInsets.fromLTRB(16, 16, 12, 12),
+      decoration: BoxDecoration(
+        color: HokTheme.cardBackground,
+        borderRadius: BorderRadius.circular(18),
+        border: Border.all(color: HokTheme.cardBorder),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const Text(
+            'Perbandingan Power Lane',
+            style: TextStyle(
+              color: HokTheme.textPrimary,
+              fontSize: 16,
+              fontWeight: FontWeight.w800,
+            ),
+          ),
+          const SizedBox(height: 4),
+          const Text(
+            'Total power dari data lane saat ini',
+            style: TextStyle(color: HokTheme.textMuted, fontSize: 11),
+          ),
+          const SizedBox(height: 12),
+          SizedBox(
+            height: 190,
+            child: BarChart(
+              BarChartData(
+                minY: 0,
+                maxY: maxY,
+                alignment: BarChartAlignment.spaceAround,
+                barGroups: List.generate(lanes.length, (index) {
+                  final lane = lanes[index];
+                  return BarChartGroupData(
+                    x: index,
+                    barRods: [
+                      BarChartRodData(
+                        toY: lane.totalPowerLane.toDouble(),
+                        color: lane.lane.accentColor,
+                        width: 20,
+                        borderRadius: const BorderRadius.vertical(
+                          top: Radius.circular(5),
+                        ),
+                      ),
+                    ],
+                  );
+                }),
+                gridData: FlGridData(
+                  show: true,
+                  drawVerticalLine: false,
+                  horizontalInterval: interval,
+                  getDrawingHorizontalLine: (_) => const FlLine(
+                    color: HokTheme.cardBorder,
+                    strokeWidth: 0.7,
+                  ),
+                ),
+                borderData: FlBorderData(show: false),
+                barTouchData: BarTouchData(
+                  touchTooltipData: BarTouchTooltipData(
+                    getTooltipColor: (_) => HokTheme.darkSurface,
+                    getTooltipItem: (group, _, rod, _) {
+                      final lane = lanes[group.x];
+                      return BarTooltipItem(
+                        '${lane.lane.displayName}\n${HOKUtils.formatNumber(rod.toY.round())}',
+                        TextStyle(
+                          color: lane.lane.accentColor,
+                          fontSize: 11,
+                          fontWeight: FontWeight.w700,
+                        ),
+                      );
+                    },
+                  ),
+                ),
+                titlesData: FlTitlesData(
+                  topTitles: const AxisTitles(
+                    sideTitles: SideTitles(showTitles: false),
+                  ),
+                  rightTitles: const AxisTitles(
+                    sideTitles: SideTitles(showTitles: false),
+                  ),
+                  leftTitles: AxisTitles(
+                    sideTitles: SideTitles(
+                      showTitles: true,
+                      reservedSize: 34,
+                      interval: interval,
+                      getTitlesWidget: (value, _) => Text(
+                        '${(value / 1000).round()}k',
+                        style: const TextStyle(
+                          color: HokTheme.textMuted,
+                          fontSize: 9,
+                        ),
+                      ),
+                    ),
+                  ),
+                  bottomTitles: AxisTitles(
+                    sideTitles: SideTitles(
+                      showTitles: true,
+                      reservedSize: 28,
+                      getTitlesWidget: (value, _) {
+                        final index = value.toInt();
+                        if (index < 0 || index >= shortNames.length) {
+                          return const SizedBox.shrink();
+                        }
+                        return Padding(
+                          padding: const EdgeInsets.only(top: 8),
+                          child: Text(
+                            shortNames[index],
+                            style: const TextStyle(
+                              color: HokTheme.textSecondary,
+                              fontSize: 9,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                        );
+                      },
+                    ),
+                  ),
+                ),
+              ),
+              duration: const Duration(milliseconds: 220),
+            ),
+          ),
+        ],
+      ),
     );
   }
 
@@ -241,9 +422,11 @@ class PowerLaneView extends StatelessWidget {
                         FittedBox(
                           fit: BoxFit.scaleDown,
                           alignment: Alignment.centerLeft,
-                          child: Text(
-                            HOKUtils.formatNumber(laneData.totalPowerLane),
-                            style: const TextStyle(
+                          child: AnimatedFlipCounter(
+                            value: laneData.totalPowerLane,
+                            thousandSeparator: '.',
+                            duration: const Duration(milliseconds: 300),
+                            textStyle: const TextStyle(
                               color: Colors.white,
                               fontSize: 34,
                               fontWeight: FontWeight.w900,
@@ -255,7 +438,6 @@ class PowerLaneView extends StatelessWidget {
                     ),
                   ),
                   const SizedBox(width: 12),
-
                   // Kolom Target Power
                   Flexible(
                     child: Column(
@@ -390,9 +572,11 @@ class PowerLaneView extends StatelessWidget {
                 ),
               ),
               const SizedBox(width: 8),
-              Text(
-                HOKUtils.formatNumber(laneData.totalPowerLane),
-                style: const TextStyle(
+              AnimatedFlipCounter(
+                value: laneData.totalPowerLane,
+                thousandSeparator: '.',
+                duration: const Duration(milliseconds: 300),
+                textStyle: const TextStyle(
                   color: Colors.white,
                   fontWeight: FontWeight.w900,
                   fontSize: 15,
@@ -597,28 +781,28 @@ class PowerLaneView extends StatelessWidget {
                             child: Row(
                               children: [
                                 CircleAvatar(
-                                    radius: 14,
-                                    backgroundColor: const Color(0xFF1D2A1D),
-                                    child: Text(
-                                      slot.heroName.isNotEmpty
-                                          ? slot.heroName
-                                                .substring(
-                                                  0,
-                                                  slot.heroName.length >= 2
-                                                      ? 2
-                                                      : 1,
-                                                )
-                                                .toUpperCase()
-                                          : '?',
-                                      style: TextStyle(
-                                        color: isUtama
-                                            ? HokTheme.neonLime
-                                            : Colors.white70,
-                                        fontSize: 10,
-                                        fontWeight: FontWeight.bold,
-                                      ),
+                                  radius: 14,
+                                  backgroundColor: const Color(0xFF1D2A1D),
+                                  child: Text(
+                                    slot.heroName.isNotEmpty
+                                        ? slot.heroName
+                                              .substring(
+                                                0,
+                                                slot.heroName.length >= 2
+                                                    ? 2
+                                                    : 1,
+                                              )
+                                              .toUpperCase()
+                                        : '?',
+                                    style: TextStyle(
+                                      color: isUtama
+                                          ? HokTheme.neonLime
+                                          : Colors.white70,
+                                      fontSize: 10,
+                                      fontWeight: FontWeight.bold,
                                     ),
                                   ),
+                                ),
                                 const SizedBox(width: 8),
                                 Expanded(
                                   child: Column(
@@ -880,9 +1064,7 @@ class PowerLaneView extends StatelessWidget {
         content: TextField(
           controller: controller,
           keyboardType: TextInputType.number,
-          inputFormatters: [
-            NumericInputFormatter(context: context),
-          ],
+          inputFormatters: [NumericInputFormatter(context: context)],
           autofocus: true,
           decoration: const InputDecoration(
             labelText: 'Target Power (misal: 33190)',
@@ -957,9 +1139,7 @@ class _GamelandPowerFieldState extends State<_GamelandPowerField> {
     return TextField(
       controller: _controller,
       keyboardType: TextInputType.number,
-      inputFormatters: [
-        NumericInputFormatter(context: context),
-      ],
+      inputFormatters: [NumericInputFormatter(context: context)],
       textAlign: TextAlign.end,
       style: const TextStyle(
         color: Colors.white,
@@ -1039,6 +1219,7 @@ class _LaneSelectorDelegate extends SliverPersistentHeaderDelegate {
                     return Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 3),
                       child: InkWell(
+                        key: ValueKey('lane-picker-${lane.name}'),
                         onTap: () => provider.switchLane(lane),
                         borderRadius: BorderRadius.circular(30),
                         child: AnimatedContainer(

@@ -1,3 +1,4 @@
+import 'package:animated_flip_counter/animated_flip_counter.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:hitung_power_hero_hok/app/theme.dart';
@@ -397,7 +398,9 @@ class _HeroDetailTabViewState extends State<HeroDetailTabView> {
                               controller: _kemenanganController,
                               keyboardType: TextInputType.number,
                               textAlign: TextAlign.center,
-                              inputFormatters: [NumericInputFormatter(context: context)],
+                              inputFormatters: [
+                                NumericInputFormatter(context: context),
+                              ],
                               style: const TextStyle(
                                 color: Colors.white,
                                 fontSize: 13,
@@ -456,7 +459,9 @@ class _HeroDetailTabViewState extends State<HeroDetailTabView> {
                             child: TextField(
                               controller: _poinPeakController,
                               keyboardType: TextInputType.number,
-                              inputFormatters: [NumericInputFormatter(context: context)],
+                              inputFormatters: [
+                                NumericInputFormatter(context: context),
+                              ],
                               style: const TextStyle(
                                 color: Colors.white,
                                 fontSize: 13,
@@ -599,9 +604,11 @@ class _HeroDetailTabViewState extends State<HeroDetailTabView> {
             crossAxisAlignment: CrossAxisAlignment.baseline,
             textBaseline: TextBaseline.alphabetic,
             children: [
-              Text(
-                HOKUtils.formatNumber(detail.finalHeroPower),
-                style: const TextStyle(
+              AnimatedFlipCounter(
+                value: detail.finalHeroPower,
+                thousandSeparator: '.',
+                duration: const Duration(milliseconds: 300),
+                textStyle: const TextStyle(
                   color: Colors.white,
                   fontSize: 48,
                   fontWeight: FontWeight.w900,
@@ -658,9 +665,11 @@ class _HeroDetailTabViewState extends State<HeroDetailTabView> {
       mainAxisSize: MainAxisSize.min,
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        Text(
-          HOKUtils.formatNumber(detail.finalHeroPower),
-          style: const TextStyle(
+        AnimatedFlipCounter(
+          value: detail.finalHeroPower,
+          thousandSeparator: '.',
+          duration: const Duration(milliseconds: 300),
+          textStyle: const TextStyle(
             color: Colors.white,
             fontSize: 18,
             fontWeight: FontWeight.w900,
