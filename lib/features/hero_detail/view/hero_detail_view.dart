@@ -66,7 +66,7 @@ class _HeroDetailTabViewState extends State<HeroDetailTabView> {
         SliverToBoxAdapter(
           child: Center(
             child: ConstrainedBox(
-              constraints: const BoxConstraints(maxWidth: 960),
+              constraints: const BoxConstraints(maxWidth: 900),
               child: const Padding(
                 padding: EdgeInsets.symmetric(horizontal: 16),
                 child: GamelandHeroHeader(),
@@ -88,7 +88,7 @@ class _HeroDetailTabViewState extends State<HeroDetailTabView> {
             collapsedHMargin: 64,
             expandedRadius: 20,
             collapsedRadius: 32,
-            maxWidth: 960,
+            maxWidth: 900,
             expandedBuilder: (context) =>
                 _buildHeroPowerExpanded(context, detail),
             collapsedBuilder: (context) =>
@@ -102,7 +102,7 @@ class _HeroDetailTabViewState extends State<HeroDetailTabView> {
         SliverToBoxAdapter(
           child: Center(
             child: ConstrainedBox(
-              constraints: const BoxConstraints(maxWidth: 960),
+              constraints: const BoxConstraints(maxWidth: 900),
               child: Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 16),
                 child: Column(

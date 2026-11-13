@@ -29,7 +29,7 @@ class PowerLaneView extends StatelessWidget {
         SliverToBoxAdapter(
           child: Center(
             child: ConstrainedBox(
-              constraints: const BoxConstraints(maxWidth: 960),
+              constraints: const BoxConstraints(maxWidth: 900),
               child: const Padding(
                 padding: EdgeInsets.symmetric(horizontal: 16),
                 // Lane selector DIPISAH ke sliver pinned sendiri di bawah
@@ -58,7 +58,7 @@ class PowerLaneView extends StatelessWidget {
             collapsedHMargin: 48,
             expandedRadius: 20,
             collapsedRadius: 32,
-            maxWidth: 960,
+            maxWidth: 900,
             expandedBuilder: (context) =>
                 _buildTierCardExpanded(context, provider, laneData),
             collapsedBuilder: (context) =>
@@ -69,10 +69,49 @@ class PowerLaneView extends StatelessWidget {
         const SliverToBoxAdapter(child: SizedBox(height: 18)),
 
         // 4. KONTEN DI BAWAH KARTU (Hero Utama, Hero OP, Rekomendasi Push, Footer)
+        if (laneData.totalPowerLane == 0)
+          SliverToBoxAdapter(
+            child: Center(
+              child: ConstrainedBox(
+                constraints: const BoxConstraints(maxWidth: 900),
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 16),
+                  child: Container(
+                    padding: const EdgeInsets.all(14),
+                    decoration: BoxDecoration(
+                      color: HokTheme.cardBackground,
+                      borderRadius: BorderRadius.circular(12),
+                      border: Border.all(color: HokTheme.cardBorder),
+                    ),
+                    child: const Row(
+                      children: [
+                        Icon(
+                          Icons.info_outline_rounded,
+                          color: HokTheme.neonLime,
+                          size: 20,
+                        ),
+                        SizedBox(width: 10),
+                        Expanded(
+                          child: Text(
+                            'Belum ada power pada lane ini. Masukkan nilai hero atau muat data Sample.',
+                            style: TextStyle(
+                              color: HokTheme.textSecondary,
+                              fontSize: 12,
+                              height: 1.4,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ),
         SliverToBoxAdapter(
           child: Center(
             child: ConstrainedBox(
-              constraints: const BoxConstraints(maxWidth: 960),
+              constraints: const BoxConstraints(maxWidth: 900),
               child: Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 16),
                 child: LayoutBuilder(
@@ -853,29 +892,37 @@ class PowerLaneView extends StatelessWidget {
                       const SizedBox(width: 6),
 
                       // Tombol Cepat +100 / +500
-                      InkWell(
-                        onTap: () => provider.quickDeltaPower(
-                          isUtama: isUtama,
-                          index: index,
-                          delta: 100,
-                        ),
-                        borderRadius: BorderRadius.circular(4),
-                        child: Container(
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 6,
-                            vertical: 6,
+                      SizedBox(
+                        width: 48,
+                        height: 48,
+                        child: InkWell(
+                          onTap: () => provider.quickDeltaPower(
+                            isUtama: isUtama,
+                            index: index,
+                            delta: 100,
                           ),
-                          decoration: BoxDecoration(
-                            color: const Color(0xFF192419),
-                            borderRadius: BorderRadius.circular(4),
-                            border: Border.all(color: const Color(0xFF233223)),
-                          ),
-                          child: const Text(
-                            '+100',
-                            style: TextStyle(
-                              color: HokTheme.limeAccent,
-                              fontSize: 10,
-                              fontWeight: FontWeight.bold,
+                          borderRadius: BorderRadius.circular(8),
+                          child: Center(
+                            child: Container(
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 6,
+                                vertical: 6,
+                              ),
+                              decoration: BoxDecoration(
+                                color: const Color(0xFF192419),
+                                borderRadius: BorderRadius.circular(4),
+                                border: Border.all(
+                                  color: const Color(0xFF233223),
+                                ),
+                              ),
+                              child: const Text(
+                                '+100',
+                                style: TextStyle(
+                                  color: HokTheme.limeAccent,
+                                  fontSize: 10,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
                             ),
                           ),
                         ),
@@ -1180,7 +1227,7 @@ class _LaneSelectorDelegate extends SliverPersistentHeaderDelegate {
 
   final PowerLaneViewModel provider;
 
-  static const double _height = 58;
+  static const double _height = 76;
 
   @override
   double get minExtent => _height;
@@ -1199,7 +1246,7 @@ class _LaneSelectorDelegate extends SliverPersistentHeaderDelegate {
       alignment: Alignment.center,
       child: Center(
         child: ConstrainedBox(
-          constraints: const BoxConstraints(maxWidth: 960),
+          constraints: const BoxConstraints(maxWidth: 900),
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
             child: Container(
@@ -1224,10 +1271,8 @@ class _LaneSelectorDelegate extends SliverPersistentHeaderDelegate {
                         borderRadius: BorderRadius.circular(30),
                         child: AnimatedContainer(
                           duration: const Duration(milliseconds: 180),
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 16,
-                            vertical: 8,
-                          ),
+                          constraints: const BoxConstraints(minHeight: 48),
+                          padding: const EdgeInsets.symmetric(horizontal: 12),
                           decoration: BoxDecoration(
                             color: isSelected
                                 ? HokTheme.neonLime

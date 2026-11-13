@@ -101,6 +101,11 @@ void main() {
 
     // Verifikasi brand navbar & komponen utama muncul
     expect(find.text('kalkulator Power Lane'), findsOneWidget);
+    await tester.drag(
+      find.byType(CustomScrollView).first,
+      const Offset(0, -180),
+    );
+    await tester.pumpAndSettle();
     expect(find.text('Hero Utama'), findsOneWidget);
     expect(find.byType(SvgPicture), findsNWidgets(5));
     expect(tester.takeException(), isNull);
@@ -172,8 +177,8 @@ void main() {
   testWidgets('Sidebar drawer test and no overflow on narrow screens', (
     WidgetTester tester,
   ) async {
-    // Set ukuran layar mobile tipikal misal 375x812
-    tester.view.physicalSize = const Size(375, 812);
+    // Verify the minimum supported mobile width.
+    tester.view.physicalSize = const Size(360, 812);
     tester.view.devicePixelRatio = 1.0;
     addTearDown(() {
       tester.view.resetPhysicalSize();
@@ -182,6 +187,16 @@ void main() {
 
     await tester.pumpWidget(const HOKPowerCalculatorApp());
     await tester.pumpAndSettle();
+
+    expect(
+      tester.getSize(find.byKey(const ValueKey('navbar-menu-button'))).height,
+      greaterThanOrEqualTo(48),
+    );
+    expect(
+      tester.getSize(find.byKey(const ValueKey('lane-picker-clash'))).height,
+      greaterThanOrEqualTo(48),
+    );
+    expect(tester.takeException(), isNull);
 
     // Buka Drawer melalui tombol menu
     await tester.tap(find.byIcon(Icons.menu_rounded));
@@ -197,6 +212,10 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(find.text('Hitung Win Streak'), findsWidgets);
+    expect(
+      tester.getSize(find.byKey(const ValueKey('wr-mode-winStreak'))).height,
+      greaterThanOrEqualTo(48),
+    );
     expect(tester.takeException(), isNull);
   });
 

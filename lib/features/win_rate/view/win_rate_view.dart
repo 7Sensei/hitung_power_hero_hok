@@ -955,7 +955,7 @@ class _WrModeSelectorDelegate extends SliverPersistentHeaderDelegate {
   final WrMode selectedMode;
   final ValueChanged<WrMode> onModeChanged;
 
-  static const double _height = 58;
+  static const double _height = 70;
 
   @override
   double get minExtent => _height;
@@ -1004,8 +1004,10 @@ class _WrModeSelectorDelegate extends SliverPersistentHeaderDelegate {
                     child: GestureDetector(
                       onTap: () => onModeChanged(mode),
                       child: AnimatedContainer(
+                        key: ValueKey('wr-mode-${mode.name}'),
                         duration: const Duration(milliseconds: 200),
-                        padding: const EdgeInsets.symmetric(vertical: 9),
+                        constraints: const BoxConstraints(minHeight: 48),
+                        padding: const EdgeInsets.symmetric(horizontal: 4),
                         decoration: BoxDecoration(
                           color: isActive
                               ? HokTheme.neonLime
@@ -1069,4 +1071,3 @@ class _WrModeSelectorDelegate extends SliverPersistentHeaderDelegate {
 
 /// Backward compatibility typedef
 typedef WinRateView = WinRateCalculatorView;
-

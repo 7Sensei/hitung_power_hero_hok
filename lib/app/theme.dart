@@ -24,7 +24,7 @@ class HokTheme {
   static const Color darkText = Color(0xFF070A07); // Text on neon lime pills
   static const Color textPrimary = Color(0xFFFFFFFF);
   static const Color textSecondary = Color(0xFF9CA3AF);
-  static const Color textMuted = Color(0xFF6B7280);
+  static const Color textMuted = Color(0xFF8A938A);
 
   // Auxiliary
   static const Color redAccent = Color(0xFFEF4444);

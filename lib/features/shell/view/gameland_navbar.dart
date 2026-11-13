@@ -23,11 +23,12 @@ class GamelandNavbar extends StatelessWidget {
           children: [
             // Tombol Garis 3 (Menu Drawer Sidebar)
             InkWell(
+              key: const ValueKey('navbar-menu-button'),
               onTap: onMenuTap ?? () => Scaffold.of(context).openDrawer(),
               borderRadius: BorderRadius.circular(10),
               child: Container(
-                width: 38,
-                height: 38,
+                width: 48,
+                height: 48,
                 decoration: BoxDecoration(
                   color: const Color(0xFF111711),
                   borderRadius: BorderRadius.circular(10),
@@ -113,7 +114,7 @@ class GamelandNavbar extends StatelessWidget {
             : Container(
                 padding: const EdgeInsets.symmetric(
                   horizontal: 14,
-                  vertical: 6,
+                  vertical: 12,
                 ),
                 decoration: BoxDecoration(
                   color: const Color(0xFF111711),
@@ -165,10 +166,8 @@ class GamelandNavbar extends StatelessWidget {
                 },
                 borderRadius: BorderRadius.circular(30),
                 child: Container(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 10,
-                    vertical: 7,
-                  ),
+                  constraints: const BoxConstraints(minHeight: 48),
+                  padding: const EdgeInsets.symmetric(horizontal: 10),
                   decoration: BoxDecoration(
                     color: const Color(0xFF121912),
                     borderRadius: BorderRadius.circular(30),
@@ -214,6 +213,33 @@ class GamelandNavbar extends StatelessWidget {
             ],
           ],
         );
+
+        if (constraints.maxWidth < 420) {
+          return Container(
+            decoration: const BoxDecoration(
+              color: Color(0xFF090D09),
+              border: Border(
+                bottom: BorderSide(color: Color(0xFF192519), width: 1),
+              ),
+            ),
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                leftBrandBlock,
+                const SizedBox(height: 8),
+                Center(child: centerSwitcherBlock),
+                if (showPowerLaneActions) ...[
+                  const SizedBox(height: 4),
+                  Align(
+                    alignment: Alignment.centerRight,
+                    child: rightActionsBlock,
+                  ),
+                ],
+              ],
+            ),
+          );
+        }
 
         if (isNarrow) {
           return Container(
@@ -275,7 +301,8 @@ class GamelandNavbar extends StatelessWidget {
       borderRadius: BorderRadius.circular(30),
       child: AnimatedContainer(
         duration: const Duration(milliseconds: 180),
-        padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 7),
+        constraints: const BoxConstraints(minHeight: 48),
+        padding: const EdgeInsets.symmetric(horizontal: 14),
         decoration: BoxDecoration(
           color: isActive ? HokTheme.neonLime : Colors.transparent,
           borderRadius: BorderRadius.circular(30),
@@ -323,8 +350,8 @@ class GamelandNavbar extends StatelessWidget {
         onTap: onTap,
         borderRadius: BorderRadius.circular(20),
         child: Container(
-          width: 34,
-          height: 34,
+          width: 48,
+          height: 48,
           decoration: BoxDecoration(
             color: const Color(0xFF121912),
             shape: BoxShape.circle,
