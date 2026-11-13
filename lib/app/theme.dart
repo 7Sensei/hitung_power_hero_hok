@@ -43,7 +43,7 @@ class HokTheme {
       ),
       visualDensity: FlexColorScheme.comfortablePlatformDensity,
       useMaterial3: true,
-      fontFamily: 'Inter',
+      fontFamily: 'Poppins',
     ).toTheme.copyWith(
       cardTheme: CardThemeData(
         color: cardBackground,
@@ -80,33 +80,33 @@ class HokTheme {
   }
 
   static TextTheme get _textTheme {
-    final bodyTheme = GoogleFonts.interTextTheme(ThemeData.dark().textTheme);
+    final bodyTheme = GoogleFonts.poppinsTextTheme(ThemeData.dark().textTheme);
     return bodyTheme.copyWith(
-      displayLarge: GoogleFonts.rajdhani(
+      displayLarge: GoogleFonts.poppins(
         textStyle: bodyTheme.displayLarge,
         fontWeight: FontWeight.w700,
       ),
-      displayMedium: GoogleFonts.rajdhani(
+      displayMedium: GoogleFonts.poppins(
         textStyle: bodyTheme.displayMedium,
         fontWeight: FontWeight.w700,
       ),
-      displaySmall: GoogleFonts.rajdhani(
+      displaySmall: GoogleFonts.poppins(
         textStyle: bodyTheme.displaySmall,
         fontWeight: FontWeight.w700,
       ),
-      headlineLarge: GoogleFonts.rajdhani(
+      headlineLarge: GoogleFonts.poppins(
         textStyle: bodyTheme.headlineLarge,
         fontWeight: FontWeight.w700,
       ),
-      headlineMedium: GoogleFonts.rajdhani(
+      headlineMedium: GoogleFonts.poppins(
         textStyle: bodyTheme.headlineMedium,
         fontWeight: FontWeight.w700,
       ),
-      headlineSmall: GoogleFonts.rajdhani(
+      headlineSmall: GoogleFonts.poppins(
         textStyle: bodyTheme.headlineSmall,
         fontWeight: FontWeight.w700,
       ),
-      titleLarge: GoogleFonts.rajdhani(
+      titleLarge: GoogleFonts.poppins(
         textStyle: bodyTheme.titleLarge,
         fontWeight: FontWeight.w700,
       ),
@@ -114,12 +114,12 @@ class HokTheme {
   }
 
   static TextStyle get displayStyle =>
-      GoogleFonts.rajdhani(color: textPrimary, fontWeight: FontWeight.w800);
+      GoogleFonts.poppins(color: textPrimary, fontWeight: FontWeight.w800);
 
-  static TextStyle get bodyStyle => GoogleFonts.inter(color: textPrimary);
+  static TextStyle get bodyStyle => GoogleFonts.poppins(color: textPrimary);
 
   static TextStyle get bodySecondaryStyle =>
-      GoogleFonts.inter(color: textSecondary);
+      GoogleFonts.poppins(color: textSecondary);
 
-  static TextStyle get bodyMutedStyle => GoogleFonts.inter(color: textMuted);
+  static TextStyle get bodyMutedStyle => GoogleFonts.poppins(color: textMuted);
 }
