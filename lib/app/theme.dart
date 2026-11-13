@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flex_color_scheme/flex_color_scheme.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class HokTheme {
   // Gameland Dark Minimalist Palette (Pitch Black + Electric Neon Lime)
@@ -29,28 +31,29 @@ class HokTheme {
   static const Color blueCyan = Color(0xFF38BDF8);
 
   static ThemeData get darkTheme {
-    return ThemeData(
-      brightness: Brightness.dark,
-      scaffoldBackgroundColor: darkBackground,
-      primaryColor: neonLime,
-      cardColor: cardBackground,
-      fontFamily: 'sans-serif',
-      appBarTheme: const AppBarTheme(
-        backgroundColor: darkBackground,
-        elevation: 0,
-        centerTitle: false,
-        iconTheme: IconThemeData(color: Colors.white),
-        titleTextStyle: TextStyle(
-          color: Colors.white,
-          fontSize: 18,
-          fontWeight: FontWeight.bold,
+    return FlexColorScheme.dark(
+      scheme: FlexScheme.material,
+      scaffoldBackground: darkBackground,
+      primary: neonLime,
+      primaryLightRef: neonLime,
+      subThemesData: const FlexSubThemesData(
+        defaultRadius: 12,
+        inputDecoratorRadius: 12,
+        inputDecoratorBorderType: FlexInputBorderType.underline,
+      ),
+      visualDensity: FlexColorScheme.comfortablePlatformDensity,
+      useMaterial3: true,
+      fontFamily: 'Inter',
+    ).toTheme.copyWith(
+      cardTheme: CardThemeData(
+        color: cardBackground,
+        elevation: 2,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(16),
+          side: const BorderSide(color: cardBorder),
         ),
       ),
-      colorScheme: const ColorScheme.dark(
-        primary: neonLime,
-        secondary: limeAccent,
-        surface: cardBackground,
-      ),
+      textTheme: _textTheme,
       inputDecorationTheme: InputDecorationTheme(
         filled: true,
         fillColor: cardSubtle,
@@ -60,20 +63,63 @@ class HokTheme {
         ),
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
-          borderSide: const BorderSide(color: cardBorder),
+          borderSide: BorderSide(color: cardBorder),
         ),
         enabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
-          borderSide: const BorderSide(color: cardBorder),
+          borderSide: BorderSide(color: cardBorder),
         ),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
-          borderSide: const BorderSide(color: neonLime, width: 1.5),
+          borderSide: BorderSide(color: neonLime, width: 1.5),
         ),
-        labelStyle: const TextStyle(color: textSecondary, fontSize: 13),
-        hintStyle: const TextStyle(color: textMuted, fontSize: 13),
+        labelStyle: TextStyle(color: textSecondary, fontSize: 13),
+        hintStyle: TextStyle(color: textMuted, fontSize: 13),
       ),
     );
   }
-}
 
+  static TextTheme get _textTheme {
+    final bodyTheme = GoogleFonts.interTextTheme(ThemeData.dark().textTheme);
+    return bodyTheme.copyWith(
+      displayLarge: GoogleFonts.rajdhani(
+        textStyle: bodyTheme.displayLarge,
+        fontWeight: FontWeight.w700,
+      ),
+      displayMedium: GoogleFonts.rajdhani(
+        textStyle: bodyTheme.displayMedium,
+        fontWeight: FontWeight.w700,
+      ),
+      displaySmall: GoogleFonts.rajdhani(
+        textStyle: bodyTheme.displaySmall,
+        fontWeight: FontWeight.w700,
+      ),
+      headlineLarge: GoogleFonts.rajdhani(
+        textStyle: bodyTheme.headlineLarge,
+        fontWeight: FontWeight.w700,
+      ),
+      headlineMedium: GoogleFonts.rajdhani(
+        textStyle: bodyTheme.headlineMedium,
+        fontWeight: FontWeight.w700,
+      ),
+      headlineSmall: GoogleFonts.rajdhani(
+        textStyle: bodyTheme.headlineSmall,
+        fontWeight: FontWeight.w700,
+      ),
+      titleLarge: GoogleFonts.rajdhani(
+        textStyle: bodyTheme.titleLarge,
+        fontWeight: FontWeight.w700,
+      ),
+    );
+  }
+
+  static TextStyle get displayStyle =>
+      GoogleFonts.rajdhani(color: textPrimary, fontWeight: FontWeight.w800);
+
+  static TextStyle get bodyStyle => GoogleFonts.inter(color: textPrimary);
+
+  static TextStyle get bodySecondaryStyle =>
+      GoogleFonts.inter(color: textSecondary);
+
+  static TextStyle get bodyMutedStyle => GoogleFonts.inter(color: textMuted);
+}
